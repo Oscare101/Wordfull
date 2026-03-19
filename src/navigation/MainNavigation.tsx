@@ -5,6 +5,8 @@ import {
 import { RootStackParamList } from './types';
 import HomeScreen from '../screens/HomeScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import LanguageScreen from '../screens/LanguageScreen';
+import ThemeScreen from '../screens/ThemeScreen';
 
 const screenOption = {
   headerShown: false,
@@ -38,6 +40,16 @@ function Navigation() {
         options={screenOption}
         name="SettingsScreen"
         component={SettingsScreen}
+      />
+      <Stack.Screen
+        options={screenOption}
+        name="LanguageScreen"
+        component={LanguageScreen}
+      />
+      <Stack.Screen
+        options={screenOption}
+        name="ThemeScreen"
+        component={ThemeScreen}
       />
     </Stack.Navigator>
   );

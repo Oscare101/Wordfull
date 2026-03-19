@@ -1,4 +1,4 @@
-import { Theme } from '../interfaces/interface';
+import { Theme } from './themeType';
 
 const olive = {
   name: 'Olive',

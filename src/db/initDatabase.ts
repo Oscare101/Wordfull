@@ -1,6 +1,7 @@
 import { db } from './database';
 import { getInitialAppLanguage } from '../utils/getInitialAppLanguage';
 import { DEFAULT_THEME } from '../constants/themes/themeType';
+import { getDefaultWordPackIdByLanguage } from '../constants/wordPacks/defaultWordPack';
 
 export async function initDatabase(): Promise<void> {
   console.log('initDatabase: started');
@@ -13,7 +14,7 @@ export async function initDatabase(): Promise<void> {
       id INTEGER PRIMARY KEY NOT NULL,
       theme TEXT NOT NULL,
       language TEXT NOT NULL,
-      selected_word_pack_id TEXT,
+      selected_word_pack_id TEXT NOT NULL,
       start_date INTEGER NOT NULL
     )
   `);
@@ -21,17 +22,26 @@ export async function initDatabase(): Promise<void> {
   console.log('initDatabase: settings table ensured');
 
   const existingResult = await db.executeAsync(
-    'SELECT id FROM settings WHERE id = ? LIMIT 1',
+    'SELECT id, selected_word_pack_id, language FROM settings WHERE id = ? LIMIT 1',
     [1],
   );
 
   const existingRows = existingResult.results ?? [];
+  const firstRow = existingRows[0] as
+    | {
+        id?: number;
+        language?: string;
+        selected_word_pack_id?: string | null;
+      }
+    | undefined;
+
   const hasSettingsRow = existingRows.length > 0;
 
   console.log('initDatabase: hasSettingsRow =', hasSettingsRow);
 
   if (!hasSettingsRow) {
     const initialLanguage = getInitialAppLanguage();
+    const initialWordPackId = getDefaultWordPackIdByLanguage(initialLanguage);
 
     await db.executeAsync(
       `
@@ -44,12 +54,32 @@ export async function initDatabase(): Promise<void> {
         )
         VALUES (?, ?, ?, ?, ?)
       `,
-      [1, DEFAULT_THEME, initialLanguage, null, Date.now()],
+      [1, DEFAULT_THEME, initialLanguage, initialWordPackId, Date.now()],
     );
 
     console.log(
       'initDatabase: default settings inserted with language:',
       initialLanguage,
+      'and word pack:',
+      initialWordPackId,
+    );
+
+    return;
+  }
+
+  // Safety fix for already existing older DBs where selected_word_pack_id may be null
+  if (!firstRow?.selected_word_pack_id) {
+    const language = firstRow?.language === 'uk' ? 'uk' : 'en';
+    const fallbackWordPackId = getDefaultWordPackIdByLanguage(language);
+
+    await db.executeAsync(
+      'UPDATE settings SET selected_word_pack_id = ? WHERE id = ?',
+      [fallbackWordPackId, 1],
+    );
+
+    console.log(
+      'initDatabase: fixed null selected_word_pack_id with fallback:',
+      fallbackWordPackId,
     );
   }
 }

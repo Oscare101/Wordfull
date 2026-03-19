@@ -17,27 +17,6 @@ export interface Statistics {
   bestAttemptsByWordsAmount: History[]; // best 10 games with most words memorized in it
 }
 
-export interface Theme {
-  name: string;
-  id: ThemeType;
-  bg: string;
-  main: string;
-  comment: string;
-  accent: string;
-  card: string;
-  success: string;
-  error: string;
-  warning: string;
-  buttonActive: string;
-  buttonInactive: string;
-  buttonTitleActive: string;
-  buttonTitleInactive: string;
-  barStyle: 'light-content' | 'dark-content';
-  bgDim: string;
-  bgShadow: string;
-  border: string;
-}
-
 export type Language = 'en' | 'uk';
 export const SUPPORTED_LANGUAGES: Language[] = ['en', 'uk'];
 

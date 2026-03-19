@@ -1,8 +1,8 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import Icon from '../../assets/icon.tsx';
-import { Theme } from '../../constants/interfaces/interface.ts';
 import colors from '../../constants/themes/colors.ts';
+import { ThemeType } from '../../constants/themes/themeType.ts';
 
 export default function SimpleHeader({
   onBack,
@@ -11,7 +11,7 @@ export default function SimpleHeader({
 }: {
   onBack: () => void;
   title: string;
-  theme: Theme['id'];
+  theme: ThemeType;
 }) {
   return (
     <View style={styles.headerContainer}>
@@ -20,11 +20,12 @@ export default function SimpleHeader({
         activeOpacity={0.8}
         style={styles.button}
       >
-        <Icon name="chevronLeft" size={24} color={colors[theme].main} />
+        <Icon name="chevronLeft" size={32} color={colors[theme].main} />
       </TouchableOpacity>
       <Text style={[styles.headerTitle, { color: colors[theme].main }]}>
         {title}
       </Text>
+      <View style={styles.placeholder} />
     </View>
   );
 }
@@ -36,7 +37,8 @@ const styles = StyleSheet.create({
     gap: 16,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
+    paddingHorizontal: 8,
+    justifyContent: 'space-between',
   },
   button: {
     height: 60,
@@ -46,5 +48,9 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 18,
+    fontWeight: '500',
+  },
+  placeholder: {
+    width: 30,
   },
 });

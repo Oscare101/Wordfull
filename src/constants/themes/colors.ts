@@ -1,7 +1,6 @@
-import { Theme } from '../interfaces/interface';
 import darkBlue from './darkBlue';
 import olive from './olive';
-import { ThemeType } from './themeType';
+import { ThemeType, Theme } from './themeType';
 
 const colors: Record<ThemeType, Theme> = {
   olive: olive,

@@ -1,0 +1,96 @@
+import {
+  Dimensions,
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, { useCallback } from 'react';
+import { RootStackParamList } from '../navigation/types';
+import { StackScreenProps } from '@react-navigation/stack';
+import { useSettings } from '../context/SettingsContext';
+import text from '../constants/languages/text';
+import colors from '../constants/themes/colors';
+import SimpleHeader from '../components/global/SimpleHeader';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import ThemeButtonItem from '../components/settings/ThemeButtonItem';
+import { ThemeType } from '../constants/themes/themeType';
+
+type Props = StackScreenProps<RootStackParamList, 'ThemeScreen'>;
+const width = Dimensions.get('screen').width;
+export default function ThemeScreen({ navigation }: Props) {
+  const insets = useSafeAreaInsets();
+  const { language, theme, setTheme } = useSettings();
+
+  const themes: { title: string; id: ThemeType }[] = [
+    { title: 'Olive', id: 'olive' },
+    { title: 'Dark Blue', id: 'darkBlue' },
+  ];
+
+  const renderThemeItem = useCallback(
+    ({ item }: { item: { title: string; id: ThemeType } }) => (
+      <ThemeButtonItem
+        title={item.title}
+        onPress={() => {
+          setTheme(item.id as ThemeType);
+        }}
+        theme={item.id}
+        width={(width - 32 - 8) / 2}
+      />
+    ),
+    [theme],
+  );
+
+  return (
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: colors[theme].bg, paddingTop: insets.top },
+      ]}
+    >
+      <SimpleHeader
+        onBack={() => navigation.goBack()}
+        title={text[language].Theme}
+        theme={theme}
+      />
+      <Text style={[styles.title, { color: colors[theme].main }]}>
+        {text[language].YourTheme}
+      </Text>
+      <ThemeButtonItem
+        title={themes.find(t => t.id === theme)?.title || ''}
+        onPress={() => {}}
+        theme={theme}
+        width={width - 32}
+      />
+      <Text style={[styles.title, { color: colors[theme].main }]}>
+        {text[language].OtherThemes}
+      </Text>
+      <FlatList
+        contentContainerStyle={{
+          paddingHorizontal: 16,
+          paddingVertical: 8,
+          gap: 8,
+        }}
+        columnWrapperStyle={{ gap: 8 }}
+        data={themes}
+        numColumns={2}
+        renderItem={renderThemeItem}
+      />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  title: {
+    fontSize: 18,
+    width: '92%',
+    marginBottom: 8,
+    marginTop: 16,
+  },
+});

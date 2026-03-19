@@ -3,4 +3,11 @@ export type TextType =
   | 'Theme'
   | 'Language'
   | 'Ukrainian'
-  | 'English';
+  | 'English'
+  // language screen
+  | 'YourLanguage'
+  | 'OtherLanguages'
+  | 'AfterChangingLanguageWarning'
+  // theme screen
+  | 'YourTheme'
+  | 'OtherThemes';

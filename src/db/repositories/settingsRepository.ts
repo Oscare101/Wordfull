@@ -6,14 +6,14 @@ export interface SettingsRow {
   id: number;
   theme: string;
   language: string;
-  selected_word_pack_id: string | null;
+  selected_word_pack_id: string;
   start_date: number;
 }
 
 export interface AppSettings {
   theme: ThemeType;
   language: Language;
-  selectedWordPackId: string | null;
+  selectedWordPackId: string;
   startDate: number;
 }
 
@@ -22,10 +22,7 @@ function mapSettingsRow(row: Record<string, unknown>): SettingsRow {
     id: Number(row.id),
     theme: String(row.theme),
     language: String(row.language),
-    selected_word_pack_id:
-      row.selected_word_pack_id == null
-        ? null
-        : String(row.selected_word_pack_id),
+    selected_word_pack_id: String(row.selected_word_pack_id),
     start_date: Number(row.start_date),
   };
 }
@@ -69,7 +66,7 @@ export const settingsRepository = {
     ]);
   },
 
-  async updateSelectedWordPack(wordPackId: string | null): Promise<void> {
+  async updateSelectedWordPack(wordPackId: string): Promise<void> {
     await db.executeAsync(
       'UPDATE settings SET selected_word_pack_id = ? WHERE id = ?',
       [wordPackId, 1],
