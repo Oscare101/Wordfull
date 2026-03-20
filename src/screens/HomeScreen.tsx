@@ -12,6 +12,7 @@ import { useStatistics } from '../context/StatisticsContext';
 import { useHistory } from '../context/HistoryContext';
 import MonthHistoryBlock from '../components/charts/MonthHistoryBlock';
 import GamesTimeStatsBlock from '../components/charts/GamesTimeStatsBlock';
+import AccuracyHistoryBlock from '../components/charts/AccuracyHistoryBlock';
 
 type Props = StackScreenProps<RootStackParamList, 'HomeScreen'>;
 
@@ -25,6 +26,12 @@ export default function HomeScreen({ navigation }: Props) {
     <View style={[styles.container, { backgroundColor: colors[theme].bg }]}>
       <View style={styles.block}>
         <MonthHistoryBlock
+          history={history}
+          statistics={statistics}
+          language={language}
+          theme={theme}
+        />
+        <AccuracyHistoryBlock
           history={history}
           statistics={statistics}
           language={language}
