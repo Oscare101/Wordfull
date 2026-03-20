@@ -40,3 +40,9 @@ export interface History {
   correctWords: number;
   inputs: string[]; // what user wrote after memorizing
 }
+
+export type GameMode = 'easy' | 'hard' | 'stamina';
+
+export interface RulesInterface {
+  defaultWordsAmount: number;
+}

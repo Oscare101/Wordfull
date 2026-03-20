@@ -8,4 +8,13 @@ export type IconName =
   | 'language'
   | 'person'
   | 'palette'
-  | 'play';
+  | 'play'
+  | 'open'
+  | 'fire'
+  | 'check'
+  | 'settings'
+  | 'speedLow'
+  | 'speedHigh'
+  | 'stats'
+  | 'info'
+  | 'infinity';

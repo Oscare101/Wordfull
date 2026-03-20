@@ -28,7 +28,6 @@ export default function ButtonBlock(props: {
       disabled={props.disabled}
       style={[
         styles.button,
-        props.styles,
         {
           // opacity: props.disabled ? 0.5 : 1,
           backgroundColor: props.disabled
@@ -36,6 +35,7 @@ export default function ButtonBlock(props: {
             : colors[props.theme].buttonActive,
           justifyContent: props.icon ? 'space-between' : 'center',
         },
+        props.styles,
       ]}
       activeOpacity={0.8}
       onPress={props.action}
@@ -43,12 +43,12 @@ export default function ButtonBlock(props: {
       <Text
         style={[
           styles.title,
-          props.titleStyles,
           {
             color: props.disabled
               ? colors[props.theme].buttonTitleInactive
               : colors[props.theme].buttonTitleActive,
           },
+          props.titleStyles,
         ]}
       >
         {props.title}
@@ -71,14 +71,15 @@ export default function ButtonBlock(props: {
 const styles = StyleSheet.create({
   button: {
     width: width * 0.92,
-    height: 50,
+    height: 60,
     borderRadius: 16,
     alignItems: 'center',
     flexDirection: 'row',
     paddingHorizontal: 16,
+    gap: 16,
   },
   title: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 600,
   },
 });

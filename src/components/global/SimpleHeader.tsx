@@ -3,15 +3,20 @@ import React from 'react';
 import Icon from '../../assets/icon.tsx';
 import colors from '../../constants/themes/colors.ts';
 import { ThemeType } from '../../constants/themes/themeType.ts';
+import { IconName } from '../../constants/interfaces/iconInterface.ts';
 
 export default function SimpleHeader({
   onBack,
   title,
   theme,
+  rightIcon,
+  rightIconAction,
 }: {
   onBack: () => void;
   title: string;
   theme: ThemeType;
+  rightIcon?: IconName;
+  rightIconAction?: () => void;
 }) {
   return (
     <View style={styles.headerContainer}>
@@ -25,7 +30,17 @@ export default function SimpleHeader({
       <Text style={[styles.headerTitle, { color: colors[theme].main }]}>
         {title}
       </Text>
-      <View style={styles.placeholder} />
+      {rightIcon ? (
+        <TouchableOpacity
+          onPress={rightIconAction}
+          activeOpacity={0.8}
+          style={styles.button}
+        >
+          <Icon name={rightIcon} size={32} color={colors[theme].main} />
+        </TouchableOpacity>
+      ) : (
+        <View style={styles.placeholder} />
+      )}
     </View>
   );
 }
@@ -51,6 +66,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   placeholder: {
-    width: 30,
+    width: 60,
   },
 });

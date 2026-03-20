@@ -7,6 +7,9 @@ import HomeScreen from '../screens/HomeScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import LanguageScreen from '../screens/LanguageScreen';
 import ThemeScreen from '../screens/ThemeScreen';
+import GameModesScreen from '../screens/GameModesScreen';
+import PreGameScreen from '../screens/PreGameScreen';
+import GameScreen from '../screens/GameScreen';
 
 const screenOption = {
   headerShown: false,
@@ -50,6 +53,24 @@ function Navigation() {
         options={screenOption}
         name="ThemeScreen"
         component={ThemeScreen}
+      />
+      <Stack.Screen
+        options={screenOption}
+        name="GameModesScreen"
+        component={GameModesScreen}
+      />
+      <Stack.Screen
+        options={screenOption}
+        name="PreGameScreen"
+        component={PreGameScreen}
+      />
+      <Stack.Screen
+        options={{
+          ...screenOption,
+          gestureEnabled: false, // Disables swipe gesture on GameScreen
+        }}
+        name="GameScreen"
+        component={GameScreen}
       />
     </Stack.Navigator>
   );

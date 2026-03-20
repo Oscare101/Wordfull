@@ -12,6 +12,15 @@ import Person from './icons/Person';
 import Palette from './icons/Palette';
 import Language from './icons/Language';
 import Play from './icons/Play';
+import Open from './icons/Open';
+import Fire from './icons/Fire';
+import Check from './icons/Check';
+import Settings from './icons/Settings';
+import SpeedLow from './icons/SpeedLow';
+import SpeedHigh from './icons/SpeedHigh';
+import Stats from './icons/Stats';
+import Info from './icons/Info';
+import InfinityIcon from './icons/Infinity';
 
 interface IconProps {
   name: IconName;
@@ -33,6 +42,15 @@ export default function Icon({ name, size = 24, color = '#000' }: IconProps) {
     palette: <SvgXml xml={Palette(color)} width={size} height={size} />,
     language: <SvgXml xml={Language(color)} width={size} height={size} />,
     play: <SvgXml xml={Play(color)} width={size} height={size} />,
+    open: <SvgXml xml={Open(color)} width={size} height={size} />,
+    fire: <SvgXml xml={Fire(color)} width={size} height={size} />,
+    check: <SvgXml xml={Check(color)} width={size} height={size} />,
+    settings: <SvgXml xml={Settings(color)} width={size} height={size} />,
+    speedLow: <SvgXml xml={SpeedLow(color)} width={size} height={size} />,
+    speedHigh: <SvgXml xml={SpeedHigh(color)} width={size} height={size} />,
+    stats: <SvgXml xml={Stats(color)} width={size} height={size} />,
+    info: <SvgXml xml={Info(color)} width={size} height={size} />,
+    infinity: <SvgXml xml={InfinityIcon(color)} width={size} height={size} />,
   };
 
   return icons[name];

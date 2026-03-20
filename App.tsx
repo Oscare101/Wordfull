@@ -6,6 +6,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import MainNavigation from './src/navigation/MainNavigation';
 import { initDatabase } from './src/db/initDatabase';
 import { SettingsProvider } from './src/context/SettingsContext';
+import { Toast } from 'react-native-toast-message/lib/src/Toast';
+import { Text, View } from 'react-native';
 
 export default function App() {
   const [isDbReady, setIsDbReady] = useState(false);
@@ -27,6 +29,32 @@ export default function App() {
     return null;
   }
 
+  const toastConfig = {
+    ToastMessage: ({ props }: any) => (
+      <View
+        style={{
+          width: '92%',
+          backgroundColor: '#000',
+          padding: 16,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          borderRadius: 8,
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 16,
+            color: '#fff',
+            textAlign: 'left',
+          }}
+        >
+          {props.title}
+        </Text>
+      </View>
+    ),
+  };
+
   return (
     <SafeAreaProvider>
       <GestureHandlerRootView style={{ flex: 1 }}>
@@ -36,6 +64,7 @@ export default function App() {
           </NavigationContainer>
         </SettingsProvider>
       </GestureHandlerRootView>
+      <Toast config={toastConfig} />
     </SafeAreaProvider>
   );
 }

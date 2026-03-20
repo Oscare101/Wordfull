@@ -17,16 +17,18 @@ export default function HomeScreen({ navigation }: Props) {
       <View style={styles.block}>
         <SettingsButtonItem
           title={text[language].Settings}
-          icon={'list'}
+          icon={'settings'}
           onPress={() => {
             navigation.navigate('SettingsScreen');
           }}
           theme={theme}
         />
         <ButtonBlock
-          title="Go to Game"
+          title={text[language].NewGame}
           icon={'play'}
-          action={() => {}}
+          action={() => {
+            navigation.navigate('GameModesScreen');
+          }}
           theme={theme}
         />
       </View>
