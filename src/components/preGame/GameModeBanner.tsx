@@ -20,7 +20,7 @@ export default function GameModeBanner({
       ? 'speedLow'
       : gameMode === 'hard'
       ? 'speedHigh'
-      : 'infinity';
+      : 'fire';
 
   const title =
     gameMode === 'easy'

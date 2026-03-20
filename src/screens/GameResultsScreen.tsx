@@ -1,32 +1,17 @@
-import {
-  FlatList,
-  InteractionManager,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import React, { useCallback, useState, useEffect, useRef } from 'react';
+import { BackHandler, FlatList, StyleSheet, Text, View } from 'react-native';
+import React, { use, useCallback, useState } from 'react';
 import { RootStackParamList } from '../navigation/types';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useSettings } from '../context/SettingsContext';
-import text from '../constants/languages/text';
 import colors from '../constants/themes/colors';
-import ButtonBlock from '../components/global/ButtonBlock';
-import SettingsButtonItem from '../components/settings/SettingsButtonItem';
-import SimpleHeader from '../components/global/SimpleHeader';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { usePreventGoBack } from '../hooks/usePreventGoBack';
-import { GameMode, WordPack } from '../constants/interfaces/interface';
-import { useSelectedWordPack } from '../constants/wordPacks/useSelectedWordPack';
-import GameHeader from '../components/game/GameHeader';
-import CardListBlock from '../components/game/CardListBlock';
-import CloseGameModal from '../components/game/CloseGameModal';
-import GameBottomBlock from '../components/game/GameBottomBlock';
+import { BeforeRemoveEvent, usePreventGoBack } from '../hooks/usePreventGoBack';
+import { GameMode } from '../constants/interfaces/interface';
 import CheckBottomBlock from '../components/game/CheckBottomBlock';
-import ConfirmCheckModal from '../components/game/ConfirmCheckModal';
 import ResultsViewSwitcher from '../components/game/ResultsViewSwitcher';
+import { CommonActions, useFocusEffect } from '@react-navigation/native';
+import { gameResultsRepository } from '../db/repositories/gameResultsRepository';
+import { useSelectedWordPack } from '../constants/wordPacks/useSelectedWordPack';
 
 type Props = StackScreenProps<RootStackParamList, 'GameResultsScreen'>;
 
@@ -34,17 +19,14 @@ export default function GameResultsScreen({ navigation, route }: Props) {
   const insets = useSafeAreaInsets();
   const { language, theme } = useSettings();
   const gameMode: GameMode = route.params.mode;
-  const words: string[] = route.params.words.map(item => item.toLowerCase());
-  const inputs: string[] = route.params.inputs.map(item => item.toLowerCase());
-  const time: number = route.params.time;
-  // const wordPack: WordPack = useSelectedWordPack();
-
-  const [confirm, setConfirm] = useState<boolean>(false);
-  const [wordsInputs, setWordsInputs] = useState<string[]>(
-    Array(words.length).fill(''),
+  const wordPack = useSelectedWordPack();
+  const words: string[] = route.params.words.map(item =>
+    item.trim().toLowerCase(),
   );
-  const inputRefs = useRef<TextInput[]>([]);
-  const flatListRef = useRef<FlatList>(null);
+  const inputs: string[] = route.params.inputs.map(item =>
+    item.trim().toLowerCase(),
+  );
+  const time: number = route.params.time;
 
   const correctWordsAmount = words.reduce((acc, word, index) => {
     if (word === inputs[index]) {
@@ -53,14 +35,48 @@ export default function GameResultsScreen({ navigation, route }: Props) {
     return acc;
   }, 0);
 
-  const [modal, setModal] = useState<boolean>(false);
   const [viewMode, setViewMode] = useState<'inputs' | 'words'>('inputs');
-  usePreventGoBack({
-    enabled: !modal,
-    onBlockedGoBack: useCallback(() => {
-      setModal(true);
+
+  useFocusEffect(
+    useCallback(() => {
+      const subscription = BackHandler.addEventListener(
+        'hardwareBackPress',
+        () => true,
+      );
+
+      return () => subscription.remove();
     }, []),
+  );
+
+  usePreventGoBack({
+    enabled: true,
+    shouldPrevent: useCallback((event: BeforeRemoveEvent) => {
+      const action = event.data.action as {
+        type?: string;
+        payload?: {
+          routes?: Array<{ name?: string }>;
+        };
+      };
+
+      const routes = action.payload?.routes;
+      const isResetToHome =
+        action.type === 'RESET' &&
+        routes?.length === 1 &&
+        routes[0]?.name === 'HomeScreen';
+
+      return !isResetToHome;
+    }, []),
+    onBlockedGoBack: useCallback(() => {}, []),
   });
+
+  const navigateHome = useCallback(() => {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: 'HomeScreen' }],
+      }),
+    );
+  }, [navigation]);
 
   function RenderItem(item: any) {
     return (
@@ -120,7 +136,6 @@ export default function GameResultsScreen({ navigation, route }: Props) {
           onSwitch={(value: 'inputs' | 'words') => setViewMode(value)}
         />
         <FlatList
-          ref={flatListRef}
           style={{ width: '100%' }}
           data={words}
           renderItem={RenderItem}
@@ -133,36 +148,10 @@ export default function GameResultsScreen({ navigation, route }: Props) {
           wordsAmount={words.length}
           time={time}
           finishAvailable={true}
-          onCheck={() => {
-            navigation.reset({
-              index: 0,
-              routes: [{ name: 'HomeScreen' as any }],
-            });
-          }}
+          onCheck={navigateHome}
           mode={gameMode}
           correctWordsAmount={correctWordsAmount}
         />
-        {/* 
-        <CloseGameModal
-          theme={theme}
-          language={language}
-          visible={modal}
-          onClose={() => setModal(false)}
-          onSubmit={() => {
-            // navigation.pop(2);
-
-            setModal(false);
-            navigation.goBack();
-            // TODO save statistics
-          }}
-        /> */}
-        {/* <ConfirmCheckModal
-          theme={theme}
-          language={language}
-          visible={confirm}
-          onClose={closeConfirmModal}
-          onSubmit={submitConfirmGame}
-        /> */}
       </View>
     </View>
   );

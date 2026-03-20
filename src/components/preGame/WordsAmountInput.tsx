@@ -75,7 +75,7 @@ export default function WordsAmountInput({
             textAlign: 'center',
           }}
         >
-          {text[language].WordsAmount}
+          {text[language].NumberOfWordsForExercise}
         </Text>
       </View>
     </>

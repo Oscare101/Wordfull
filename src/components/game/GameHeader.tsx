@@ -1,7 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import { ThemeType } from '../../constants/themes/themeType';
-import { Language } from '../../constants/interfaces/interface';
+import { GameMode, Language } from '../../constants/interfaces/interface';
 import Icon from '../../assets/icon';
 import colors from '../../constants/themes/colors';
 import text from '../../constants/languages/text';
@@ -12,14 +12,14 @@ export default function GameHeader({
   language,
   onClose,
   onToggleList,
-  isStamina,
+  mode,
 }: {
   isListOpened: boolean;
   theme: ThemeType;
   language: Language;
   onClose: () => void;
   onToggleList: () => void;
-  isStamina: boolean;
+  mode: GameMode;
 }) {
   return (
     <View style={styles.headerContainer}>
@@ -30,7 +30,7 @@ export default function GameHeader({
       >
         <Icon name="close" size={32} color={colors[theme].main} />
       </TouchableOpacity>
-      {!isStamina && (
+      {mode === 'easy' && (
         <TouchableOpacity
           style={styles.rightButton}
           onPress={onToggleList}

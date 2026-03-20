@@ -9,7 +9,7 @@ import ButtonBlock from '../components/global/ButtonBlock';
 import SettingsButtonItem from '../components/settings/SettingsButtonItem';
 import SimpleHeader from '../components/global/SimpleHeader';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { usePreventGoBack } from '../hooks/usePreventGoBack';
+import { BeforeRemoveEvent, usePreventGoBack } from '../hooks/usePreventGoBack';
 import { GameMode, WordPack } from '../constants/interfaces/interface';
 import { useSelectedWordPack } from '../constants/wordPacks/useSelectedWordPack';
 import GameHeader from '../components/game/GameHeader';
@@ -25,7 +25,6 @@ export default function GameScreen({ navigation, route }: Props) {
   const wordsAmount: number = route.params.wordsAmount;
   const gameMode: GameMode = route.params.mode;
   const words: string[] = route.params.words;
-  // const wordPack: WordPack = useSelectedWordPack();
 
   const [startTime, setStartTime] = useState<number>(0);
   const [wordIndex, setWordIndex] = useState<number>(0);
@@ -41,6 +40,22 @@ export default function GameScreen({ navigation, route }: Props) {
 
   usePreventGoBack({
     enabled: !modal,
+    shouldPrevent: useCallback((event: BeforeRemoveEvent) => {
+      const action = event.data.action as {
+        type?: string;
+        payload?: {
+          routes?: Array<{ name?: string }>;
+        };
+      };
+
+      const routes = action.payload?.routes;
+      const isResetToHome =
+        action.type === 'RESET' &&
+        routes?.length === 1 &&
+        routes[0]?.name === 'HomeScreen';
+
+      return !isResetToHome;
+    }, []),
     onBlockedGoBack: useCallback(() => {
       setModal(true);
     }, []),
@@ -65,7 +80,7 @@ export default function GameScreen({ navigation, route }: Props) {
 
           setFinishAvailable(true);
         }}
-        isStamina={gameMode === 'stamina'}
+        mode={gameMode}
       />
       <View style={[styles.block, { marginBottom: insets.bottom + 16 }]}>
         <CardListBlock
@@ -99,7 +114,7 @@ export default function GameScreen({ navigation, route }: Props) {
               finish: new Date().getTime(),
               words:
                 gameMode === 'stamina' ? words.slice(0, wordIndex + 1) : words,
-              wordsAmount: wordsAmount,
+              wordsAmount: gameMode === 'stamina' ? wordIndex + 1 : wordsAmount,
               mode: gameMode,
             });
           }}

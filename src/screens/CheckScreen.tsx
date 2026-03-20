@@ -17,7 +17,7 @@ import ButtonBlock from '../components/global/ButtonBlock';
 import SettingsButtonItem from '../components/settings/SettingsButtonItem';
 import SimpleHeader from '../components/global/SimpleHeader';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { usePreventGoBack } from '../hooks/usePreventGoBack';
+import { BeforeRemoveEvent, usePreventGoBack } from '../hooks/usePreventGoBack';
 import { GameMode, WordPack } from '../constants/interfaces/interface';
 import { useSelectedWordPack } from '../constants/wordPacks/useSelectedWordPack';
 import GameHeader from '../components/game/GameHeader';
@@ -26,6 +26,9 @@ import CloseGameModal from '../components/game/CloseGameModal';
 import GameBottomBlock from '../components/game/GameBottomBlock';
 import CheckBottomBlock from '../components/game/CheckBottomBlock';
 import ConfirmCheckModal from '../components/game/ConfirmCheckModal';
+import { gameResultsRepository } from '../db/repositories/gameResultsRepository';
+import { useStatistics } from '../context/StatisticsContext';
+import { useHistory } from '../context/HistoryContext';
 
 type Props = StackScreenProps<RootStackParamList, 'CheckScreen'>;
 
@@ -37,8 +40,9 @@ export default function CheckScreen({ navigation, route }: Props) {
   const words: string[] = route.params.words;
   const start: number = route.params.start;
   const finish: number = route.params.finish;
-  // const wordPack: WordPack = useSelectedWordPack();
-
+  const wordPack: WordPack = useSelectedWordPack();
+  const { reloadStatistics } = useStatistics();
+  const { reloadHistory } = useHistory();
   const [confirm, setConfirm] = useState<boolean>(false);
   const [wordsInputs, setWordsInputs] = useState<string[]>(
     Array(wordsAmount).fill(''),
@@ -52,12 +56,30 @@ export default function CheckScreen({ navigation, route }: Props) {
 
   usePreventGoBack({
     enabled: !modal,
+    shouldPrevent: useCallback((event: BeforeRemoveEvent) => {
+      const action = event.data.action as {
+        type?: string;
+        payload?: {
+          routes?: Array<{ name?: string }>;
+        };
+      };
+
+      const routes = action.payload?.routes;
+      const isResetToHome =
+        action.type === 'RESET' &&
+        routes?.length === 1 &&
+        routes[0]?.name === 'HomeScreen';
+
+      return !isResetToHome;
+    }, []),
     onBlockedGoBack: useCallback(() => {
       setModal(true);
     }, []),
   });
 
   const onCheck = useCallback(() => {
+    console.log(wordsInputs);
+
     if (wordsInputs.some((i: any) => !i.trim())) {
       setConfirm(true);
     } else {
@@ -69,17 +91,32 @@ export default function CheckScreen({ navigation, route }: Props) {
     setConfirm(false);
   }, []);
 
-  const submitConfirmGame = useCallback(() => {
-    setConfirm(false);
-    // navigation.pop(2);
-    navigation.navigate('GameResultsScreen', {
-      words: words,
-      inputs: wordsInputs,
-      time: time,
-      mode: gameMode,
-    });
-    // TODO save result to statistics
-  }, [time, wordsInputs, words, gameMode]);
+  const submitConfirmGame = useCallback(async () => {
+    try {
+      // setConfirm(false);
+
+      await gameResultsRepository.saveCompletedGame({
+        duration: time,
+        mode: gameMode,
+        wordPackId: wordPack.id,
+        wordPackNameSnapshot: wordPack.name,
+        words,
+        inputs: wordsInputs,
+        language: language,
+      });
+      await reloadStatistics();
+      await reloadHistory();
+
+      navigation.navigate('GameResultsScreen', {
+        words,
+        inputs: wordsInputs,
+        time,
+        mode: gameMode,
+      });
+    } catch (error) {
+      console.error('Failed to save completed game:', error);
+    }
+  }, [time, wordsInputs, words, gameMode, wordPack, navigation]);
 
   function RenderItem(item: any) {
     return (

@@ -8,6 +8,8 @@ import { initDatabase } from './src/db/initDatabase';
 import { SettingsProvider } from './src/context/SettingsContext';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
 import { Text, View } from 'react-native';
+import { StatisticsProvider } from './src/context/StatisticsContext';
+import { HistoryProvider } from './src/context/HistoryContext';
 
 export default function App() {
   const [isDbReady, setIsDbReady] = useState(false);
@@ -59,9 +61,13 @@ export default function App() {
     <SafeAreaProvider>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <SettingsProvider>
-          <NavigationContainer>
-            <MainNavigation />
-          </NavigationContainer>
+          <HistoryProvider>
+            <StatisticsProvider>
+              <NavigationContainer>
+                <MainNavigation />
+              </NavigationContainer>
+            </StatisticsProvider>
+          </HistoryProvider>
         </SettingsProvider>
       </GestureHandlerRootView>
       <Toast config={toastConfig} />

@@ -8,6 +8,8 @@ export async function initDatabase(): Promise<void> {
 
   // TODO only for dev reset db
   // await db.executeAsync(`DROP TABLE IF EXISTS settings`);
+  // await db.executeAsync(`DROP TABLE IF EXISTS history`);
+  // await db.executeAsync(`DROP TABLE IF EXISTS statistics`);
 
   await db.executeAsync(`
     CREATE TABLE IF NOT EXISTS settings (
@@ -18,6 +20,32 @@ export async function initDatabase(): Promise<void> {
       start_date INTEGER NOT NULL
     )
   `);
+
+  await db.executeAsync(`
+  CREATE TABLE IF NOT EXISTS history (
+    id TEXT PRIMARY KEY NOT NULL,
+    timestamp INTEGER NOT NULL,
+    duration INTEGER NOT NULL,
+    mode TEXT NOT NULL,
+    word_pack_id TEXT NOT NULL,
+    word_pack_name_snapshot TEXT NOT NULL,
+    words_amount INTEGER NOT NULL,
+    correct_words INTEGER NOT NULL,
+    words_json TEXT NOT NULL,
+    inputs_json TEXT NOT NULL,
+    language TEXT NOT NULL
+  )
+`);
+
+  await db.executeAsync(`
+  CREATE TABLE IF NOT EXISTS statistics (
+    id INTEGER PRIMARY KEY NOT NULL,
+    words_memorized INTEGER NOT NULL,
+    words_attempted INTEGER NOT NULL,
+    time_spent INTEGER NOT NULL,
+    games INTEGER NOT NULL
+  )
+`);
 
   console.log('initDatabase: settings table ensured');
 
@@ -38,6 +66,27 @@ export async function initDatabase(): Promise<void> {
   const hasSettingsRow = existingRows.length > 0;
 
   console.log('initDatabase: hasSettingsRow =', hasSettingsRow);
+
+  const statisticsResult = await db.executeAsync(
+    'SELECT id FROM statistics WHERE id = ? LIMIT 1',
+    [1],
+  );
+
+  if (!statisticsResult.results?.length) {
+    await db.executeAsync(
+      `
+      INSERT INTO statistics (
+        id,
+        words_memorized,
+        words_attempted,
+        time_spent,
+        games
+      )
+      VALUES (?, ?, ?, ?, ?)
+    `,
+      [1, 0, 0, 0, 0],
+    );
+  }
 
   if (!hasSettingsRow) {
     const initialLanguage = getInitialAppLanguage();

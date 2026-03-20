@@ -33,7 +33,7 @@ const ukrainian = {
     '• На екрані будуть карточки зі словами\n• Перемикайтесь між ними та запам’ятайте їх у правильному порядку за найкоротший час\n• Після цього перейдіть до перевірки і введіть всі слова\n• Завершіть спробу та ознайомтесь із результатом',
   startWhenReady: 'Починайте коли будете готові\nЧас почнеться одразу',
 
-  WordsAmount: 'Кількість слів для вправи',
+  NumberOfWordsForExercise: 'Кількість слів для вправи',
   wordsMaxWarning: 'Максимальна кількість слів доступна #',
   CloseGameWarningTitle: 'Припинити гру',
   CloseGameWarning:
@@ -53,6 +53,36 @@ const ukrainian = {
   ConfirmWarningTitle: 'Завершити спробу',
   ConfirmWarning: 'Завершити спробу, навіть з наявними пустими полями',
   correctWordsMemorized: 'вивчених слів',
+  TotalWordsMemorized: 'Усього вивчених слів',
+  Words: 'Слів', // 4 5 6 7 8 9 0
+  Words23: 'Слова', // 2 3
+  Word: 'Слово', // 1
+  Days: 'Днів',
+  Day: 'День',
+  PersonalBestResults: 'Особисті найкращі результати',
+  Today: 'Сьогодні',
+  Yesterday: 'Вчора',
+  PastWeek: 'Минулого тижня',
+  PastMonth: 'Минулого місяця',
+  PastYear: 'Минулого року',
+  AllTime: 'За весь час',
+  Accuracy: 'Точність',
+  inPastWeek: 'за минулий тиждень',
+  inPastMonth: 'за минулий місяць',
+  inPastYear: 'за минулий рік',
+  inPast30Days: 'за минулі 30 днів',
+  inAllTime: 'за весь час',
+  DaylyAverage: 'Середнє за день',
+  TimePlaying: 'Час ігор',
+  GamesCompleted: 'Завершених ігор',
+  MondayShort: 'Пн',
+  TuesdayShort: 'Вт',
+  WednesdayShort: 'Ср',
+  ThursdayShort: 'Чт',
+  FridayShort: 'Пт',
+  SaturdayShort: 'Сб',
+  SundayShort: 'Нд',
+  WordsAmount: 'Кількість слів',
 } satisfies Record<TextType, string>;
 
 export default ukrainian;

@@ -14,7 +14,6 @@ export interface Statistics {
   wordsAttempted: number; // all attempted words (including incorrect ones)
   timeSpent: number; // in milliseconds
   games: number; // number of memorization sessions
-  bestAttemptsByWordsAmount: History[]; // best 10 games with most words memorized in it
 }
 
 export type Language = 'en' | 'uk';
@@ -32,6 +31,7 @@ export interface WordPack {
 export interface History {
   id: string;
   timestamp: number;
+  language: Language;
   duration: number; // milliseconds
   wordPackId: WordPack['id'];
   wordPackNameSnapshot: string;
@@ -39,6 +39,7 @@ export interface History {
   words: string[]; // what words did he have to memorize
   correctWords: number;
   inputs: string[]; // what user wrote after memorizing
+  mode: GameMode;
 }
 
 export type GameMode = 'easy' | 'hard' | 'stamina';

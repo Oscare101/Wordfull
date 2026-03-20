@@ -6,7 +6,7 @@ import {
   useNavigation,
 } from '@react-navigation/native';
 
-type BeforeRemoveEvent = EventArg<
+export type BeforeRemoveEvent = EventArg<
   'beforeRemove',
   true,
   {
@@ -17,11 +17,13 @@ type BeforeRemoveEvent = EventArg<
 interface UsePreventGoBackParams {
   enabled?: boolean;
   onBlockedGoBack: (event: BeforeRemoveEvent) => void;
+  shouldPrevent?: (event: BeforeRemoveEvent) => boolean;
 }
 
 export function usePreventGoBack({
   enabled = true,
   onBlockedGoBack,
+  shouldPrevent,
 }: UsePreventGoBackParams) {
   const navigation =
     useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
@@ -32,10 +34,14 @@ export function usePreventGoBack({
     }
 
     const unsubscribe = navigation.addListener('beforeRemove', event => {
+      if (shouldPrevent && !shouldPrevent(event)) {
+        return;
+      }
+
       event.preventDefault();
       onBlockedGoBack(event);
     });
 
     return unsubscribe;
-  }, [enabled, navigation, onBlockedGoBack]);
+  }, [enabled, navigation, onBlockedGoBack, shouldPrevent]);
 }

@@ -21,7 +21,7 @@ export default function SettingsButtonItem({
       style={[
         styles.buttonContainer,
         {
-          borderColor: colors[theme].border + '80',
+          borderColor: colors[theme].border,
         },
       ]}
       onPress={onPress}
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 60,
     borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: 16,
   },
   buttonTitle: {
     fontSize: 16,
