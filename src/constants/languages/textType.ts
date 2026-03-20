@@ -42,4 +42,5 @@ export type TextType =
   | 'IfYouEnteredWords'
   | 'Finish'
   | 'ConfirmWarningTitle'
-  | 'ConfirmWarning';
+  | 'ConfirmWarning'
+  | 'correctWordsMemorized';

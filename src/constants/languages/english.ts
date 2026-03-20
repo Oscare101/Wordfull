@@ -51,6 +51,7 @@ const english = {
   Finish: 'Finish',
   ConfirmWarningTitle: 'Finish attempt',
   ConfirmWarning: 'Finish the attempt, even with empty fields',
+  correctWordsMemorized: 'correct words memorized',
 } satisfies Record<TextType, string>;
 
 export default english;

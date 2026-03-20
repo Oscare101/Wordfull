@@ -9,12 +9,14 @@ export default function SimpleHeader({
   onBack,
   title,
   theme,
+  leftIcon,
   rightIcon,
   rightIconAction,
 }: {
   onBack: () => void;
   title: string;
   theme: ThemeType;
+  leftIcon?: IconName;
   rightIcon?: IconName;
   rightIconAction?: () => void;
 }) {
@@ -25,7 +27,11 @@ export default function SimpleHeader({
         activeOpacity={0.8}
         style={styles.button}
       >
-        <Icon name="chevronLeft" size={32} color={colors[theme].main} />
+        <Icon
+          name={leftIcon || 'chevronLeft'}
+          size={32}
+          color={colors[theme].main}
+        />
       </TouchableOpacity>
       <Text style={[styles.headerTitle, { color: colors[theme].main }]}>
         {title}

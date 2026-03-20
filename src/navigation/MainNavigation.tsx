@@ -10,6 +10,8 @@ import ThemeScreen from '../screens/ThemeScreen';
 import GameModesScreen from '../screens/GameModesScreen';
 import PreGameScreen from '../screens/PreGameScreen';
 import GameScreen from '../screens/GameScreen';
+import CheckScreen from '../screens/CheckScreen';
+import GameResultsScreen from '../screens/GameResultsScreen';
 
 const screenOption = {
   headerShown: false,
@@ -71,6 +73,22 @@ function Navigation() {
         }}
         name="GameScreen"
         component={GameScreen}
+      />
+      <Stack.Screen
+        options={{
+          ...screenOption,
+          gestureEnabled: false, // Disables swipe gesture on CheckScreen
+        }}
+        name="CheckScreen"
+        component={CheckScreen}
+      />
+      <Stack.Screen
+        options={{
+          ...screenOption,
+          gestureEnabled: false, // Disables swipe gesture on GameResultsScreen
+        }}
+        name="GameResultsScreen"
+        component={GameResultsScreen}
       />
     </Stack.Navigator>
   );

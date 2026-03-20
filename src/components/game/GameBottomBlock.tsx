@@ -40,7 +40,7 @@ export default function GameBottomBlock({
 
   const heightAnim = sizeAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: [150, 250],
+    outputRange: [130, 250],
   });
 
   return (

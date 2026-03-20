@@ -8,5 +8,17 @@ export type RootStackParamList = {
   GameModesScreen: undefined;
   PreGameScreen: { mode: GameMode };
   GameScreen: { wordsAmount: number; mode: GameMode; words: string[] };
-  GameResultsScreen: undefined;
+  CheckScreen: {
+    start: number;
+    finish: number;
+    words: string[];
+    mode: GameMode;
+    wordsAmount: number;
+  };
+  GameResultsScreen: {
+    words: string[];
+    inputs: string[];
+    time: number;
+    mode: GameMode;
+  };
 };

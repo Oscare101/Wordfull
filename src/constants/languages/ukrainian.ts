@@ -52,6 +52,7 @@ const ukrainian = {
   Finish: 'Завершити',
   ConfirmWarningTitle: 'Завершити спробу',
   ConfirmWarning: 'Завершити спробу, навіть з наявними пустими полями',
+  correctWordsMemorized: 'вивчених слів',
 } satisfies Record<TextType, string>;
 
 export default ukrainian;

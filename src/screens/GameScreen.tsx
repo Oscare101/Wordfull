@@ -27,7 +27,7 @@ export default function GameScreen({ navigation, route }: Props) {
   const words: string[] = route.params.words;
   // const wordPack: WordPack = useSelectedWordPack();
 
-  const [startTime, setStartTime] = useState<number>();
+  const [startTime, setStartTime] = useState<number>(0);
   const [wordIndex, setWordIndex] = useState<number>(0);
   const [modal, setModal] = useState<boolean>(false);
   const [finishAvailable, setFinishAvailable] = useState<boolean>(
@@ -94,16 +94,14 @@ export default function GameScreen({ navigation, route }: Props) {
           wordIndex={wordIndex}
           finishAvailable={finishAvailable}
           onFinish={() => {
-            setModal(true);
-            // navigation.navigate('CheckScreen', {
-            //   start: startTime,
-            //   finish: new Date().getTime(),
-            //   words:
-            //     route.params.type === 'stamina'
-            //       ? route.params.words.slice(0, wordIndex + 1)
-            //       : route.params.words,
-            //   type: route.params.type,
-            // });
+            navigation.navigate('CheckScreen', {
+              start: startTime,
+              finish: new Date().getTime(),
+              words:
+                gameMode === 'stamina' ? words.slice(0, wordIndex + 1) : words,
+              wordsAmount: wordsAmount,
+              mode: gameMode,
+            });
           }}
           isListOpened={isListOpened}
           mode={gameMode}

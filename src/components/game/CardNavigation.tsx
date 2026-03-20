@@ -69,6 +69,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    position: 'absolute',
+    bottom: 0,
   },
   button: {
     alignItems: 'center',
