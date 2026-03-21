@@ -6,7 +6,7 @@ import { ThemeType } from '../../constants/themes/themeType';
 import { GameMode, Language } from '../../constants/interfaces/interface';
 import text from '../../constants/languages/text';
 
-export default function GameModeBanner({
+function GameModeBanner({
   gameMode,
   language,
   theme,
@@ -48,3 +48,5 @@ export default function GameModeBanner({
 }
 
 const styles = StyleSheet.create({});
+
+export default React.memo(GameModeBanner);

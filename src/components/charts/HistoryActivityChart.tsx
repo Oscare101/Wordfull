@@ -119,6 +119,7 @@ export default function HistoryActivityChart({
                   style={[
                     styles.bar,
                     {
+                      maxHeight: days === 7 ? height - 26 : undefined,
                       height: `${barHeightPercent * 100}%`,
                       backgroundColor: item.isToday
                         ? themeColors.accent
@@ -177,7 +178,7 @@ const styles = StyleSheet.create({
   },
   barTrack: {
     width: '78%',
-    height: '82%',
+    flex: 1,
     justifyContent: 'flex-end',
   },
   bar: {
@@ -186,12 +187,12 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   weekdayLabel: {
-    marginTop: 12,
+    marginTop: 8,
     fontSize: 14,
     lineHeight: 18,
   },
   bottomDateRow: {
-    marginTop: 14,
+    marginTop: 8,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },

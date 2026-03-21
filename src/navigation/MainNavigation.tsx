@@ -12,6 +12,11 @@ import PreGameScreen from '../screens/PreGameScreen';
 import GameScreen from '../screens/GameScreen';
 import CheckScreen from '../screens/CheckScreen';
 import GameResultsScreen from '../screens/GameResultsScreen';
+import UserDataScreen from '../screens/UserDataScreen';
+import StatisticsScreen from '../screens/StatisticsScreen';
+import WordsAmountScreen from '../screens/WordsAmountScreen';
+import AccuracyScreen from '../screens/AccuracyScreen';
+import PersonalBestsScreen from '../screens/PersonalBestsScreen';
 
 const screenOption = {
   headerShown: false,
@@ -58,6 +63,11 @@ function Navigation() {
       />
       <Stack.Screen
         options={screenOption}
+        name="UserDataScreen"
+        component={UserDataScreen}
+      />
+      <Stack.Screen
+        options={screenOption}
         name="GameModesScreen"
         component={GameModesScreen}
       />
@@ -89,6 +99,26 @@ function Navigation() {
         }}
         name="GameResultsScreen"
         component={GameResultsScreen}
+      />
+      <Stack.Screen
+        options={screenOption}
+        name="StatisticsScreen"
+        component={StatisticsScreen}
+      />
+      <Stack.Screen
+        options={screenOption}
+        name="WordsAmountScreen"
+        component={WordsAmountScreen}
+      />
+      <Stack.Screen
+        options={screenOption}
+        name="PersonalBestsScreen"
+        component={PersonalBestsScreen}
+      />
+      <Stack.Screen
+        options={screenOption}
+        name="AccuracyScreen"
+        component={AccuracyScreen}
       />
     </Stack.Navigator>
   );

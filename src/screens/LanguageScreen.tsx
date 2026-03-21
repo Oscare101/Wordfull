@@ -22,19 +22,24 @@ export default function LanguageScreen({ navigation }: Props) {
     { code: 'uk', title: text[language].Ukrainian, flag: '🇺🇦' },
   ];
 
+  const onChangeLanguage = useCallback(
+    (code: Language) => {
+      setLanguage(code);
+    },
+    [setLanguage],
+  );
+
   const renderLanguageItem = useCallback(
     ({ item }: { item: { code: Language; title: string; flag: string } }) => (
       <LanguageButtonItem
         title={item.title}
         flag={item.flag}
-        onPress={() => {
-          setLanguage(item.code as Language);
-        }}
+        onPress={onChangeLanguage.bind(null, item.code)}
         theme={theme}
         width={(width - 32 - 8) / 2}
       />
     ),
-    [theme],
+    [theme, onChangeLanguage],
   );
 
   return (
@@ -55,7 +60,6 @@ export default function LanguageScreen({ navigation }: Props) {
       <LanguageButtonItem
         title={languages.find(l => l.code === language)?.title || ''}
         flag={languages.find(l => l.code === language)?.flag || ''}
-        onPress={() => {}}
         theme={theme}
         width={width - 32}
       />

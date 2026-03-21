@@ -7,12 +7,11 @@ import text from '../constants/languages/text';
 import colors from '../constants/themes/colors';
 import ButtonBlock from '../components/global/ButtonBlock';
 import SettingsButtonItem from '../components/settings/SettingsButtonItem';
-import { statisticsRepository } from '../db/repositories/statisticsRepository';
 import { useStatistics } from '../context/StatisticsContext';
 import { useHistory } from '../context/HistoryContext';
-import MonthHistoryBlock from '../components/charts/MonthHistoryBlock';
-import GamesTimeStatsBlock from '../components/charts/GamesTimeStatsBlock';
-import AccuracyHistoryBlock from '../components/charts/AccuracyHistoryBlock';
+import HistoryChartBlock from '../components/charts/HistoryChartBlock';
+import QuoteBlock from '../components/home/QuoteBlock';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type Props = StackScreenProps<RootStackParamList, 'HomeScreen'>;
 
@@ -20,28 +19,35 @@ export default function HomeScreen({ navigation }: Props) {
   const { language, theme } = useSettings();
   const { statistics } = useStatistics();
   const { history } = useHistory();
-  console.log('history', history);
+  const insets = useSafeAreaInsets();
 
   return (
-    <View style={[styles.container, { backgroundColor: colors[theme].bg }]}>
-      <View style={styles.block}>
-        <MonthHistoryBlock
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: colors[theme].bg,
+          paddingTop: insets.top,
+          paddingBottom: insets.bottom,
+        },
+      ]}
+    >
+      <View style={[styles.block, { gap: 32, flex: 1 }]}>
+        <Text style={[styles.title, { color: colors[theme].main }]}>
+          Wordfull
+        </Text>
+        <QuoteBlock theme={theme} language={language} />
+      </View>
+
+      <View style={[styles.block, { flex: 2 }]}>
+        <HistoryChartBlock
           history={history}
-          statistics={statistics}
           language={language}
           theme={theme}
+          type="week"
+          onOpen={() => navigation.navigate('StatisticsScreen')}
         />
-        <AccuracyHistoryBlock
-          history={history}
-          statistics={statistics}
-          language={language}
-          theme={theme}
-        />
-        <GamesTimeStatsBlock
-          statistics={statistics}
-          theme={theme}
-          language={language}
-        />
+
         <SettingsButtonItem
           title={text[language].Settings}
           icon={'settings'}
@@ -67,10 +73,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   block: {
     gap: 8,
     width: '92%',
+    justifyContent: 'center',
   },
 });

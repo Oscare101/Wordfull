@@ -74,7 +74,7 @@ const english = {
   FridayShort: 'F',
   SaturdayShort: 'S',
   SundayShort: 'S',
-  DaylyAverage: 'Daily average',
+  DailyAverage: 'Daily average',
   Today: 'Today',
   Yesterday: 'Yesterday',
   PastWeek: 'Past week',
@@ -82,6 +82,21 @@ const english = {
   PastYear: 'Past year',
   AllTime: 'All time',
   inAllTime: 'in All time',
+  UserData: 'User data',
+  Export: 'Export',
+  ExportDescription:
+    'Exported data can be used as a back up or to transfer your progress to another device\nBy exporting data you dont lose your progress on this device, when you import data to the current device it will rewrite the previous data',
+  Import: 'Import',
+  ImportDescription:
+    'Imported data will rewrite all your current progress\nAfter loading file you will be shown a window to confirm your choice with brief file data',
+  DangerZone: 'Danger zone',
+  WipeData: 'Wipe data',
+  WipeDataDescription:
+    'This will wipe all your data and allow you to start from scratch',
+  Statistics: 'Statistics',
+  quote1:
+    '“Intellectual growth should commence at birth and cease only at death.”',
+  quote1Author: 'Albert Einstein',
 } satisfies Record<TextType, string>;
 
 export default english;

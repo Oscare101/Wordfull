@@ -17,4 +17,9 @@ export type IconName =
   | 'speedHigh'
   | 'stats'
   | 'info'
-  | 'infinity';
+  | 'infinity'
+  | 'export'
+  | 'import'
+  | 'document'
+  | 'trash'
+  | 'profile';

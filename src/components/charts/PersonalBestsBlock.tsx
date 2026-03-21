@@ -1,33 +1,27 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
-import {
-  History,
-  Language,
-  Statistics,
-} from '../../constants/interfaces/interface';
-import { ThemeType } from '../../constants/themes/themeType';
+import { Language } from '../../constants/interfaces/interface';
 import text from '../../constants/languages/text';
 import colors from '../../constants/themes/colors';
-import AccuracyProgressChart from './AccuracyProgressChart';
+import { ThemeType } from '../../constants/themes/themeType';
+import { useTopBestGames } from '../../hooks/useTopBestGames';
+import TopGamesChart from './TopGamesChart';
 import Icon from '../../assets/icon';
 
-export default function AccuracyHistoryBlock({
-  history,
-  statistics,
+function PersonalBestsBlock({
   language,
   theme,
   height = 150,
+  maxGames = 5,
   onOpen,
 }: {
-  history: History[];
-  statistics: Statistics | null;
   language: Language;
   theme: ThemeType;
   height?: number;
+  maxGames?: number;
   onOpen?: () => void;
 }) {
-  const wordsAmount: number = statistics?.wordsMemorized ?? 0;
-
+  const topGames = useTopBestGames(maxGames);
   const container = (
     <View
       style={[styles.container, { borderColor: colors[theme].border, height }]}
@@ -38,14 +32,12 @@ export default function AccuracyHistoryBlock({
         </View>
       )}
       <Text style={{ fontSize: 14, color: colors[theme].main }}>
-        {text[language].WordsAmount} ■ + {text[language].Accuracy}{' '}
-        <Text style={{ color: colors[theme].comment }}>●</Text>
+        {text[language].PersonalBestResults}
       </Text>
-      <AccuracyProgressChart
-        history={history}
-        days={7}
-        accuracyColor={colors[theme].comment}
-        height={height - 40}
+      <TopGamesChart
+        games={topGames}
+        height={height - 50}
+        maxItems={maxGames}
       />
     </View>
   );
@@ -67,5 +59,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 16,
     padding: 16,
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
   },
 });
+
+export default React.memo(PersonalBestsBlock);

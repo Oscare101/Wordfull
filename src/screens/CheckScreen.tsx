@@ -78,8 +78,6 @@ export default function CheckScreen({ navigation, route }: Props) {
   });
 
   const onCheck = useCallback(() => {
-    console.log(wordsInputs);
-
     if (wordsInputs.some((i: any) => !i.trim())) {
       setConfirm(true);
     } else {
@@ -93,7 +91,8 @@ export default function CheckScreen({ navigation, route }: Props) {
 
   const submitConfirmGame = useCallback(async () => {
     try {
-      // setConfirm(false);
+      setConfirm(false);
+      setModal(false);
 
       await gameResultsRepository.saveCompletedGame({
         duration: time,

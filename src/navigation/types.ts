@@ -4,6 +4,7 @@ export type RootStackParamList = {
   HomeScreen: undefined;
   SettingsScreen: undefined;
   LanguageScreen: undefined;
+  UserDataScreen: undefined;
   ThemeScreen: undefined;
   GameModesScreen: undefined;
   PreGameScreen: { mode: GameMode };
@@ -21,4 +22,8 @@ export type RootStackParamList = {
     time: number;
     mode: GameMode;
   };
+  StatisticsScreen: undefined;
+  WordsAmountScreen: undefined;
+  PersonalBestsScreen: undefined;
+  AccuracyScreen: undefined;
 };

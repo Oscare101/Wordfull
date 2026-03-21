@@ -5,7 +5,7 @@ import Icon from '../../assets/icon';
 import { ThemeType } from '../../constants/themes/themeType';
 import colors from '../../constants/themes/colors';
 
-export default function SettingsButtonItem({
+function SettingsButtonItem({
   title,
   icon,
   onPress,
@@ -13,7 +13,7 @@ export default function SettingsButtonItem({
 }: {
   title: string;
   icon: IconName;
-  onPress: () => void;
+  onPress?: () => void;
   theme: ThemeType;
 }) {
   return (
@@ -24,6 +24,7 @@ export default function SettingsButtonItem({
           borderColor: colors[theme].border,
         },
       ]}
+      disabled={!onPress}
       onPress={onPress}
       activeOpacity={0.8}
     >
@@ -50,3 +51,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+
+export default React.memo(SettingsButtonItem);

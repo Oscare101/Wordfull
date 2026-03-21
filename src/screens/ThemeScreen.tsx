@@ -28,18 +28,23 @@ export default function ThemeScreen({ navigation }: Props) {
     { title: 'Dark Blue', id: 'darkBlue' },
   ];
 
+  const onChangeTheme = useCallback(
+    (id: ThemeType) => {
+      setTheme(id);
+    },
+    [setTheme],
+  );
+
   const renderThemeItem = useCallback(
     ({ item }: { item: { title: string; id: ThemeType } }) => (
       <ThemeButtonItem
         title={item.title}
-        onPress={() => {
-          setTheme(item.id as ThemeType);
-        }}
+        onPress={onChangeTheme.bind(null, item.id)}
         theme={item.id}
         width={(width - 32 - 8) / 2}
       />
     ),
-    [theme],
+    [theme, onChangeTheme],
   );
 
   return (
@@ -59,7 +64,6 @@ export default function ThemeScreen({ navigation }: Props) {
       </Text>
       <ThemeButtonItem
         title={themes.find(t => t.id === theme)?.title || ''}
-        onPress={() => {}}
         theme={theme}
         width={width - 32}
       />

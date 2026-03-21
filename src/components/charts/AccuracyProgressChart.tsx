@@ -7,7 +7,7 @@ import colors from '../../constants/themes/colors';
 
 type ChartDays = 7 | 30;
 
-interface HistoryProgressChartProps {
+interface AccuracyProgressChartProps {
   history: History[];
   days?: ChartDays;
   height?: number;
@@ -126,13 +126,13 @@ function buildPath(points: { x: number; y: number }[]): string {
     .join(' ');
 }
 
-export default function HistoryProgressChart({
+function AccuracyProgressChart({
   history,
   days = 7,
   height = 150,
   lineColor,
   accuracyColor,
-}: HistoryProgressChartProps) {
+}: AccuracyProgressChartProps) {
   const { theme, language } = useSettings();
   const themeColors = colors[theme];
 
@@ -143,7 +143,7 @@ export default function HistoryProgressChart({
 
   const chartWidth = days === 7 ? 360 : 520;
   const chartHeight = height;
-  const topPadding = 20;
+  const topPadding = 16;
   const bottomPadding = 32;
   const leftPadding = 14;
   const rightPadding = 14;
@@ -208,8 +208,8 @@ export default function HistoryProgressChart({
               <Text
                 key={'label-' + index}
                 style={{
-                  left: (x - 4) * 0.98,
-                  bottom: 0,
+                  left: (x - 6) * 0.93,
+                  bottom: 10,
                   position: 'absolute',
                   fontSize: 16,
                   color: labelColor,
@@ -235,7 +235,7 @@ export default function HistoryProgressChart({
               cx={point.x}
               cy={point.y}
               r={6}
-              fill={isNull ? 'transparent' : isLast ? white : 'transparent'}
+              fill={isNull ? 'transparent' : isLast ? white : themeColors.bg}
               stroke={isNull ? 'transparent' : white}
               strokeWidth={2}
             />
@@ -254,23 +254,13 @@ export default function HistoryProgressChart({
               width={12}
               height={12}
               rx={2}
-              fill={isNull ? 'transparent' : isLast ? black : 'transparent'}
+              fill={isNull ? 'transparent' : isLast ? black : themeColors.bg}
               stroke={isNull ? 'transparent' : black}
               strokeWidth={2}
             />
           );
         })}
       </Svg>
-
-      {/* <View style={styles.labelsRow} pointerEvents="none">
-        {data.map(item => (
-          <View key={item.key} style={styles.labelItem}>
-            <Text style={[styles.labelText, { color: labelColor }]}>
-              {item.label}
-            </Text>
-          </View>
-        ))}
-      </View> */}
     </View>
   );
 }
@@ -279,14 +269,7 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
   },
-  // labelsRow: {
-  //   position: 'absolute',
-  //   left: 0,
-  //   right: 0,
-  //   bottom: 6,
-  //   flexDirection: 'row',
-  //   justifyContent: 'space-between',
-  // },
+
   labelItem: {
     flex: 1,
     alignItems: 'center',
@@ -295,3 +278,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
 });
+
+export default React.memo(AccuracyProgressChart);

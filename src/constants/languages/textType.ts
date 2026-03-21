@@ -73,4 +73,15 @@ export type TextType =
   | 'FridayShort'
   | 'SaturdayShort'
   | 'SundayShort'
-  | 'DaylyAverage';
+  | 'DailyAverage'
+  | 'UserData'
+  | 'Export'
+  | 'ExportDescription'
+  | 'Import'
+  | 'ImportDescription'
+  | 'DangerZone'
+  | 'WipeData'
+  | 'WipeDataDescription'
+  | 'Statistics'
+  | 'quote1'
+  | 'quote1Author';

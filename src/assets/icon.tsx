@@ -21,6 +21,11 @@ import SpeedHigh from './icons/SpeedHigh';
 import Stats from './icons/Stats';
 import Info from './icons/Info';
 import InfinityIcon from './icons/Infinity';
+import Export from './icons/Export';
+import Profile from './icons/Profile';
+import Trash from './icons/Trash';
+import Import from './icons/Import';
+import Document from './icons/Document';
 
 interface IconProps {
   name: IconName;
@@ -51,6 +56,11 @@ export default function Icon({ name, size = 24, color = '#000' }: IconProps) {
     stats: <SvgXml xml={Stats(color)} width={size} height={size} />,
     info: <SvgXml xml={Info(color)} width={size} height={size} />,
     infinity: <SvgXml xml={InfinityIcon(color)} width={size} height={size} />,
+    export: <SvgXml xml={Export(color)} width={size} height={size} />,
+    import: <SvgXml xml={Import(color)} width={size} height={size} />,
+    document: <SvgXml xml={Document(color)} width={size} height={size} />,
+    trash: <SvgXml xml={Trash(color)} width={size} height={size} />,
+    profile: <SvgXml xml={Profile(color)} width={size} height={size} />,
   };
 
   return icons[name];

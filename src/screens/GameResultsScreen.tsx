@@ -20,12 +20,14 @@ export default function GameResultsScreen({ navigation, route }: Props) {
   const { language, theme } = useSettings();
   const gameMode: GameMode = route.params.mode;
   const wordPack = useSelectedWordPack();
-  const words: string[] = route.params.words.map(item =>
-    item.trim().toLowerCase(),
-  );
-  const inputs: string[] = route.params.inputs.map(item =>
-    item.trim().toLowerCase(),
-  );
+  const words: string[] = route.params.words.map(item => {
+    const trimmed = item.trim().toLowerCase();
+    return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+  });
+  const inputs: string[] = route.params.inputs.map(item => {
+    const trimmed = item.trim().toLowerCase();
+    return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+  });
   const time: number = route.params.time;
 
   const correctWordsAmount = words.reduce((acc, word, index) => {

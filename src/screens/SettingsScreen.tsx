@@ -18,26 +18,32 @@ export default function SettingsScreen({ navigation }: Props) {
   const insets = useSafeAreaInsets();
   const { language, theme, selectedWordPackId } = useSettings();
 
-  const buttons: { title: string; icon: IconName; onPress: () => void }[] = [
+  const buttons: { title: string; icon: IconName; onPress?: () => void }[] = [
     {
       title: text[language].Theme,
       icon: 'palette',
-      onPress: () => {
+      onPress: useCallback(() => {
         navigation.navigate('ThemeScreen');
-      },
+      }, [navigation]),
     },
     {
       title: text[language].Language,
       icon: 'language',
-      onPress: () => {
+      onPress: useCallback(() => {
         navigation.navigate('LanguageScreen');
-      },
+      }, [navigation]),
     },
     {
       title:
         getSystemWordPackById(selectedWordPackId)?.name || selectedWordPackId,
       icon: 'list',
-      onPress: () => {},
+    },
+    {
+      title: text[language].UserData,
+      icon: 'profile',
+      onPress: useCallback(() => {
+        navigation.navigate('UserDataScreen');
+      }, [navigation]),
     },
   ];
 
@@ -45,7 +51,7 @@ export default function SettingsScreen({ navigation }: Props) {
     ({
       item,
     }: {
-      item: { title: string; icon: IconName; onPress: () => void };
+      item: { title: string; icon: IconName; onPress?: () => void };
     }) => (
       <SettingsButtonItem
         title={item.title}

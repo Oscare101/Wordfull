@@ -33,6 +33,8 @@ function ConfirmCheckModal({
       visible={visible}
       transparent={true}
       style={styles.modal}
+      statusBarTranslucent={true}
+      navigationBarTranslucent={true}
       onRequestClose={() => {
         if (visible) {
           onClose(); // Dismiss the modal
