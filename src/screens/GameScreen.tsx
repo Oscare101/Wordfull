@@ -1,21 +1,18 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import React, { useCallback, useState, useEffect } from 'react';
 import { RootStackParamList } from '../navigation/types';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useSettings } from '../context/SettingsContext';
 import text from '../constants/languages/text';
 import colors from '../constants/themes/colors';
-import ButtonBlock from '../components/global/ButtonBlock';
-import SettingsButtonItem from '../components/settings/SettingsButtonItem';
-import SimpleHeader from '../components/global/SimpleHeader';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BeforeRemoveEvent, usePreventGoBack } from '../hooks/usePreventGoBack';
 import { GameMode, WordPack } from '../constants/interfaces/interface';
-import { useSelectedWordPack } from '../constants/wordPacks/useSelectedWordPack';
 import GameHeader from '../components/game/GameHeader';
 import CardListBlock from '../components/game/CardListBlock';
 import CloseGameModal from '../components/game/CloseGameModal';
 import GameBottomBlock from '../components/game/GameBottomBlock';
+import Toast from 'react-native-toast-message';
 
 type Props = StackScreenProps<RootStackParamList, 'GameScreen'>;
 
@@ -37,6 +34,19 @@ export default function GameScreen({ navigation, route }: Props) {
   useEffect(() => {
     setStartTime(new Date().getTime());
   }, []);
+
+  useEffect(() => {
+    if (wordIndex === words.length - 1 && gameMode === 'stamina') {
+      Toast.show({
+        type: 'ToastMessage',
+        props: {
+          title: text[language].StaminaLastWordWarning,
+        },
+        position: 'top',
+        visibilityTime: 10000,
+      });
+    }
+  }, [wordIndex, words]);
 
   usePreventGoBack({
     enabled: !modal,

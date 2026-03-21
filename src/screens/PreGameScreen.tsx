@@ -1,27 +1,16 @@
-import {
-  Keyboard,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
-import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
 import { RootStackParamList } from '../navigation/types';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useSettings } from '../context/SettingsContext';
 import text from '../constants/languages/text';
 import colors from '../constants/themes/colors';
 import ButtonBlock from '../components/global/ButtonBlock';
-import SettingsButtonItem from '../components/settings/SettingsButtonItem';
 import SimpleHeader from '../components/global/SimpleHeader';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { GameMode, WordPack } from '../constants/interfaces/interface';
 import { rules } from '../constants/rules';
 import { useSelectedWordPack } from '../constants/wordPacks/useSelectedWordPack';
-import { Toast } from 'react-native-toast-message/lib/src/Toast';
-import Icon from '../assets/icon';
 import WordsAmountInput from '../components/preGame/WordsAmountInput';
 import GameModeBanner from '../components/preGame/GameModeBanner';
 import { GetRandomWords } from '../functions/functions';

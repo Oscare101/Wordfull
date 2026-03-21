@@ -1,8 +1,8 @@
 import { Theme } from './themeType';
 
-const darkBlue = {
-  name: 'Dark blue',
-  id: 'darkBlue',
+const darkRed = {
+  name: 'Dark red',
+  id: 'darkRed',
   bg: '#374951',
   main: '#EDF1F3',
   comment: '#808490',
@@ -21,4 +21,4 @@ const darkBlue = {
   border: '#EDF1F3',
 } satisfies Theme;
 
-export default darkBlue;
+export default darkRed;

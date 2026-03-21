@@ -64,7 +64,6 @@ function ExplanationModal({
             <ScrollView
               style={styles.scrollView}
               contentContainerStyle={styles.scrollContent}
-              showsVerticalScrollIndicator={false}
             >
               <Text
                 style={{

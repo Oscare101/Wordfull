@@ -6,7 +6,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import MainNavigation from './src/navigation/MainNavigation';
 import { initDatabase } from './src/db/initDatabase';
 import { SettingsProvider } from './src/context/SettingsContext';
-import { Toast } from 'react-native-toast-message/lib/src/Toast';
+import Toast from 'react-native-toast-message';
 import { Text, View } from 'react-native';
 import { StatisticsProvider } from './src/context/StatisticsContext';
 import { HistoryProvider } from './src/context/HistoryContext';
@@ -42,6 +42,7 @@ export default function App() {
           justifyContent: 'space-between',
           alignItems: 'center',
           borderRadius: 8,
+          top: 16,
         }}
       >
         <Text

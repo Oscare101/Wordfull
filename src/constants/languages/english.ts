@@ -11,7 +11,7 @@ const english = {
   YourLanguage: 'Your language',
   OtherLanguages: 'Other languages',
   AfterChangingLanguageWarning:
-    'After changing the language, the word pack will be changed to the new language. You still can change it to any language you want in the word pack settings.',
+    'After changing the language, the word pack will be changed to the new language.', // You still can change it to any language you want in the word pack settings.',
   YourTheme: 'Your theme',
   OtherThemes: 'Other themes',
   // game modes screen
@@ -112,6 +112,28 @@ const english = {
   PreGameStaminaExplanation:
     "In stamina mode there is no limit on how many words you can memorize, but the more words you try to look through, the harder it will be to memorize them all, and the words that you don't memorize will be counted as not memorized, so you can stop memorizing at any point to get the best result.\n\nAlso note that Word Pack that is used in the game is limited. Currently it only contains # unique words in it",
   YourInputs: 'Your inputs',
+  StaminaLastWordWarning:
+    'WOW! This is the last word in the Word Pack, please go to the check stage and write all the memorized words',
+  WipeDataWarningTitle: 'Wipe all data',
+  WipeDataWarning:
+    'Are you sure you want to wipe all your data?\nThis action can not be undone',
+  YourDataWasWiped: 'Your data was wiped\nYou can start from scratch now',
+  WipeDataFailed: 'Failed to wipe data\nPlease restart the app and try again',
+  ExportWarningTitle: 'Export data',
+  ExportWarning:
+    'This action will create a file with all your data that you can use as a back up or to transfer your progress to another device\nBy exporting data you dont lose your progress on this device, when you import data to the current device it will rewrite the previous data',
+  YourDataWasExported: 'Your data was exported successfully',
+  ExportFailed: 'Failed to export data\nPlease restart the app and try again',
+  ImportWarningTitle: 'Import data',
+  ImportWarning:
+    'This action will rewrite all your current data with the data from the file you will select\nAfter loading file you will be shown a window to confirm your choice with brief file data',
+  YourDataWasImported: 'Your data was imported successfully',
+  ImportFailed:
+    'Failed to import data\nPlease make sure the file is correct and try again',
+  PlayedSince: 'Played since',
+  ExportedAt: 'Exported at',
+  ImportDataPreview: 'Import data preview',
+  Confirm: 'Confirm',
 } satisfies Record<TextType, string>;
 
 export default english;

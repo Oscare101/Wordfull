@@ -1,4 +1,4 @@
-export type ThemeType = 'olive' | 'darkBlue';
+export type ThemeType = 'olive' | 'darkBlue' | 'darkRed';
 
 export const DEFAULT_THEME: ThemeType = 'olive';
 
