@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import { RootStackParamList } from '../navigation/types';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useSettings } from '../context/SettingsContext';
@@ -9,12 +9,16 @@ import ButtonBlock from '../components/global/ButtonBlock';
 import SettingsButtonItem from '../components/settings/SettingsButtonItem';
 import SimpleHeader from '../components/global/SimpleHeader';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import ExplanationModal from '../components/global/ExplanationModal';
 
 type Props = StackScreenProps<RootStackParamList, 'GameModesScreen'>;
 
 export default function GameModesScreen({ navigation }: Props) {
   const insets = useSafeAreaInsets();
   const { language, theme } = useSettings();
+
+  const [explanationModal, setExplanationModal] = useState<boolean>(false);
+
   return (
     <View
       style={[
@@ -26,10 +30,10 @@ export default function GameModesScreen({ navigation }: Props) {
         onBack={() => navigation.goBack()}
         title={text[language].NewGame}
         theme={theme}
-        // rightIcon="info"
-        // rightIconAction={() => {
-        //   // Handle info icon action
-        // }}
+        rightIcon="info"
+        rightIconAction={() => {
+          setExplanationModal(true);
+        }}
       />
       <View style={[styles.block, { marginBottom: insets.bottom + 16 }]}>
         <ButtonBlock
@@ -79,6 +83,13 @@ export default function GameModesScreen({ navigation }: Props) {
           {text[language].staminaDescription}
         </Text>
       </View>
+      <ExplanationModal
+        theme={theme}
+        language={language}
+        type="gameModes"
+        visible={explanationModal}
+        onClose={() => setExplanationModal(false)}
+      />
     </View>
   );
 }

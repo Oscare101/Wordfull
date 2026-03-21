@@ -29,6 +29,10 @@ export type TextType =
   | 'wordsMaxWarning'
   | 'CloseGameWarningTitle'
   | 'CloseGameWarning'
+  | 'CancelGameWarningTitle'
+  | 'CancelGameWarning'
+  | 'Cancel'
+  | 'Continue'
   | 'goBack'
   | 'Stop'
   | 'Check'
@@ -84,4 +88,9 @@ export type TextType =
   | 'WipeDataDescription'
   | 'Statistics'
   | 'quote1'
-  | 'quote1Author';
+  | 'quote1Author'
+  | 'Explanation'
+  | 'GameModeExplanation'
+  | 'PreGameEasyHardExplanation'
+  | 'PreGameStaminaExplanation'
+  | 'YourInputs';

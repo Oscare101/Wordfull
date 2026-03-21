@@ -53,8 +53,11 @@ export default function CheckBottomBlock({
       />
       <View style={styles.timeBlock}>
         <Text style={[styles.timeTitle, { color: colors[theme].main }]}>
-          {correctWordsAmount && `${correctWordsAmount}/${wordsAmount}   `}
-          <Text style={{ fontSize: correctWordsAmount ? 24 : 32 }}>
+          {correctWordsAmount !== undefined &&
+            `${correctWordsAmount}/${wordsAmount}   `}
+          <Text
+            style={{ fontSize: correctWordsAmount !== undefined ? 24 : 32 }}
+          >
             {TimeFormat(time, language)}
           </Text>
         </Text>
@@ -66,7 +69,7 @@ export default function CheckBottomBlock({
             },
           ]}
         >
-          {correctWordsAmount
+          {correctWordsAmount !== undefined
             ? text[language].correctWordsMemorized
             : text[language].timeMemorizing}
         </Text>

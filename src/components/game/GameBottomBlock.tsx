@@ -57,7 +57,7 @@ export default function GameBottomBlock({
         theme={theme}
         language={language}
         finishAvailable={finishAvailable}
-        buttonTitle={text[language].Finish}
+        buttonTitle={text[language].Check}
         comment={text[language].IfYouReadyToCheck}
         onCheck={() => {
           onFinish();

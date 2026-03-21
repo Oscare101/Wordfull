@@ -19,6 +19,7 @@ interface CloseModalProps {
   onSubmit: () => void;
   theme: ThemeType;
   language: Language;
+  type: 'cancel' | 'stop';
 }
 
 function CloseGameModal({
@@ -27,6 +28,7 @@ function CloseGameModal({
   onSubmit,
   theme,
   language,
+  type,
 }: CloseModalProps) {
   return (
     <Modal
@@ -70,7 +72,9 @@ function CloseGameModal({
                 color: colors[theme].main,
               }}
             >
-              {text[language].CloseGameWarningTitle}
+              {type === 'cancel'
+                ? text[language].CancelGameWarningTitle
+                : text[language].CloseGameWarningTitle}
             </Text>
             <Text
               style={{
@@ -80,18 +84,24 @@ function CloseGameModal({
                 textAlign: 'center',
               }}
             >
-              {text[language].CloseGameWarning}
+              {type === 'cancel'
+                ? text[language].CancelGameWarning
+                : text[language].CloseGameWarning}
             </Text>
             <View style={styles.buttonsRow}>
               <ButtonBlock
-                title={text[language].goBack}
+                title={text[language].Continue}
                 action={onClose}
                 styles={styles.buttonStyle}
                 titleStyles={{ fontSize: 20 }}
                 theme={theme}
               />
               <ButtonBlock
-                title={text[language].Stop}
+                title={
+                  type === 'cancel'
+                    ? text[language].Cancel
+                    : text[language].Stop
+                }
                 action={onSubmit}
                 styles={[styles.buttonStyle, { backgroundColor: '#00000000' }]}
                 titleStyles={{ fontSize: 20, color: colors[theme].main }}

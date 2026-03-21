@@ -2,6 +2,8 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import colors from '../../constants/themes/colors';
 import { ThemeType } from '../../constants/themes/themeType';
+import text from '../../constants/languages/text';
+import { Language } from '../../constants/interfaces/interface';
 
 function ResultsViewSwitcher({
   theme,
@@ -10,7 +12,7 @@ function ResultsViewSwitcher({
   onSwitch,
 }: {
   theme: ThemeType;
-  language: string;
+  language: Language;
   value: 'inputs' | 'words';
   onSwitch: (value: 'inputs' | 'words') => void;
 }) {
@@ -34,7 +36,7 @@ function ResultsViewSwitcher({
               value === 'inputs' ? colors[theme].main : colors[theme].comment,
           }}
         >
-          Inputs
+          {text[language].YourInputs}
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
@@ -55,7 +57,7 @@ function ResultsViewSwitcher({
               value === 'words' ? colors[theme].main : colors[theme].comment,
           }}
         >
-          Words
+          {text[language].Words23}
         </Text>
       </TouchableOpacity>
     </View>

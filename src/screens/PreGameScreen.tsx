@@ -25,6 +25,7 @@ import Icon from '../assets/icon';
 import WordsAmountInput from '../components/preGame/WordsAmountInput';
 import GameModeBanner from '../components/preGame/GameModeBanner';
 import { GetRandomWords } from '../functions/functions';
+import ExplanationModal from '../components/global/ExplanationModal';
 
 type Props = StackScreenProps<RootStackParamList, 'PreGameScreen'>;
 
@@ -39,101 +40,86 @@ export default function PreGameScreen({ navigation, route }: Props) {
       ? wordPack.words.length.toString()
       : rules.defaultWordsAmount.toString(),
   );
-
-  useEffect(() => {
-    if (+wordsAmount > wordPack.words.length) {
-      Toast.show({
-        type: 'ToastMessage',
-        props: {
-          title: text[language].wordsMaxWarning.replace(
-            '#',
-            wordPack.words.length.toString(),
-          ),
-        },
-        position: 'top',
-      });
-    }
-  }, [wordsAmount]);
+  const [explanationModal, setExplanationModal] = useState<boolean>(false);
 
   return (
-    <TouchableWithoutFeedback
-      style={{ flex: 1 }}
-      onPress={() => Keyboard.dismiss()}
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: colors[theme].bg, paddingTop: insets.top },
+      ]}
     >
-      <View
-        style={[
-          styles.container,
-          { backgroundColor: colors[theme].bg, paddingTop: insets.top },
-        ]}
-      >
-        <SimpleHeader
-          onBack={() => navigation.goBack()}
-          title={''}
+      <SimpleHeader
+        onBack={() => navigation.goBack()}
+        title={''}
+        theme={theme}
+        rightIcon="info"
+        rightIconAction={() => {
+          setExplanationModal(true);
+        }}
+      />
+      <View style={[styles.block, { marginBottom: insets.bottom + 16 }]}>
+        <WordsAmountInput
+          wordsAmount={wordsAmount}
+          setWordsAmount={setWordsAmount}
+          wordPack={wordPack}
           theme={theme}
-          // rightIcon="info"
-          // rightIconAction={() => {
-          //   // Handle info icon action
-          // }}
+          gameMode={gameMode}
+          language={language}
         />
-        <View style={[styles.block, { marginBottom: insets.bottom + 16 }]}>
-          <WordsAmountInput
-            wordsAmount={wordsAmount}
-            setWordsAmount={setWordsAmount}
-            wordPack={wordPack}
-            theme={theme}
-            gameMode={gameMode}
-            language={language}
-          />
-          <GameModeBanner
-            gameMode={gameMode}
-            language={language}
-            theme={theme}
-          />
+        <GameModeBanner gameMode={gameMode} language={language} theme={theme} />
 
-          <Text
-            style={{
-              fontSize: 14,
-              marginBottom: 16,
-              color: colors[theme].main,
-            }}
-          >
-            {text[language].gamePreambula}
-          </Text>
-          <ButtonBlock
-            title={text[language].Start}
-            icon={'play'}
-            action={() => {
-              const wordsArray = GetRandomWords(wordPack.words, +wordsAmount);
+        <Text
+          style={{
+            fontSize: 14,
+            marginBottom: 16,
+            color: colors[theme].main,
+          }}
+        >
+          {text[language].gamePreambula}
+        </Text>
+        <ButtonBlock
+          title={text[language].Start}
+          icon={'play'}
+          action={() => {
+            const wordsArray = GetRandomWords(wordPack.words, +wordsAmount);
 
-              navigation.navigate('GameScreen', {
-                wordsAmount: +wordsAmount,
-                mode: gameMode,
-                words: wordsArray,
-              });
-            }}
-            disabled={
-              +wordsAmount === 0 ||
-              +wordsAmount > wordPack.words.length ||
-              isNaN(+wordsAmount)
-            }
-            theme={theme}
-            titleStyles={{ fontSize: 26 }}
-            iconSize={32}
-            styles={{ justifyContent: 'center', height: 70 }}
-          />
-          <Text
-            style={{
-              fontSize: 14,
-              textAlign: 'center',
-              marginTop: 16,
-              color: colors[theme].main,
-            }}
-          >
-            {text[language].startWhenReady}
-          </Text>
-        </View>
+            navigation.navigate('GameScreen', {
+              wordsAmount: +wordsAmount,
+              mode: gameMode,
+              words: wordsArray,
+            });
+          }}
+          disabled={
+            +wordsAmount === 0 ||
+            +wordsAmount > wordPack.words.length ||
+            isNaN(+wordsAmount)
+          }
+          theme={theme}
+          titleStyles={{ fontSize: 26 }}
+          iconSize={32}
+          styles={{ justifyContent: 'center', height: 70 }}
+        />
+        <Text
+          style={{
+            fontSize: 14,
+            textAlign: 'center',
+            marginTop: 16,
+            color: colors[theme].main,
+          }}
+        >
+          {text[language].startWhenReady}
+        </Text>
       </View>
-    </TouchableWithoutFeedback>
+      <ExplanationModal
+        theme={theme}
+        language={language}
+        type={gameMode === 'stamina' ? 'preGameStamina' : 'preGameEasyHard'}
+        visible={explanationModal}
+        onClose={() => setExplanationModal(false)}
+        wordsAmount={wordPack.words.length}
+      />
+    </View>
   );
 }
 

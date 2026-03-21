@@ -131,6 +131,7 @@ export default function GameScreen({ navigation, route }: Props) {
             navigation.goBack();
             // TODO save statistics
           }}
+          type={'cancel'}
         />
       </View>
     </View>

@@ -1,3 +1,4 @@
+import { GameMode } from './../interfaces/interface';
 import { TextType } from './textType';
 
 const english = {
@@ -35,7 +36,12 @@ const english = {
   wordsMaxWarning: 'Maximum number of words available #',
   CloseGameWarningTitle: 'Stop game',
   CloseGameWarning:
-    "Are you sure you want to stop the game?\nThe attempt will be counted, but the progress won't be saved",
+    'Are you sure you want to stop the game?\nThe attempt will be counted, and be saved to history as not finished',
+  CancelGameWarningTitle: 'Cancel the game',
+  CancelGameWarning:
+    "Are you sure you want to cancel the game?\nYour progress won't be saved",
+  Cancel: 'Cancel',
+  Continue: 'Continue',
   goBack: 'Go back',
   Stop: 'Stop',
   Check: 'Check',
@@ -97,6 +103,15 @@ const english = {
   quote1:
     '“Intellectual growth should commence at birth and cease only at death.”',
   quote1Author: 'Albert Einstein',
+  Explanation:
+    'The game consists of two stages:\n\n1. Memorization\n2. Check (write memorized words)\n\nDuring the memorization stage, you will be shown cards with words. You can switch between them and take as much time as you need to memorize them.\nWhen you feel ready to check, press the "Check" button.\n\nDuring the check stage, you need to enter all the words in the correct order. You can not see the list of all words or go back to cards after you switched to the check stage. When you finish entering words, press the "Finish" button to see your result.',
+  GameModeExplanation:
+    'In the Easy mode, you memorize a limited amount of words, you can go back to previous cards and see the list of all words during the memorizing stage.\n\nIn the Hard mode, you also memorize a limited amount of words, but you can not go back to previous cards or see the list of all words during the memorizing stage.\n\nIn the Stamina mode, you memorize an unlimited amount of words, without ability to go back to previous cards or see the list of all words during the memorizing stage. And in this mode you can stop memorizing at any point at any amount of words',
+  PreGameEasyHardExplanation:
+    "On this screen you can select how many words you want to memorize during the game. The more words you select, the harder it will be to memorize them, and all the words that you don't memorize will be counted as not memorized, so choose the amount of words that you think you can memorize to get the best result",
+  PreGameStaminaExplanation:
+    "In stamina mode there is no limit on how many words you can memorize, but the more words you try to look through, the harder it will be to memorize them all, and the words that you don't memorize will be counted as not memorized, so you can stop memorizing at any point to get the best result.\n\nAlso note that Word Pack that is used in the game is limited. Currently it only contains # unique words in it",
+  YourInputs: 'Your inputs',
 } satisfies Record<TextType, string>;
 
 export default english;

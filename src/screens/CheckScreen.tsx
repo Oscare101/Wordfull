@@ -29,6 +29,7 @@ import ConfirmCheckModal from '../components/game/ConfirmCheckModal';
 import { gameResultsRepository } from '../db/repositories/gameResultsRepository';
 import { useStatistics } from '../context/StatisticsContext';
 import { useHistory } from '../context/HistoryContext';
+import { CommonActions } from '@react-navigation/native';
 
 type Props = StackScreenProps<RootStackParamList, 'CheckScreen'>;
 
@@ -52,10 +53,8 @@ export default function CheckScreen({ navigation, route }: Props) {
 
   const time = finish - start;
 
-  const [modal, setModal] = useState<boolean>(false);
-
   usePreventGoBack({
-    enabled: !modal,
+    enabled: true,
     shouldPrevent: useCallback((event: BeforeRemoveEvent) => {
       const action = event.data.action as {
         type?: string;
@@ -72,9 +71,7 @@ export default function CheckScreen({ navigation, route }: Props) {
 
       return !isResetToHome;
     }, []),
-    onBlockedGoBack: useCallback(() => {
-      setModal(true);
-    }, []),
+    onBlockedGoBack: useCallback(() => {}, []),
   });
 
   const onCheck = useCallback(() => {
@@ -92,7 +89,6 @@ export default function CheckScreen({ navigation, route }: Props) {
   const submitConfirmGame = useCallback(async () => {
     try {
       setConfirm(false);
-      setModal(false);
 
       await gameResultsRepository.saveCompletedGame({
         duration: time,
@@ -201,19 +197,6 @@ export default function CheckScreen({ navigation, route }: Props) {
           mode={gameMode}
         />
 
-        <CloseGameModal
-          theme={theme}
-          language={language}
-          visible={modal}
-          onClose={() => setModal(false)}
-          onSubmit={() => {
-            // navigation.pop(2);
-
-            setModal(false);
-            navigation.goBack();
-            // TODO save statistics
-          }}
-        />
         <ConfirmCheckModal
           theme={theme}
           language={language}
