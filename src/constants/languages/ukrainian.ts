@@ -136,6 +136,12 @@ const ukrainian = {
   ExportedAt: 'Експортовано', // used in export preview after selecting file to import
   ImportDataPreview: 'Попередній перегляд даних',
   Confirm: 'Підтвердити',
+  olive: 'Оливкова',
+  darkBlue: 'Темно-синя',
+  darkRed: 'Темно-червона',
+  sky: 'Небесна',
+  blackWhite: 'Чорно-біла',
+  Learning: 'Навчання',
 } satisfies Record<TextType, string>;
 
 export default ukrainian;

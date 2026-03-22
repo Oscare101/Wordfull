@@ -1,5 +1,5 @@
 import { BackHandler, FlatList, StyleSheet, Text, View } from 'react-native';
-import React, { use, useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { RootStackParamList } from '../navigation/types';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useSettings } from '../context/SettingsContext';
@@ -10,8 +10,9 @@ import { GameMode } from '../constants/interfaces/interface';
 import CheckBottomBlock from '../components/game/CheckBottomBlock';
 import ResultsViewSwitcher from '../components/game/ResultsViewSwitcher';
 import { CommonActions, useFocusEffect } from '@react-navigation/native';
-import { gameResultsRepository } from '../db/repositories/gameResultsRepository';
+import { countCorrectWords } from '../db/repositories/gameResultsRepository';
 import { useSelectedWordPack } from '../constants/wordPacks/useSelectedWordPack';
+import Icon from '../assets/icon';
 
 type Props = StackScreenProps<RootStackParamList, 'GameResultsScreen'>;
 
@@ -29,13 +30,6 @@ export default function GameResultsScreen({ navigation, route }: Props) {
     return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
   });
   const time: number = route.params.time;
-
-  const correctWordsAmount = words.reduce((acc, word, index) => {
-    if (word === inputs[index]) {
-      return acc + 1;
-    }
-    return acc;
-  }, 0);
 
   const [viewMode, setViewMode] = useState<'inputs' | 'words'>('inputs');
 
@@ -81,6 +75,9 @@ export default function GameResultsScreen({ navigation, route }: Props) {
   }, [navigation]);
 
   function RenderItem(item: any) {
+    const isCorrect =
+      countCorrectWords([words[item.index]], [inputs[item.index]]) === 1;
+
     return (
       <View
         style={{
@@ -103,21 +100,34 @@ export default function GameResultsScreen({ navigation, route }: Props) {
             borderBottomWidth: 1,
             borderColor: colors[theme].main,
             borderStyle: 'solid',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
           }}
         >
           <Text
             style={{
               fontSize: 24,
-              color:
-                inputs[item.index] === words[item.index]
-                  ? colors[theme].main
-                  : !inputs[item.index].trim()
-                  ? colors[theme].comment
-                  : colors[theme].error,
+              color: isCorrect
+                ? colors[theme].success
+                : !inputs[item.index].trim()
+                ? colors[theme].error
+                : colors[theme].error,
             }}
           >
             {viewMode === 'inputs' ? inputs[item.index] : words[item.index]}
           </Text>
+          <Icon
+            name={isCorrect ? 'check' : 'close'}
+            color={
+              isCorrect
+                ? colors[theme].success
+                : !inputs[item.index].trim()
+                ? colors[theme].error
+                : colors[theme].error
+            }
+            size={24}
+          />
         </View>
       </View>
     );
@@ -152,7 +162,7 @@ export default function GameResultsScreen({ navigation, route }: Props) {
           finishAvailable={true}
           onCheck={navigateHome}
           mode={gameMode}
-          correctWordsAmount={correctWordsAmount}
+          correctWordsAmount={countCorrectWords(words, inputs)}
         />
       </View>
     </View>

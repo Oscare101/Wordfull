@@ -26,4 +26,5 @@ export type RootStackParamList = {
   WordsAmountScreen: undefined;
   PersonalBestsScreen: undefined;
   AccuracyScreen: undefined;
+  LearningScreen: undefined;
 };

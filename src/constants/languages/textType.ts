@@ -110,4 +110,11 @@ export type TextType =
   | 'PlayedSince'
   | 'ExportedAt'
   | 'ImportDataPreview'
-  | 'Confirm';
+  | 'Confirm'
+  // themes
+  | 'olive'
+  | 'darkBlue'
+  | 'darkRed'
+  | 'sky'
+  | 'blackWhite'
+  | 'Learning';

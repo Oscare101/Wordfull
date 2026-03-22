@@ -126,7 +126,7 @@ export default function WordsAmountScreen({ navigation }: Props) {
           language={language}
           theme={theme}
           type="month"
-          height={250}
+          height={200}
         />
         <FlatList
           data={stats}

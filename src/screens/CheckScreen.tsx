@@ -1,55 +1,42 @@
-import {
-  FlatList,
-  InteractionManager,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import React, { useCallback, useState, useEffect, useRef } from 'react';
+import { FlatList, Keyboard, StyleSheet, TextInput, View } from 'react-native';
+import React, { useCallback, useState, useRef } from 'react';
 import { RootStackParamList } from '../navigation/types';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useSettings } from '../context/SettingsContext';
-import text from '../constants/languages/text';
 import colors from '../constants/themes/colors';
-import ButtonBlock from '../components/global/ButtonBlock';
-import SettingsButtonItem from '../components/settings/SettingsButtonItem';
-import SimpleHeader from '../components/global/SimpleHeader';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BeforeRemoveEvent, usePreventGoBack } from '../hooks/usePreventGoBack';
 import { GameMode, WordPack } from '../constants/interfaces/interface';
 import { useSelectedWordPack } from '../constants/wordPacks/useSelectedWordPack';
-import GameHeader from '../components/game/GameHeader';
-import CardListBlock from '../components/game/CardListBlock';
-import CloseGameModal from '../components/game/CloseGameModal';
-import GameBottomBlock from '../components/game/GameBottomBlock';
 import CheckBottomBlock from '../components/game/CheckBottomBlock';
 import ConfirmCheckModal from '../components/game/ConfirmCheckModal';
 import { gameResultsRepository } from '../db/repositories/gameResultsRepository';
 import { useStatistics } from '../context/StatisticsContext';
 import { useHistory } from '../context/HistoryContext';
-import { CommonActions } from '@react-navigation/native';
+import CheckInputRow from '../components/game/CheckInputRow';
 
 type Props = StackScreenProps<RootStackParamList, 'CheckScreen'>;
 
 export default function CheckScreen({ navigation, route }: Props) {
   const insets = useSafeAreaInsets();
   const { language, theme } = useSettings();
+  const wordPack: WordPack = useSelectedWordPack();
+  const { reloadStatistics } = useStatistics();
+  const { reloadHistory } = useHistory();
+
   const wordsAmount: number = route.params.wordsAmount;
   const gameMode: GameMode = route.params.mode;
   const words: string[] = route.params.words;
   const start: number = route.params.start;
   const finish: number = route.params.finish;
-  const wordPack: WordPack = useSelectedWordPack();
-  const { reloadStatistics } = useStatistics();
-  const { reloadHistory } = useHistory();
+
   const [confirm, setConfirm] = useState<boolean>(false);
   const [wordsInputs, setWordsInputs] = useState<string[]>(
     Array(wordsAmount).fill(''),
   );
-  const inputRefs = useRef<TextInput[]>([]);
-  const flatListRef = useRef<FlatList>(null);
+
+  const inputRefs = useRef<Array<TextInput | null>>([]);
+  const flatListRef = useRef<FlatList<string>>(null);
 
   const time = finish - start;
 
@@ -113,63 +100,62 @@ export default function CheckScreen({ navigation, route }: Props) {
     }
   }, [time, wordsInputs, words, gameMode, wordPack, navigation]);
 
-  function RenderItem(item: any) {
-    return (
-      <View
-        style={{
-          width: '80%',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          height: 40,
-          alignSelf: 'center',
-        }}
-      >
-        <Text style={{ fontSize: 24, color: colors[theme].main }}>
-          {item.index + 1}
-        </Text>
-        <TextInput
-          ref={(el: any) => (inputRefs.current[item.index] = el!)} // Store reference
-          value={wordsInputs[item.index]}
-          onChangeText={(value: string) => {
-            let arr = [...wordsInputs];
-            arr[item.index] = value;
+  const registerInputRef = useCallback(
+    (index: number, ref: TextInput | null) => {
+      inputRefs.current[index] = ref;
+    },
+    [],
+  );
 
-            setWordsInputs(arr);
-          }}
-          style={{
-            flex: 1,
-            color: colors[theme].main,
-            fontSize: 24,
-            padding: 0,
-            marginLeft: 16,
-            borderBottomWidth: 1,
-            borderColor: colors[theme].main,
-            borderStyle: 'solid',
-          }}
-          selectionColor={colors[theme].main}
-          autoCapitalize="words"
-          returnKeyType={
-            item.index === wordsInputs.length - 1 ? 'done' : 'next'
-          } // 'done' on last input
-          onSubmitEditing={() => {
-            const nextIndex = item.index + 1;
-            if (nextIndex < wordsInputs.length) {
-              flatListRef.current?.scrollToIndex({
-                index: nextIndex,
-                animated: true,
-                viewPosition: 0.5, // optional: scrolls the item to middle
-              });
+  const onChangeValue = useCallback((index: number, value: string) => {
+    setWordsInputs(prev => {
+      if (prev[index] === value) {
+        return prev;
+      }
 
-              InteractionManager.runAfterInteractions(() => {
-                inputRefs.current[nextIndex]?.focus();
-              });
-            }
-          }}
+      const next = [...prev];
+      next[index] = value;
+      return next;
+    });
+  }, []);
+
+  const onSubmitIndex = useCallback(
+    (index: number) => {
+      const nextIndex = index + 1;
+
+      if (nextIndex < wordsInputs.length) {
+        inputRefs.current[nextIndex]?.focus();
+
+        requestAnimationFrame(() => {
+          flatListRef.current?.scrollToIndex({
+            index: nextIndex,
+            animated: true,
+            viewPosition: 0.5,
+          });
+        });
+      } else {
+        Keyboard.dismiss();
+      }
+    },
+    [wordsInputs.length],
+  );
+
+  const renderItem = useCallback(
+    ({ index }: { item: string; index: number }) => {
+      return (
+        <CheckInputRow
+          index={index}
+          value={wordsInputs[index]}
+          totalCount={wordsInputs.length}
+          theme={theme}
+          onChangeValue={onChangeValue}
+          onSubmitIndex={onSubmitIndex}
+          registerInputRef={registerInputRef}
         />
-      </View>
-    );
-  }
+      );
+    },
+    [wordsInputs, theme, onChangeValue, onSubmitIndex, registerInputRef],
+  );
 
   return (
     <View
@@ -183,7 +169,7 @@ export default function CheckScreen({ navigation, route }: Props) {
           ref={flatListRef}
           style={{ width: '100%' }}
           data={words}
-          renderItem={RenderItem}
+          renderItem={renderItem}
           ListHeaderComponent={() => <View style={{ height: 32 }} />}
           ListFooterComponent={() => <View style={{ height: 200 }} />}
         />

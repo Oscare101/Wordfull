@@ -17,6 +17,7 @@ import StatisticsScreen from '../screens/StatisticsScreen';
 import WordsAmountScreen from '../screens/WordsAmountScreen';
 import AccuracyScreen from '../screens/AccuracyScreen';
 import PersonalBestsScreen from '../screens/PersonalBestsScreen';
+import LearningScreen from '../screens/LearningScreen';
 
 const screenOption = {
   headerShown: false,
@@ -119,6 +120,11 @@ function Navigation() {
         options={screenOption}
         name="AccuracyScreen"
         component={AccuracyScreen}
+      />
+      <Stack.Screen
+        options={screenOption}
+        name="LearningScreen"
+        component={LearningScreen}
       />
     </Stack.Navigator>
   );

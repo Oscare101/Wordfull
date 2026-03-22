@@ -20,14 +20,20 @@ function generateHistoryId(): string {
   return `${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
 }
 
-function countCorrectWords(words: string[], inputs: string[]): number {
+export function normalizeWordForCompare(word: string): string {
+  return word
+    .trim()
+    .toLowerCase()
+    .normalize('NFC')
+    .replace(/['’ʼ`ʹʻ՚ꞌ]/g, '');
+}
+
+export function countCorrectWords(words: string[], inputs: string[]): number {
   return words.reduce((acc, word, index) => {
-    return (
-      acc +
-      (word.trim().toLowerCase() === (inputs[index] ?? '').trim().toLowerCase()
-        ? 1
-        : 0)
-    );
+    const normalizedWord = normalizeWordForCompare(word);
+    const normalizedInput = normalizeWordForCompare(inputs[index] ?? '');
+
+    return acc + (normalizedWord === normalizedInput ? 1 : 0);
   }, 0);
 }
 

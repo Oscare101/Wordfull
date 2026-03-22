@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { History, Language } from '../../constants/interfaces/interface';
 import { useSettings } from '../../context/SettingsContext';
 import colors from '../../constants/themes/colors';
+import useDayRefreshKey from '../../hooks/useDayRefreshKey';
 
 type ChartDays = 7 | 30;
 
@@ -57,7 +58,6 @@ function buildChartData(
 ): ChartBarItem[] {
   const today = startOfDay(new Date());
   const startDate = addDays(today, -(days - 1));
-
   const countsMap = new Map<string, number>();
 
   for (const item of history) {
@@ -68,7 +68,7 @@ function buildChartData(
     }
 
     const key = formatDateKey(itemDate);
-    countsMap.set(key, (countsMap.get(key) ?? 0) + 1);
+    countsMap.set(key, (countsMap.get(key) ?? 0) + item.correctWords);
   }
 
   const result: ChartBarItem[] = [];
@@ -96,10 +96,11 @@ export default function HistoryActivityChart({
 }: HistoryActivityChartProps) {
   const { theme, language } = useSettings();
   const themeColors = colors[theme];
+  const dayKey = useDayRefreshKey();
 
   const chartData = useMemo(
     () => buildChartData(history, days, language),
-    [history, days, language],
+    [history, days, language, dayKey],
   );
 
   const maxValue = useMemo(() => {
@@ -183,7 +184,7 @@ const styles = StyleSheet.create({
   },
   bar: {
     width: '100%',
-    minHeight: 10,
+    minHeight: 8,
     borderRadius: 6,
   },
   weekdayLabel: {

@@ -26,6 +26,7 @@ import Profile from './icons/Profile';
 import Trash from './icons/Trash';
 import Import from './icons/Import';
 import Document from './icons/Document';
+import Book from './icons/Book';
 
 interface IconProps {
   name: IconName;
@@ -61,6 +62,7 @@ export default function Icon({ name, size = 24, color = '#000' }: IconProps) {
     document: <SvgXml xml={Document(color)} width={size} height={size} />,
     trash: <SvgXml xml={Trash(color)} width={size} height={size} />,
     profile: <SvgXml xml={Profile(color)} width={size} height={size} />,
+    book: <SvgXml xml={Book(color)} width={size} height={size} />,
   };
 
   return icons[name];

@@ -26,6 +26,9 @@ export default function ThemeScreen({ navigation }: Props) {
   const themes: { title: string; id: ThemeType }[] = [
     { title: 'Olive', id: 'olive' },
     { title: 'Dark Blue', id: 'darkBlue' },
+    { title: 'Dark Red', id: 'darkRed' },
+    { title: 'Sky', id: 'sky' },
+    { title: 'Black & White', id: 'blackWhite' },
   ];
 
   const onChangeTheme = useCallback(
@@ -38,7 +41,7 @@ export default function ThemeScreen({ navigation }: Props) {
   const renderThemeItem = useCallback(
     ({ item }: { item: { title: string; id: ThemeType } }) => (
       <ThemeButtonItem
-        title={item.title}
+        title={text[language][item.id]}
         onPress={onChangeTheme.bind(null, item.id)}
         theme={item.id}
         width={(width - 32 - 8) / 2}
@@ -63,7 +66,7 @@ export default function ThemeScreen({ navigation }: Props) {
         {text[language].YourTheme}
       </Text>
       <ThemeButtonItem
-        title={themes.find(t => t.id === theme)?.title || ''}
+        title={text[language][themes.find(t => t.id === theme)!.id] || ''}
         theme={theme}
         width={width - 32}
       />

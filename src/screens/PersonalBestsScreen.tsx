@@ -72,7 +72,7 @@ export default function PersonalBestsScreen({ navigation }: Props) {
         <PersonalBestsBlock
           language={language}
           theme={theme}
-          height={150}
+          height={200}
           maxGames={5}
         />
         <FlatList

@@ -22,4 +22,5 @@ export type IconName =
   | 'import'
   | 'document'
   | 'trash'
-  | 'profile';
+  | 'profile'
+  | 'book';

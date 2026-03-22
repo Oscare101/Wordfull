@@ -27,10 +27,7 @@ export default function StatisticsValueItem({
     >
       <Text
         style={{
-          color:
-            type === 'main'
-              ? colors[theme].buttonTitleActive
-              : colors[theme].main,
+          color: type === 'main' ? colors[theme].cardTitle : colors[theme].main,
           fontSize: 16,
           fontWeight: 'bold',
         }}
@@ -39,10 +36,7 @@ export default function StatisticsValueItem({
       </Text>
       <Text
         style={{
-          color:
-            type === 'main'
-              ? colors[theme].buttonTitleActive
-              : colors[theme].main,
+          color: type === 'main' ? colors[theme].cardTitle : colors[theme].main,
           fontSize: 16,
         }}
       >

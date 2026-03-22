@@ -3,7 +3,7 @@ import { useHistory } from '../context/HistoryContext';
 
 // const {
 //   wordsLearnedToday,
-//    accuracyToday,
+//   accuracyToday,
 
 //   wordsLearnedWeek,
 //   accuracyWeek,

@@ -134,6 +134,12 @@ const english = {
   ExportedAt: 'Exported at',
   ImportDataPreview: 'Import data preview',
   Confirm: 'Confirm',
+  olive: 'Olive',
+  darkBlue: 'Dark blue',
+  darkRed: 'Dark red',
+  sky: 'Sky',
+  blackWhite: 'Black & White',
+  Learning: 'Learning',
 } satisfies Record<TextType, string>;
 
 export default english;

@@ -8,6 +8,7 @@ const darkBlue = {
   comment: '#808490',
   accent: '#6C92A2',
   card: '#3A545E',
+  cardTitle: '#374951',
   success: '#4FA03B',
   error: '#A64646',
   warning: '#606465',

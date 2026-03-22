@@ -1,4 +1,4 @@
-export type ThemeType = 'olive' | 'darkBlue' | 'darkRed';
+export type ThemeType = 'olive' | 'darkBlue' | 'darkRed' | 'sky' | 'blackWhite';
 
 export const DEFAULT_THEME: ThemeType = 'olive';
 
@@ -10,6 +10,7 @@ export interface Theme {
   comment: string;
   accent: string;
   card: string;
+  cardTitle: string;
   success: string;
   error: string;
   warning: string;

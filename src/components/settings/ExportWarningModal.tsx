@@ -25,11 +25,15 @@ function ExportWarningModal({
   onClose,
   theme,
   language,
+  fileName,
+  fileSize,
 }: {
   visible: boolean;
   onClose: () => void;
   theme: ThemeType;
   language: Language;
+  fileName: string;
+  fileSize: string;
 }) {
   const onExportData = async () => {
     try {
@@ -121,6 +125,7 @@ function ExportWarningModal({
               }}
             >
               {text[language].ExportWarning}
+              {'\n'}
             </Text>
             <View style={styles.buttonsRow}>
               <ButtonBlock

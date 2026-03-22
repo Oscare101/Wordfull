@@ -8,6 +8,7 @@ const olive = {
   comment: '#CCCCCC',
   accent: '#B6B654',
   card: '#5F7463',
+  cardTitle: '#C1D2C4',
   success: '#333333',
   error: '#AB3944',
   warning: '#ADADAD',

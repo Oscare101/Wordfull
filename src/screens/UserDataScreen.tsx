@@ -285,6 +285,8 @@ export default function UserDataScreen({ navigation }: Props) {
         language={language}
         visible={exportModal}
         onClose={() => setExportModal(false)}
+        fileName={exportInfo?.fileName ?? ''}
+        fileSize={exportInfo?.approximateSize ?? ''}
       />
 
       <WipeDataWarningModal

@@ -130,7 +130,10 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <SettingsContext.Provider value={value}>
-      <StatusBar barStyle={colors[value.theme].barStyle} />
+      <StatusBar
+        barStyle={colors[value.theme].barStyle}
+        backgroundColor={colors[value.theme].bg}
+      />
       {children}
     </SettingsContext.Provider>
   );
