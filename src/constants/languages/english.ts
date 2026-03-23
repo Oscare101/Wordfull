@@ -157,6 +157,8 @@ const english = {
   GamesStatistics: 'Games statistics',
   AverageAccuracy: 'Average accuracy',
   Records: 'Records',
+  WordfullTitleDescription:
+    'Train your memory and focus by memorizing words in the correct order. Start your memory training journey today!',
 } satisfies Record<TextType, string>;
 
 export default english;

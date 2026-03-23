@@ -7,7 +7,7 @@ import colors from '../../constants/themes/colors';
 import HistoryActivityChart from '../charts/HistoryActivityChart';
 import { usePeriodStats } from '../../hooks/usePeriodStats';
 import Icon from '../../assets/icon';
-import { NumberFormat } from '../../functions/functions';
+import { NumberFormat, WordsTitleFromAmount } from '../../functions/functions';
 
 function HistoryChartBlock({
   history,
@@ -29,12 +29,7 @@ function HistoryChartBlock({
 
   const wordsAmount = type === 'month' ? wordsLearnedMonth : wordsLearnedWeek;
 
-  const wordsTitle =
-    wordsAmount % 10 === 1
-      ? text[language].Word
-      : wordsAmount && [2, 3, 4].includes(wordsAmount % 10)
-      ? text[language].Words23
-      : text[language].Words;
+  const wordsTitle = WordsTitleFromAmount(wordsAmount, language);
 
   const container = (
     <View
@@ -57,7 +52,7 @@ function HistoryChartBlock({
       <Text
         style={{ fontSize: 16, color: colors[theme].main, fontWeight: 'bold' }}
       >
-        {NumberFormat(wordsAmount, language)} {wordsTitle.toLocaleLowerCase()}
+        {NumberFormat(wordsAmount, language)} {wordsTitle}
       </Text>
       <HistoryActivityChart
         history={history}

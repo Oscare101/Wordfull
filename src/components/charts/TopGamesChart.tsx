@@ -4,7 +4,7 @@ import { History, Language } from '../../constants/interfaces/interface';
 import colors from '../../constants/themes/colors';
 import { useSettings } from '../../context/SettingsContext';
 import text from '../../constants/languages/text';
-import { NumberFormat } from '../../functions/functions';
+import { NumberFormat, WordsTitleFromAmount } from '../../functions/functions';
 
 interface TopGamesChartProps {
   games: History[];
@@ -42,12 +42,7 @@ export default function TopGamesChart({
 
   const perioud = (height - 40) / (maxItems * 2 + maxItems - 1);
 
-  const wordsTitle =
-    bestGame.correctWords % 10 === 1
-      ? text[language].Word
-      : bestGame.correctWords && [2, 3, 4].includes(bestGame.correctWords % 10)
-      ? text[language].Words23
-      : text[language].Words;
+  const wordsTitle = WordsTitleFromAmount(bestGame.correctWords, language);
 
   return (
     <View style={[styles.container, { height }]}>

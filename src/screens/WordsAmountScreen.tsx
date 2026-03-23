@@ -13,6 +13,7 @@ import { useHistory } from '../context/HistoryContext';
 import { useStatistics } from '../context/StatisticsContext';
 import { usePeriodStats } from '../hooks/usePeriodStats';
 import StatisticsValueItem from '../components/statistics/StatisticsValueItem';
+import { WordsTitleFromAmount } from '../functions/functions';
 
 type Props = StackScreenProps<RootStackParamList, 'WordsAmountScreen'>;
 
@@ -37,56 +38,48 @@ export default function WordsAmountScreen({ navigation }: Props) {
     wordsLearnedDailyAverage,
   } = usePeriodStats();
 
-  function getWordsTitle(count: number) {
-    return count % 10 === 1
-      ? text[language].Word
-      : count && [2, 3, 4].includes(count % 10)
-      ? text[language].Words23
-      : text[language].Words;
-  }
-
   const stats = [
     {
       title: text[language].Today,
       value:
         wordsLearnedToday.toFixed() +
         ' ' +
-        getWordsTitle(wordsLearnedToday).toLocaleLowerCase(),
+        WordsTitleFromAmount(wordsLearnedToday, language),
     },
     {
       title: text[language].DailyAverage,
       value:
         wordsLearnedDailyAverage.toFixed() +
         ' ' +
-        getWordsTitle(wordsLearnedDailyAverage).toLocaleLowerCase(),
+        WordsTitleFromAmount(wordsLearnedDailyAverage, language),
     },
     {
       title: text[language].TotalWordsMemorized,
       value:
         wordsLearnedTotal.toFixed() +
         ' ' +
-        getWordsTitle(wordsLearnedTotal).toLocaleLowerCase(),
+        WordsTitleFromAmount(wordsLearnedTotal, language),
     },
     {
       title: text[language].PastWeek,
       value:
         wordsLearnedWeek.toFixed() +
         ' ' +
-        getWordsTitle(wordsLearnedWeek).toLocaleLowerCase(),
+        WordsTitleFromAmount(wordsLearnedWeek, language),
     },
     {
       title: text[language].PastMonth,
       value:
         wordsLearnedMonth.toFixed() +
         ' ' +
-        getWordsTitle(wordsLearnedMonth).toLocaleLowerCase(),
+        WordsTitleFromAmount(wordsLearnedMonth, language),
     },
     {
       title: text[language].PastYear,
       value:
         wordsLearnedYear.toFixed() +
         ' ' +
-        getWordsTitle(wordsLearnedYear).toLocaleLowerCase(),
+        WordsTitleFromAmount(wordsLearnedYear, language),
     },
   ];
 

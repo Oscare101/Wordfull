@@ -128,6 +128,7 @@ export type TextType =
   | 'GamesStatistics'
   | 'AverageAccuracy'
   | 'Records'
+  | 'WordfullTitleDescription'
   // themes
   | 'olive'
   | 'darkBlue'

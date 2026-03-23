@@ -59,7 +59,7 @@ const ukrainian = {
   ConfirmWarning: 'Завершити спробу, навіть з наявними пустими полями',
   correctWordsMemorized: 'вивчених слів',
   TotalWordsMemorized: 'Усього вивчених слів',
-  Words: 'Слів', // 4 5 6 7 8 9 0
+  Words: 'Слів', // 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
   Words23: 'Слова', // 2 3
   Word: 'Слово', // 1
   Days: 'Днів',
@@ -159,6 +159,8 @@ const ukrainian = {
   GamesStatistics: 'Статистика ігор',
   AverageAccuracy: 'Середня точність',
   Records: 'Рекорди',
+  WordfullTitleDescription:
+    "Тренуйте свою пам'ять та концентрацію, запам'ятовуючи слова у правильному порядку. Почніть тренувати свою пам'ять вже сьогодні!",
 } satisfies Record<TextType, string>;
 
 export default ukrainian;

@@ -13,7 +13,7 @@ import { useStatistics } from '../context/StatisticsContext';
 import StatisticsValueItem from '../components/statistics/StatisticsValueItem';
 import PersonalBestsBlock from '../components/statistics/PersonalBestsBlock';
 import { useTopBestGames } from '../hooks/useTopBestGames';
-import { NumberFormat } from '../functions/functions';
+import { NumberFormat, WordsTitleFromAmount } from '../functions/functions';
 
 type Props = StackScreenProps<RootStackParamList, 'PersonalBestsScreen'>;
 
@@ -23,14 +23,6 @@ export default function PersonalBestsScreen({ navigation }: Props) {
   const { statistics } = useStatistics();
   const { history } = useHistory();
   const topGames = useTopBestGames(10);
-
-  function getWordsTitle(count: number) {
-    return count % 10 === 1
-      ? text[language].Word
-      : count && [2, 3, 4].includes(count % 10)
-      ? text[language].Words23
-      : text[language].Words;
-  }
 
   function getShortMonthDay(date: Date, language: Language): string {
     return date.toLocaleDateString(language, {
@@ -49,7 +41,7 @@ export default function PersonalBestsScreen({ navigation }: Props) {
         value={
           NumberFormat(item.correctWords, language) +
           ' ' +
-          getWordsTitle(item.correctWords).toLocaleLowerCase()
+          WordsTitleFromAmount(item.correctWords, language)
         }
         theme={theme}
         type={index ? 'secondary' : 'main'}

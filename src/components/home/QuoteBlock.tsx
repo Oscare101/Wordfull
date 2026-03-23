@@ -15,11 +15,11 @@ export default function QuoteBlock({
   return (
     <View style={styles.quoteBlock}>
       <Text style={[styles.quote, { color: colors[theme].main }]}>
-        {text[language].quote1}
+        {text[language].WordfullTitleDescription}
       </Text>
-      <Text style={[styles.author, { color: colors[theme].main }]}>
+      {/* <Text style={[styles.author, { color: colors[theme].main }]}>
         {text[language].quote1Author}
-      </Text>
+      </Text> */}
     </View>
   );
 }

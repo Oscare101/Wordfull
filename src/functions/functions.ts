@@ -36,3 +36,15 @@ export function TimeFormat(ms: number, language: Language) {
 export function NumberFormat(num: number, language: Language) {
   return num.toLocaleString(language);
 }
+
+export function WordsTitleFromAmount(count: number, language: Language) {
+  if (count >= 10 && count <= 20) {
+    return text[language].Words.toLocaleLowerCase();
+  } else {
+    return count % 10 === 1
+      ? text[language].Word.toLocaleLowerCase()
+      : count % 10 >= 2 && count % 10 <= 4
+      ? text[language].Words23.toLocaleLowerCase()
+      : text[language].Words.toLocaleLowerCase();
+  }
+}
