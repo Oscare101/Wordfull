@@ -4,9 +4,10 @@ import { History, Language } from '../../constants/interfaces/interface';
 import { ThemeType } from '../../constants/themes/themeType';
 import text from '../../constants/languages/text';
 import colors from '../../constants/themes/colors';
-import HistoryActivityChart from './HistoryActivityChart';
+import HistoryActivityChart from '../charts/HistoryActivityChart';
 import { usePeriodStats } from '../../hooks/usePeriodStats';
 import Icon from '../../assets/icon';
+import { NumberFormat } from '../../functions/functions';
 
 function HistoryChartBlock({
   history,
@@ -56,7 +57,7 @@ function HistoryChartBlock({
       <Text
         style={{ fontSize: 16, color: colors[theme].main, fontWeight: 'bold' }}
       >
-        {wordsAmount} {wordsTitle.toLocaleLowerCase()}
+        {NumberFormat(wordsAmount, language)} {wordsTitle.toLocaleLowerCase()}
       </Text>
       <HistoryActivityChart
         history={history}

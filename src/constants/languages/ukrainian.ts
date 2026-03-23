@@ -142,6 +142,23 @@ const ukrainian = {
   sky: 'Небесна',
   blackWhite: 'Чорно-біла',
   Learning: 'Навчання',
+  GamesPlayedEasy: 'Ігор у легкому режимі',
+  GamesPlayedHard: 'Ігор у складному режимі',
+  GamesPlayedStamina: 'Ігор у режимі витривалості',
+  WordsMemorizedEasy: "Слів запам'ятовано в легкому режимі",
+  WordsMemorizedHard: "Слів запам'ятовано в складному режимі",
+  WordsMemorizedStamina: "Слів запам'ятовано в режимі витривалості",
+  AccuracyEasy: 'Точність в легкому режимі',
+  AccuracyHard: 'Точність в складному режимі',
+  AccuracyStamina: 'Точність в режимі витривалості',
+  timePlayerEasy: 'Час гри в легкому режимі',
+  timePlayerHard: 'Час гри в складному режимі',
+  timePlayerStamina: 'Час гри в режимі витривалості',
+  AverageTimePerGame: 'Середній час на гру',
+  AverageTimePerWord: 'Середній час на слово',
+  GamesStatistics: 'Статистика ігор',
+  AverageAccuracy: 'Середня точність',
+  Records: 'Рекорди',
 } satisfies Record<TextType, string>;
 
 export default ukrainian;

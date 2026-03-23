@@ -9,7 +9,7 @@ import ButtonBlock from '../components/global/ButtonBlock';
 import SettingsButtonItem from '../components/settings/SettingsButtonItem';
 import { useStatistics } from '../context/StatisticsContext';
 import { useHistory } from '../context/HistoryContext';
-import HistoryChartBlock from '../components/charts/HistoryChartBlock';
+import HistoryChartBlock from '../components/statistics/HistoryChartBlock';
 import QuoteBlock from '../components/home/QuoteBlock';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 

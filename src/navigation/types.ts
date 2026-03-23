@@ -27,4 +27,5 @@ export type RootStackParamList = {
   PersonalBestsScreen: undefined;
   AccuracyScreen: undefined;
   LearningScreen: undefined;
+  AverageStatsScreen: undefined;
 };

@@ -1,4 +1,4 @@
-import { Dimensions, FlatList, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import React, { useCallback } from 'react';
 import { RootStackParamList } from '../navigation/types';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -9,15 +9,14 @@ import SimpleHeader from '../components/global/SimpleHeader';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import LanguageButtonItem from '../components/settings/LanguageButtonItem';
 import { Language } from '../constants/interfaces/interface';
-import AccuracyHistoryBlock from '../components/charts/AccuracyHistoryBlock';
+import AccuracyHistoryBlock from '../components/statistics/AccuracyHistoryBlock';
 import { useHistory } from '../context/HistoryContext';
 import { useStatistics } from '../context/StatisticsContext';
-import PersonalBestsBlock from '../components/charts/PersonalBestsBlock';
-import HistoryChartBlock from '../components/charts/HistoryChartBlock';
-import GamesTimeStatsBlock from '../components/charts/GamesTimeStatsBlock';
+import PersonalBestsBlock from '../components/statistics/PersonalBestsBlock';
+import HistoryChartBlock from '../components/statistics/HistoryChartBlock';
+import GamesTimeStatsBlock from '../components/statistics/GamesTimeStatsBlock';
 
 type Props = StackScreenProps<RootStackParamList, 'StatisticsScreen'>;
-const width = Dimensions.get('screen').width;
 
 export default function StatisticsScreen({ navigation }: Props) {
   const insets = useSafeAreaInsets();
@@ -65,6 +64,7 @@ export default function StatisticsScreen({ navigation }: Props) {
           statistics={statistics}
           theme={theme}
           language={language}
+          onOpen={() => navigation.navigate('AverageStatsScreen')}
         />
       </View>
     </View>

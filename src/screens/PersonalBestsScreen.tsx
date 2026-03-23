@@ -11,8 +11,9 @@ import colors from '../constants/themes/colors';
 import { useHistory } from '../context/HistoryContext';
 import { useStatistics } from '../context/StatisticsContext';
 import StatisticsValueItem from '../components/statistics/StatisticsValueItem';
-import PersonalBestsBlock from '../components/charts/PersonalBestsBlock';
+import PersonalBestsBlock from '../components/statistics/PersonalBestsBlock';
 import { useTopBestGames } from '../hooks/useTopBestGames';
+import { NumberFormat } from '../functions/functions';
 
 type Props = StackScreenProps<RootStackParamList, 'PersonalBestsScreen'>;
 
@@ -46,7 +47,7 @@ export default function PersonalBestsScreen({ navigation }: Props) {
           language,
         )}`}
         value={
-          item.correctWords.toString() +
+          NumberFormat(item.correctWords, language) +
           ' ' +
           getWordsTitle(item.correctWords).toLocaleLowerCase()
         }
@@ -54,7 +55,7 @@ export default function PersonalBestsScreen({ navigation }: Props) {
         type={index ? 'secondary' : 'main'}
       />
     ),
-    [theme],
+    [theme, language],
   );
   return (
     <View
@@ -65,7 +66,7 @@ export default function PersonalBestsScreen({ navigation }: Props) {
     >
       <SimpleHeader
         onBack={() => navigation.goBack()}
-        title={text[language].PersonalBestResults}
+        title={text[language].Records}
         theme={theme}
       />
       <View style={styles.block}>
@@ -78,7 +79,7 @@ export default function PersonalBestsScreen({ navigation }: Props) {
         <FlatList
           data={topGames}
           renderItem={renderItem}
-          contentContainerStyle={{ gap: 8, paddingBottom: 16 }}
+          contentContainerStyle={{ gap: 8, paddingBottom: insets.bottom + 16 }}
         />
       </View>
     </View>
@@ -94,5 +95,6 @@ const styles = StyleSheet.create({
   block: {
     gap: 8,
     width: '92%',
+    flex: 1,
   },
 });

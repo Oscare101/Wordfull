@@ -1,33 +1,41 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import { Language, Statistics } from '../../constants/interfaces/interface';
 import text from '../../constants/languages/text';
 import { ThemeType } from '../../constants/themes/themeType';
 import colors from '../../constants/themes/colors';
-import { TimeFormat } from '../../functions/functions';
+import { NumberFormat, TimeFormat } from '../../functions/functions';
 import Svg, { Line } from 'react-native-svg';
+import Icon from '../../assets/icon';
 
 function GamesTimeStatsBlock({
   statistics,
   theme,
   language,
   height = 80,
+  onOpen,
 }: {
   statistics: Statistics | null;
   theme: ThemeType;
   language: Language;
   height?: number;
+  onOpen?: () => void;
 }) {
-  return (
+  const container = (
     <View
       style={[styles.container, { borderColor: colors[theme].border, height }]}
     >
+      {onOpen && (
+        <View style={{ position: 'absolute', top: 16, right: 16 }}>
+          <Icon name="open" size={16} color={colors[theme].main} />
+        </View>
+      )}
       <View style={[styles.block]}>
         <Text style={[styles.comment, { color: colors[theme].main }]}>
           {text[language].GamesCompleted}
         </Text>
         <Text style={[styles.title, { color: colors[theme].main }]}>
-          {statistics?.games}
+          {NumberFormat(statistics?.games || 0, language)}
         </Text>
       </View>
       <Svg width={1} height={height - 32} viewBox={`0 0 ${1} ${height - 32}`}>
@@ -53,6 +61,16 @@ function GamesTimeStatsBlock({
       </View>
     </View>
   );
+
+  if (onOpen) {
+    return (
+      <TouchableOpacity activeOpacity={0.8} onPress={onOpen}>
+        {container}
+      </TouchableOpacity>
+    );
+  }
+
+  return container;
 }
 
 const styles = StyleSheet.create({

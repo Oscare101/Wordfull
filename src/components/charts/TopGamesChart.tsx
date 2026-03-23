@@ -4,6 +4,7 @@ import { History, Language } from '../../constants/interfaces/interface';
 import colors from '../../constants/themes/colors';
 import { useSettings } from '../../context/SettingsContext';
 import text from '../../constants/languages/text';
+import { NumberFormat } from '../../functions/functions';
 
 interface TopGamesChartProps {
   games: History[];
@@ -52,7 +53,8 @@ export default function TopGamesChart({
     <View style={[styles.container, { height }]}>
       <View style={styles.topRow}>
         <Text style={[styles.bestWordsText, { color: themeColors.main }]}>
-          {bestGame.correctWords} {wordsTitle.toLocaleLowerCase()}
+          {NumberFormat(bestGame.correctWords, language)}{' '}
+          {wordsTitle.toLocaleLowerCase()}
         </Text>
 
         <Text style={[styles.bestDateText, { color: themeColors.main }]}>

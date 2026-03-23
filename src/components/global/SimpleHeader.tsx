@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
   },
   headerTitle: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: '500',
   },
   placeholder: {

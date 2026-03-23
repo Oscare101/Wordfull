@@ -32,3 +32,7 @@ export function TimeFormat(ms: number, language: Language) {
     return `${seconds}.${oneTenthOfSecond} ${text[language].sec}`;
   }
 }
+
+export function NumberFormat(num: number, language: Language) {
+  return num.toLocaleString(language);
+}

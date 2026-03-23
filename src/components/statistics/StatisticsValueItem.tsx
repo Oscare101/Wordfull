@@ -3,7 +3,7 @@ import React from 'react';
 import { ThemeType } from '../../constants/themes/themeType';
 import colors from '../../constants/themes/colors';
 
-export default function StatisticsValueItem({
+function StatisticsValueItem({
   theme,
   type,
   title,
@@ -58,3 +58,5 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
 });
+
+export default React.memo(StatisticsValueItem);

@@ -140,6 +140,23 @@ const english = {
   sky: 'Sky',
   blackWhite: 'Black & White',
   Learning: 'Learning',
+  GamesPlayedEasy: 'Games played in Easy mode',
+  GamesPlayedHard: 'Games played in Hard mode',
+  GamesPlayedStamina: 'Games played in Stamina mode',
+  WordsMemorizedEasy: 'Words memorized in Easy mode',
+  WordsMemorizedHard: 'Words memorized in Hard mode',
+  WordsMemorizedStamina: 'Words memorized in Stamina mode',
+  AccuracyEasy: 'Accuracy in Easy mode',
+  AccuracyHard: 'Accuracy in Hard mode',
+  AccuracyStamina: 'Accuracy in Stamina mode',
+  timePlayerEasy: 'Time played in Easy mode',
+  timePlayerHard: 'Time played in Hard mode',
+  timePlayerStamina: 'Time played in Stamina mode',
+  AverageTimePerGame: 'Average time per game',
+  AverageTimePerWord: 'Average time per word',
+  GamesStatistics: 'Games statistics',
+  AverageAccuracy: 'Average accuracy',
+  Records: 'Records',
 } satisfies Record<TextType, string>;
 
 export default english;

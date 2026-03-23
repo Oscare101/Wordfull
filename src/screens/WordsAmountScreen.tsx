@@ -8,7 +8,7 @@ import { Language } from '../constants/interfaces/interface';
 import text from '../constants/languages/text';
 import { useSettings } from '../context/SettingsContext';
 import colors from '../constants/themes/colors';
-import HistoryChartBlock from '../components/charts/HistoryChartBlock';
+import HistoryChartBlock from '../components/statistics/HistoryChartBlock';
 import { useHistory } from '../context/HistoryContext';
 import { useStatistics } from '../context/StatisticsContext';
 import { usePeriodStats } from '../hooks/usePeriodStats';
@@ -132,7 +132,7 @@ export default function WordsAmountScreen({ navigation }: Props) {
           data={stats}
           renderItem={renderItem}
           keyExtractor={item => item.title}
-          contentContainerStyle={{ gap: 8, paddingBottom: 16 }}
+          contentContainerStyle={{ gap: 8, paddingBottom: insets.bottom + 16 }}
         />
       </View>
     </View>
@@ -148,5 +148,6 @@ const styles = StyleSheet.create({
   block: {
     gap: 8,
     width: '92%',
+    flex: 1,
   },
 });

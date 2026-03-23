@@ -9,7 +9,7 @@ import { useSettings } from '../context/SettingsContext';
 import colors from '../constants/themes/colors';
 import { usePeriodStats } from '../hooks/usePeriodStats';
 import StatisticsValueItem from '../components/statistics/StatisticsValueItem';
-import AccuracyHistoryBlock from '../components/charts/AccuracyHistoryBlock';
+import AccuracyHistoryBlock from '../components/statistics/AccuracyHistoryBlock';
 import { useHistory } from '../context/HistoryContext';
 import { useStatistics } from '../context/StatisticsContext';
 
@@ -27,6 +27,7 @@ export default function AccuracyScreen({ navigation }: Props) {
     accuracyYear,
     accuracyTotal,
   } = usePeriodStats();
+  console.log(history);
 
   const stats = [
     {
@@ -93,7 +94,7 @@ export default function AccuracyScreen({ navigation }: Props) {
           data={stats}
           renderItem={renderItem}
           keyExtractor={item => item.title}
-          contentContainerStyle={{ gap: 8, paddingBottom: 16 }}
+          contentContainerStyle={{ gap: 8, paddingBottom: insets.bottom + 16 }}
         />
       </View>
     </View>
@@ -109,5 +110,6 @@ const styles = StyleSheet.create({
   block: {
     gap: 8,
     width: '92%',
+    flex: 1,
   },
 });
