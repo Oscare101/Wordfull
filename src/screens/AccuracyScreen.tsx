@@ -88,7 +88,6 @@ export default function AccuracyScreen({ navigation }: Props) {
           language={language}
           theme={theme}
           height={200}
-          onOpen={() => navigation.navigate('AccuracyScreen')}
         />
         <FlatList
           data={stats}

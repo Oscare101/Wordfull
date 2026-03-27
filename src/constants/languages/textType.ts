@@ -129,6 +129,9 @@ export type TextType =
   | 'AverageAccuracy'
   | 'Records'
   | 'WordfullTitleDescription'
+  | 'NoInfo'
+  | 'PlayYourFirstGame'
+  | 'PlayMoreGamesToUnlockYourPersonalBests'
   // themes
   | 'olive'
   | 'darkBlue'

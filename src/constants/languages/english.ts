@@ -11,7 +11,7 @@ const english = {
   YourLanguage: 'Your language',
   OtherLanguages: 'Other languages',
   AfterChangingLanguageWarning:
-    'After changing the language, the word pack will be changed to the new language.', // You still can change it to any language you want in the word pack settings.',
+    'After changing the language, the word pack will be changed to the new language. Your progress will be preserved.', // You still can change it to any language you want in the word pack settings.',
   YourTheme: 'Your theme',
   OtherThemes: 'Other themes',
   // game modes screen
@@ -159,6 +159,10 @@ const english = {
   Records: 'Records',
   WordfullTitleDescription:
     'Train your memory and focus by memorizing words in the correct order. Start your memory training journey today!',
+  NoInfo: 'No info',
+  PlayYourFirstGame: 'Play your first game to see the statistics',
+  PlayMoreGamesToUnlockYourPersonalBests:
+    'Play more games to see your personal bests',
 } satisfies Record<TextType, string>;
 
 export default english;

@@ -7,6 +7,7 @@ import { ThemeType } from '../../constants/themes/themeType';
 import { useTopBestGames } from '../../hooks/useTopBestGames';
 import TopGamesChart from '../charts/TopGamesChart';
 import Icon from '../../assets/icon';
+import NoInfoStatBlock from './NoInfoStatBlock';
 
 function PersonalBestsBlock({
   language,
@@ -34,11 +35,31 @@ function PersonalBestsBlock({
       <Text style={{ fontSize: 14, color: colors[theme].main }}>
         {text[language].PersonalBestResults}
       </Text>
-      <TopGamesChart
-        games={topGames}
-        height={height - 50}
-        maxItems={maxGames}
-      />
+      {topGames.length === 0 ? (
+        <NoInfoStatBlock
+          language={language}
+          theme={theme}
+          height={height - 50}
+        />
+      ) : (
+        <TopGamesChart
+          games={topGames}
+          height={height - 50}
+          maxItems={maxGames}
+        />
+      )}
+      {topGames.length === 1 && (
+        <Text
+          style={{
+            position: 'absolute',
+            bottom: 16,
+            left: 16,
+            color: colors[theme].main,
+          }}
+        >
+          {text[language].PlayMoreGamesToUnlockYourPersonalBests}
+        </Text>
+      )}
     </View>
   );
 
