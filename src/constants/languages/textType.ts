@@ -132,6 +132,7 @@ export type TextType =
   | 'NoInfo'
   | 'PlayYourFirstGame'
   | 'PlayMoreGamesToUnlockYourPersonalBests'
+  | 'PrivacyPolicy'
   // themes
   | 'olive'
   | 'darkBlue'

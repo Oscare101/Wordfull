@@ -163,6 +163,7 @@ const english = {
   PlayYourFirstGame: 'Play your first game to see the statistics',
   PlayMoreGamesToUnlockYourPersonalBests:
     'Play more games to see your personal bests',
+  PrivacyPolicy: 'Privacy policy',
 } satisfies Record<TextType, string>;
 
 export default english;

@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, Linking, StyleSheet, View } from 'react-native';
 import React, { useCallback } from 'react';
 import { RootStackParamList } from '../navigation/types';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -43,6 +43,15 @@ export default function SettingsScreen({ navigation }: Props) {
       icon: 'profile',
       onPress: useCallback(() => {
         navigation.navigate('UserDataScreen');
+      }, [navigation]),
+    },
+    {
+      title: text[language].PrivacyPolicy,
+      icon: 'document',
+      onPress: useCallback(() => {
+        Linking.openURL(
+          'https://sites.google.com/view/wordfull-privacy-policy/%D0%B3%D0%BE%D0%BB%D0%BE%D0%B2%D0%BD%D0%B0-%D1%81%D1%82%D0%BE%D1%80%D1%96%D0%BD%D0%BA%D0%B0',
+        );
       }, [navigation]),
     },
   ];

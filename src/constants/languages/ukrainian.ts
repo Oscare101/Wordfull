@@ -165,6 +165,7 @@ const ukrainian = {
   PlayYourFirstGame: 'Зіграти першу гру, щоб побачити статистику',
   PlayMoreGamesToUnlockYourPersonalBests:
     'Грай більше ігор, щоб бачити свої особисті рекорди',
+  PrivacyPolicy: 'Політика конфіденційності',
 } satisfies Record<TextType, string>;
 
 export default ukrainian;

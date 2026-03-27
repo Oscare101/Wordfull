@@ -174,7 +174,7 @@ function AccuracyProgressChart({
   const accuracyPoints = data.map((item, index) => {
     const x = leftPadding + index * xStep;
     const normalized = clamp(item.accuracy, 0, 1);
-    const y = topPadding + innerHeight - normalized * innerHeight;
+    const y = topPadding + innerHeight - normalized * innerHeight - 2;
 
     return { x, y };
   });
@@ -230,6 +230,15 @@ function AccuracyProgressChart({
           const isNull = data[index].totalCorrectWords === 0;
 
           return (
+            // <Line
+            //   key={`accuracy-point-${index}`}
+            //   x1={point.x - xStep / 3}
+            //   y1={point.y}
+            //   x2={point.x + xStep / 3}
+            //   y2={point.y}
+            //   stroke={isNull ? 'transparent' : white}
+            //   strokeWidth={2}
+            // />
             <Circle
               key={`accuracy-point-${index}`}
               cx={point.x}
