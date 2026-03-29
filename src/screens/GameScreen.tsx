@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import React, { useCallback, useState, useEffect } from 'react';
 import { RootStackParamList } from '../navigation/types';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -13,6 +13,7 @@ import CardListBlock from '../components/game/CardListBlock';
 import CloseGameModal from '../components/game/CloseGameModal';
 import GameBottomBlock from '../components/game/GameBottomBlock';
 import Toast from 'react-native-toast-message';
+import useCaptureProtectionScreen from '../hooks/useCaptureProtectionScreen';
 
 type Props = StackScreenProps<RootStackParamList, 'GameScreen'>;
 
@@ -22,6 +23,8 @@ export default function GameScreen({ navigation, route }: Props) {
   const wordsAmount: number = route.params.wordsAmount;
   const gameMode: GameMode = route.params.mode;
   const words: string[] = route.params.words;
+
+  useCaptureProtectionScreen(true);
 
   const [startTime, setStartTime] = useState<number>(0);
   const [wordIndex, setWordIndex] = useState<number>(0);

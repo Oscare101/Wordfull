@@ -166,6 +166,11 @@ const ukrainian = {
   PlayMoreGamesToUnlockYourPersonalBests:
     'Грай більше ігор, щоб бачити свої особисті рекорди',
   PrivacyPolicy: 'Політика конфіденційності',
+  LearningScreenDescription:
+    "Ви можете використовувати цей екран, щоб краще зрозуміти функціонал застосунку або навчитися методам запам'ятовування. Тут ви знайдете объяснення ігрових режимів та поради для покращення ваших навичок запам'ятовування.",
+  AppVersion: 'Версія застосунку',
+  ReportsAndFeedback: 'Звіти та відгуки',
+  ScreenshotsDisabled: 'Скриншоти вимкнено',
 } satisfies Record<TextType, string>;
 
 export default ukrainian;

@@ -134,6 +134,9 @@ export type TextType =
   | 'PlayMoreGamesToUnlockYourPersonalBests'
   | 'PrivacyPolicy'
   | 'LearningScreenDescription'
+  | 'AppVersion'
+  | 'ReportsAndFeedback'
+  | 'ScreenshotsDisabled'
   // themes
   | 'olive'
   | 'darkBlue'

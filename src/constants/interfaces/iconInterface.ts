@@ -23,4 +23,5 @@ export type IconName =
   | 'document'
   | 'trash'
   | 'profile'
-  | 'book';
+  | 'book'
+  | 'clipboard';
