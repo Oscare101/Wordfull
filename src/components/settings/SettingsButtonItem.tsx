@@ -10,11 +10,13 @@ function SettingsButtonItem({
   icon,
   onPress,
   theme,
+  alert,
 }: {
   title: string;
   icon: IconName;
   onPress?: () => void;
   theme: ThemeType;
+  alert?: boolean;
 }) {
   return (
     <TouchableOpacity
@@ -28,6 +30,31 @@ function SettingsButtonItem({
       onPress={onPress}
       activeOpacity={0.8}
     >
+      {alert && (
+        <View
+          style={{
+            position: 'absolute',
+            top: -4,
+            right: -4,
+            backgroundColor: colors[theme].accent,
+            width: 24,
+            height: 24,
+            borderRadius: 8,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Text
+            style={{
+              color: colors[theme].bg,
+              fontWeight: 'bold',
+              fontSize: 18,
+            }}
+          >
+            !
+          </Text>
+        </View>
+      )}
       <Text style={[styles.buttonTitle, { color: colors[theme].main }]}>
         {title}
       </Text>

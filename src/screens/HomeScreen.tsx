@@ -54,6 +54,7 @@ export default function HomeScreen({ navigation }: Props) {
             navigation.navigate('LearningScreen');
           }}
           theme={theme}
+          alert={history.length === 0}
         /> */}
         <SettingsButtonItem
           title={text[language].Settings}

@@ -133,6 +133,7 @@ export type TextType =
   | 'PlayYourFirstGame'
   | 'PlayMoreGamesToUnlockYourPersonalBests'
   | 'PrivacyPolicy'
+  | 'LearningScreenDescription'
   // themes
   | 'olive'
   | 'darkBlue'

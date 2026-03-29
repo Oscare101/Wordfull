@@ -164,6 +164,8 @@ const english = {
   PlayMoreGamesToUnlockYourPersonalBests:
     'Play more games to see your personal bests',
   PrivacyPolicy: 'Privacy policy',
+  LearningScreenDescription:
+    'You can use this screen to better understand the app functionality or to learn methods of memorization. Here you will find explanations of game modes and tips for improving your memorization skills',
 } satisfies Record<TextType, string>;
 
 export default english;

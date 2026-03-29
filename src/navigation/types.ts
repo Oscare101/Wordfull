@@ -28,4 +28,5 @@ export type RootStackParamList = {
   AccuracyScreen: undefined;
   LearningScreen: undefined;
   AverageStatsScreen: undefined;
+  ChapterScreen: { chapterId: string };
 };
