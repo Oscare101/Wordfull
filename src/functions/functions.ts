@@ -34,7 +34,7 @@ export function TimeFormat(ms: number, language: Language) {
 }
 
 export function NumberFormat(num: number, language: Language) {
-  return num.toLocaleString(language);
+  return num.toLocaleString();
 }
 
 export function WordsTitleFromAmount(count: number, language: Language) {

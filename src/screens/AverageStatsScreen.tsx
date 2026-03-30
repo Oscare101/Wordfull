@@ -48,6 +48,7 @@ export default function AverageStatsScreen({ navigation }: Props) {
     timePlayedStamina,
     averageTimePerGame,
     averageTimePerWord,
+    wordsMemorizedTotal,
   } = useGameStats(history);
 
   const stats = [
@@ -150,6 +151,13 @@ export default function AverageStatsScreen({ navigation }: Props) {
           theme={theme}
           language={language}
         />
+        <StatisticsValueItem
+          theme={theme}
+          type="secondary"
+          title={text[language].TotalWordsMemorized}
+          value={NumberFormat(wordsMemorizedTotal, language)}
+        />
+
         <FlatList
           data={stats}
           renderItem={renderItem}

@@ -13,7 +13,11 @@ import { useStatistics } from '../context/StatisticsContext';
 import StatisticsValueItem from '../components/statistics/StatisticsValueItem';
 import PersonalBestsBlock from '../components/statistics/PersonalBestsBlock';
 import { useTopBestGames } from '../hooks/useTopBestGames';
-import { NumberFormat, WordsTitleFromAmount } from '../functions/functions';
+import {
+  NumberFormat,
+  TimeFormat,
+  WordsTitleFromAmount,
+} from '../functions/functions';
 
 type Props = StackScreenProps<RootStackParamList, 'PersonalBestsScreen'>;
 

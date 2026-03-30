@@ -16,6 +16,7 @@ type Result = {
   timePlayedStamina: number;
   averageTimePerGame: number;
   averageTimePerWord: number;
+  wordsMemorizedTotal: number;
 };
 
 export default function useGameStats(history: History[]): Result {
@@ -37,6 +38,7 @@ export default function useGameStats(history: History[]): Result {
 
     let totalTime = 0;
     let totalWords = 0;
+    let wordsMemorizedTotal = 0;
 
     for (const item of history) {
       // --- count by mode ---
@@ -60,6 +62,7 @@ export default function useGameStats(history: History[]): Result {
       // --- accumulate ---
       totalTime += item.duration ?? 0;
       totalWords += item.wordsAmount ?? 0;
+      wordsMemorizedTotal += item.correctWords ?? 0;
     }
 
     const totalGames = gamesAmountEasy + gamesAmountHard + gamesAmountStamina;
@@ -83,6 +86,7 @@ export default function useGameStats(history: History[]): Result {
       averageTimePerGame: totalGames > 0 ? totalTime / totalGames : 0,
 
       averageTimePerWord: totalWords > 0 ? totalTime / totalWords : 0,
+      wordsMemorizedTotal,
     };
   }, [history]);
 }
