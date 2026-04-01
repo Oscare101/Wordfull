@@ -176,6 +176,7 @@ const ukrainian = {
   complex_nouns: 'Складні іменники',
   abstract_nouns: 'Абстрактні іменники',
   Preview: 'Попередній перегляд',
+  SmthWentWrongTryAgain: 'Щось пішло не так\nБудь ласка, спробуйте ще раз',
 } satisfies Record<TextType, string>;
 
 export default ukrainian;

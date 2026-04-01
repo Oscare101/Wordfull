@@ -29,7 +29,7 @@ export function HistoryProvider({ children }: { children: React.ReactNode }) {
       const loadedHistory = await historyRepository.getAll();
       setHistory(loadedHistory);
     } catch (error) {
-      console.error('Failed to load history from DB:', error);
+      if (__DEV__) console.error('Failed to load history from DB:', error);
     } finally {
       setIsLoading(false);
     }

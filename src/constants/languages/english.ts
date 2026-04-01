@@ -174,6 +174,7 @@ const english = {
   complex_nouns: 'Complex nouns',
   abstract_nouns: 'Abstract nouns',
   Preview: 'Preview',
+  SmthWentWrongTryAgain: 'Something went wrong\nPlease try again',
 } satisfies Record<TextType, string>;
 
 export default english;

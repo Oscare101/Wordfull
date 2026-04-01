@@ -20,7 +20,7 @@ export default function App() {
         await initDatabase();
         setIsDbReady(true);
       } catch (error) {
-        console.error('Database init error:', error);
+        if (__DEV__) console.error('Database init error:', error);
       }
     };
 

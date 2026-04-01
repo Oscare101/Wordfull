@@ -47,7 +47,7 @@ function ExportWarningModal({
         position: 'top',
       });
     } catch (error: any) {
-      console.error('onExportPress error:', error);
+      if (__DEV__) console.error('onExportPress error:', error);
       if (error.includes('CANCELLED')) {
         return;
       }

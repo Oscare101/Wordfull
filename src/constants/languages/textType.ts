@@ -142,6 +142,7 @@ export type TextType =
   | 'complex_nouns'
   | 'abstract_nouns'
   | 'Preview'
+  | 'SmthWentWrongTryAgain'
   // themes
   | 'olive'
   | 'darkBlue'

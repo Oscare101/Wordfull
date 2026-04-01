@@ -9,7 +9,7 @@ type TableInfoRow = {
 };
 
 export async function initDatabase(): Promise<void> {
-  console.log('initDatabase: started');
+  if (__DEV__) console.log('initDatabase: started');
 
   // TODO only for dev reset db
   // await db.executeAsync(`DROP TABLE IF EXISTS settings`);
@@ -52,7 +52,7 @@ export async function initDatabase(): Promise<void> {
     )
   `);
 
-  console.log('initDatabase: base tables ensured');
+  if (__DEV__) console.log('initDatabase: base tables ensured');
 
   // For old installed apps:
   // if settings table already existed with the old schema,
@@ -71,9 +71,10 @@ export async function initDatabase(): Promise<void> {
       ADD COLUMN selected_system_word_pack_keys_json TEXT
     `);
 
-    console.log(
-      'initDatabase: added selected_system_word_pack_keys_json column',
-    );
+    if (__DEV__)
+      console.log(
+        'initDatabase: added selected_system_word_pack_keys_json column',
+      );
   }
 
   const statisticsResult = await db.executeAsync(
@@ -96,7 +97,7 @@ export async function initDatabase(): Promise<void> {
       [1, 0, 0, 0, 0],
     );
 
-    console.log('initDatabase: default statistics inserted');
+    if (__DEV__) console.log('initDatabase: default statistics inserted');
   }
 
   const existingSettingsResult = await db.executeAsync(
@@ -123,7 +124,7 @@ export async function initDatabase(): Promise<void> {
 
   const hasSettingsRow = existingSettingsRows.length > 0;
 
-  console.log('initDatabase: hasSettingsRow =', hasSettingsRow);
+  if (__DEV__) console.log('initDatabase: hasSettingsRow =', hasSettingsRow);
 
   const defaultSelectedSystemWordPackKeysJson =
     stringifySelectedSystemWordPackKeys(DEFAULT_SYSTEM_WORD_PACK_KEYS);
@@ -151,12 +152,13 @@ export async function initDatabase(): Promise<void> {
       ],
     );
 
-    console.log(
-      'initDatabase: default settings inserted with language:',
-      initialLanguage,
-      'and selected keys:',
-      defaultSelectedSystemWordPackKeysJson,
-    );
+    if (__DEV__)
+      console.log(
+        'initDatabase: default settings inserted with language:',
+        initialLanguage,
+        'and selected keys:',
+        defaultSelectedSystemWordPackKeysJson,
+      );
 
     return;
   }
@@ -174,9 +176,10 @@ export async function initDatabase(): Promise<void> {
       [defaultSelectedSystemWordPackKeysJson, 1],
     );
 
-    console.log(
-      'initDatabase: fixed missing selected_system_word_pack_keys_json with default value:',
-      defaultSelectedSystemWordPackKeysJson,
-    );
+    if (__DEV__)
+      console.log(
+        'initDatabase: fixed missing selected_system_word_pack_keys_json with default value:',
+        defaultSelectedSystemWordPackKeysJson,
+      );
   }
 }

@@ -27,7 +27,6 @@ export default function AccuracyScreen({ navigation }: Props) {
     accuracyYear,
     accuracyTotal,
   } = usePeriodStats();
-  console.log(history);
 
   const stats = [
     {

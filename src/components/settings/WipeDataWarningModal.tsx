@@ -62,7 +62,7 @@ function WipeDataWarningModal({
         position: 'top',
       });
     } catch (error) {
-      console.error('onWipeDataPress error:', error);
+      if (__DEV__) console.error('onWipeDataPress error:', error);
       Toast.show({
         type: 'ToastMessage',
         props: {

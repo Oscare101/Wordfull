@@ -33,7 +33,7 @@ export function StatisticsProvider({
       const loadedStatistics = await statisticsRepository.get();
       setStatistics(loadedStatistics);
     } catch (error) {
-      console.error('Failed to load statistics from DB:', error);
+      if (__DEV__) console.error('Failed to load statistics from DB:', error);
     } finally {
       setIsLoading(false);
     }

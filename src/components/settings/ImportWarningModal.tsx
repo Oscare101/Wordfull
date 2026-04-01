@@ -68,7 +68,7 @@ function ImportWarningModal({
         position: 'top',
       });
     } catch (error) {
-      console.error('onConfirmImport error:', error);
+      if (__DEV__) console.error('onConfirmImport error:', error);
       Toast.show({
         type: 'ToastMessage',
         props: {
@@ -88,7 +88,7 @@ function ImportWarningModal({
       setPreviewData(data.payload);
       setState('preview');
     } catch (error) {
-      console.error('onImportPress error:', error);
+      if (__DEV__) console.error('onImportPress error:', error);
       Toast.show({
         type: 'ToastMessage',
         props: {

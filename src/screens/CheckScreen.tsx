@@ -14,6 +14,8 @@ import { gameResultsRepository } from '../db/repositories/gameResultsRepository'
 import { useStatistics } from '../context/StatisticsContext';
 import { useHistory } from '../context/HistoryContext';
 import CheckInputRow from '../components/game/CheckInputRow';
+import Toast from 'react-native-toast-message';
+import text from '../constants/languages/text';
 
 type Props = StackScreenProps<RootStackParamList, 'CheckScreen'>;
 
@@ -96,7 +98,14 @@ export default function CheckScreen({ navigation, route }: Props) {
         mode: gameMode,
       });
     } catch (error) {
-      console.error('Failed to save completed game:', error);
+      Toast.show({
+        type: 'ToastMessage',
+        props: {
+          title: text[language].SmthWentWrongTryAgain,
+        },
+        position: 'top',
+      });
+      if (__DEV__) console.error('Failed to save completed game:', error);
     }
   }, [time, wordsInputs, words, gameMode, wordPack, navigation]);
 

@@ -47,7 +47,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       const loadedSettings = await settingsRepository.get();
       setSettings(loadedSettings);
     } catch (error) {
-      console.error('Failed to load settings from DB:', error);
+      if (__DEV__) console.error('Failed to load settings from DB:', error);
     } finally {
       setIsLoading(false);
     }
@@ -72,7 +72,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         };
       });
     } catch (error) {
-      console.error('Failed to update language:', error);
+      if (__DEV__) console.error('Failed to update language:', error);
     }
   }, []);
 
@@ -91,7 +91,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         };
       });
     } catch (error) {
-      console.error('Failed to update theme:', error);
+      if (__DEV__) console.error('Failed to update theme:', error);
     }
   }, []);
 
@@ -118,10 +118,11 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
           };
         });
       } catch (error) {
-        console.error(
-          'Failed to update selected system word pack keys:',
-          error,
-        );
+        if (__DEV__)
+          console.error(
+            'Failed to update selected system word pack keys:',
+            error,
+          );
       }
     },
     [],
