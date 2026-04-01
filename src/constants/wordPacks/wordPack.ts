@@ -1,44 +1,92 @@
-import { Language, WordPack } from '../interfaces/interface';
+import {
+  DEFAULT_SYSTEM_WORD_PACK_KEYS,
+  Language,
+  SystemWordPackKey,
+  WordPack,
+} from '../interfaces/interface';
+import { abstract_noun_en_500 } from './abstract-nouns-en-500';
+import { abstract_noun_uk_500 } from './abstract-nouns-uk-500';
 import { common_noun_en_100 } from './common-nouns-en-100';
-import { common_noun_en_1000 } from './common-nouns-en-1000';
 import { common_noun_uk_100 } from './common-nouns-uk-100';
-import { common_noun_uk_1000 } from './common-nouns-uk-1000';
+import { complex_noun_en_900 } from './complex-nouns-en-900';
+import { complex_noun_uk_900 } from './complex-nouns-uk-900';
 
-export const SYSTEM_WORD_PACKS: WordPack[] = [
-  // common_noun_en_100,
-  common_noun_en_1000,
-  // common_noun_uk_100,
-  common_noun_uk_1000,
-];
+type SystemWordPacksByLanguage = Record<
+  Language,
+  Partial<Record<SystemWordPackKey, WordPack>>
+>;
+
+export const SYSTEM_WORD_PACKS: SystemWordPacksByLanguage = {
+  en: {
+    simple_nouns: common_noun_en_100,
+    complex_nouns: complex_noun_en_900,
+    abstract_nouns: abstract_noun_en_500,
+  },
+  uk: {
+    simple_nouns: common_noun_uk_100,
+    complex_nouns: complex_noun_uk_900,
+    abstract_nouns: abstract_noun_uk_500,
+  },
+};
 
 export function getAllSystemWordPacks(): WordPack[] {
-  return SYSTEM_WORD_PACKS;
+  return Object.values(SYSTEM_WORD_PACKS).flatMap(languagePacks =>
+    Object.values(languagePacks).filter(Boolean),
+  ) as WordPack[];
 }
 
-export function getSystemWordPackById(id: string): WordPack | undefined {
-  return SYSTEM_WORD_PACKS.find(pack => pack.id === id);
+export function getSystemWordPackByKey(
+  language: Language,
+  key: SystemWordPackKey,
+): WordPack | undefined {
+  return SYSTEM_WORD_PACKS[language]?.[key];
 }
 
 export function getSystemWordPacksByLanguage(language: Language): WordPack[] {
-  return SYSTEM_WORD_PACKS.filter(pack => pack.language === language);
+  return Object.values(SYSTEM_WORD_PACKS[language]).filter(
+    Boolean,
+  ) as WordPack[];
 }
 
-export function getDefaultWordPackIdByLanguage(language: Language): string {
-  const pack = SYSTEM_WORD_PACKS.find(pack => pack.language === language);
-
-  if (!pack) {
-    throw new Error(`No default word pack found for language: ${language}`);
-  }
-
-  return pack.id;
+export function getSystemWordPacksByKeys(
+  language: Language,
+  keys: SystemWordPackKey[],
+): WordPack[] {
+  return keys
+    .map(key => getSystemWordPackByKey(language, key))
+    .filter(Boolean) as WordPack[];
 }
 
-export function getDefaultWordPackByLanguage(language: Language): WordPack {
-  const pack = SYSTEM_WORD_PACKS.find(pack => pack.language === language);
+export function getMergedSystemWordPackByLanguageAndKeys(
+  language: Language,
+  keys: SystemWordPackKey[],
+): WordPack {
+  const packs = getSystemWordPacksByKeys(language, keys);
 
-  if (!pack) {
-    throw new Error(`No default word pack found for language: ${language}`);
-  }
+  const safePacks =
+    packs.length > 0
+      ? packs
+      : getSystemWordPacksByKeys(language, DEFAULT_SYSTEM_WORD_PACK_KEYS);
 
-  return pack;
+  const uniqueWords = Array.from(
+    new Set(safePacks.flatMap(pack => pack.words)),
+  );
+
+  const mergedName =
+    safePacks.length === 1
+      ? safePacks[0].name
+      : safePacks.map(pack => pack.name).join(' + ');
+
+  const mergedId = `system-${language}-${safePacks
+    .map(pack => pack.key ?? pack.id)
+    .join('+')}`;
+
+  return {
+    id: mergedId,
+    key: undefined,
+    name: mergedName,
+    isSystem: true,
+    language,
+    words: uniqueWords,
+  };
 }

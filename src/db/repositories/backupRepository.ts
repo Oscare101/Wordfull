@@ -1,11 +1,19 @@
 import { db } from '../database';
 import { initDatabase } from '../initDatabase';
+import { DEFAULT_SYSTEM_WORD_PACK_KEYS } from '../../constants/interfaces/interface';
+import { stringifySelectedSystemWordPackKeys } from './settingsRepository';
 
 export type RawSettingsRow = {
   id: number;
   theme: string;
   language: string;
-  selected_word_pack_id: string;
+
+  // new field
+  selected_system_word_pack_keys_json?: string | null;
+
+  // optional old field for old backup files only
+  selected_word_pack_id?: string | null; // TODO remove
+
   start_date: number;
 };
 
@@ -66,14 +74,23 @@ export const backupRepository = {
       await db.executeAsync('DELETE FROM statistics');
       await db.executeAsync('DELETE FROM settings');
 
+      const defaultSelectedSystemWordPackKeysJson =
+        stringifySelectedSystemWordPackKeys(DEFAULT_SYSTEM_WORD_PACK_KEYS);
+
       for (const row of data.settings) {
+        const selectedSystemWordPackKeysJson =
+          typeof row.selected_system_word_pack_keys_json === 'string' &&
+          row.selected_system_word_pack_keys_json.length > 0
+            ? row.selected_system_word_pack_keys_json
+            : defaultSelectedSystemWordPackKeysJson;
+
         await db.executeAsync(
           `
           INSERT INTO settings (
             id,
             theme,
             language,
-            selected_word_pack_id,
+            selected_system_word_pack_keys_json,
             start_date
           ) VALUES (?, ?, ?, ?, ?)
           `,
@@ -81,7 +98,7 @@ export const backupRepository = {
             row.id,
             row.theme,
             row.language,
-            row.selected_word_pack_id,
+            selectedSystemWordPackKeysJson,
             row.start_date,
           ],
         );

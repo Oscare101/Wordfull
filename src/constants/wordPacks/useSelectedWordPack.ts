@@ -1,19 +1,14 @@
 import { useMemo } from 'react';
-import {
-  getDefaultWordPackByLanguage,
-  getSystemWordPackById,
-} from './wordPack';
+import { getMergedSystemWordPackByLanguageAndKeys } from './wordPack';
 import { useSettings } from '../../context/SettingsContext';
 
-// const wordPack = useSelectedWordPack();
-
 export function useSelectedWordPack() {
-  const { selectedWordPackId, language } = useSettings();
+  const { selectedSystemWordPackKeys, language } = useSettings();
 
   return useMemo(() => {
-    return (
-      getSystemWordPackById(selectedWordPackId) ??
-      getDefaultWordPackByLanguage(language)
+    return getMergedSystemWordPackByLanguageAndKeys(
+      language,
+      selectedSystemWordPackKeys,
     );
-  }, [selectedWordPackId, language]);
+  }, [selectedSystemWordPackKeys, language]);
 }

@@ -8,12 +8,10 @@ import colors from '../constants/themes/colors';
 import SimpleHeader from '../components/global/SimpleHeader';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ButtonBlock from '../components/global/ButtonBlock';
-import UserDataActionModal from '../components/settings/UserDataActionModal';
 import { backupExportService } from '../services/userDataService';
 import { useStatistics } from '../context/StatisticsContext';
 import { useHistory } from '../context/HistoryContext';
 import { EncryptedBackupFile } from '../constants/interfaces/backup';
-import { backupImportService } from '../services/backupImportService';
 import WipeDataWarningModal from '../components/settings/WipeDataWarningModal';
 import ExportWarningModal from '../components/settings/ExportWarningModal';
 import ImportWarningModal from '../components/settings/ImportWarningModal';
@@ -65,7 +63,7 @@ export default function UserDataScreen({ navigation }: Props) {
 
     try {
       setLoading(true);
-      await backupExportService.exportPlainJsonBackup();
+      await backupExportService.exportPlainJsonBackup('password');
       setModalType(null);
       setExportPassword('');
     } catch (error) {
@@ -78,7 +76,9 @@ export default function UserDataScreen({ navigation }: Props) {
   const selectImportFile = async () => {
     try {
       setLoading(true);
-      const result = await backupExportService.exportPlainJsonBackup();
+      const result = await backupExportService.exportPlainJsonBackup(
+        'password',
+      );
       // setImportedFile(result.filename);
       // setImportedFileName(result.fileName);
       setModalType('importConfirm');
@@ -180,98 +180,6 @@ export default function UserDataScreen({ navigation }: Props) {
           />
         </View>
       </View>
-
-      <UserDataActionModal
-        visible={modalType === 'export'}
-        title="Export backup"
-        description={`File name: ${
-          exportInfo?.fileName ?? '-'
-        }\nApproximate size: ${
-          exportInfo?.approximateSize ?? '-'
-        }\n\nThis backup contains your local app data and can be imported on another device.`}
-        confirmTitle="Export"
-        cancelTitle="Cancel"
-        onClose={closeModal}
-        onConfirm={confirmExport}
-        theme={theme}
-        language={language}
-        password={exportPassword}
-        setPassword={setExportPassword}
-        showPasswordInput
-        loading={loading}
-      >
-        {exportInfo?.preview ? (
-          <View style={styles.previewBox}>
-            <Text style={[styles.previewText, { color: colors[theme].main }]}>
-              Language: {exportInfo.preview.settings?.language ?? '-'}
-            </Text>
-            <Text style={[styles.previewText, { color: colors[theme].main }]}>
-              Theme: {exportInfo.preview.settings?.theme ?? '-'}
-            </Text>
-            <Text style={[styles.previewText, { color: colors[theme].main }]}>
-              Games: {exportInfo.preview.statistics?.games ?? 0}
-            </Text>
-            <Text style={[styles.previewText, { color: colors[theme].main }]}>
-              History entries: {exportInfo.preview.historyCount}
-            </Text>
-          </View>
-        ) : null}
-      </UserDataActionModal>
-
-      <UserDataActionModal
-        visible={modalType === 'importSelect'}
-        title="Import backup"
-        description="Select a Wordfull backup file from your device. After selection, you will see a preview before replacing your current data."
-        confirmTitle="Choose file"
-        cancelTitle="Cancel"
-        onClose={closeModal}
-        onConfirm={selectImportFile}
-        theme={theme}
-        language={language}
-        loading={loading}
-      />
-
-      <UserDataActionModal
-        visible={modalType === 'importConfirm'}
-        title="Import selected backup"
-        description={`File: ${importedFileName}\n\nImport will completely replace your current local data.`}
-        confirmTitle="Import"
-        cancelTitle="Cancel"
-        onClose={closeModal}
-        onConfirm={confirmImport}
-        theme={theme}
-        language={language}
-        password={importPassword}
-        setPassword={setImportPassword}
-        showPasswordInput
-        loading={loading}
-      >
-        {importPreview ? (
-          <View style={styles.previewBox}>
-            <Text style={[styles.previewText, { color: colors[theme].main }]}>
-              Exported: {new Date(importPreview.exportedAt).toLocaleString()}
-            </Text>
-            <Text style={[styles.previewText, { color: colors[theme].main }]}>
-              Device: {importPreview.device.brand} {importPreview.device.model}
-            </Text>
-            <Text style={[styles.previewText, { color: colors[theme].main }]}>
-              OS: {importPreview.device.os} {importPreview.device.osVersion}
-            </Text>
-            <Text style={[styles.previewText, { color: colors[theme].main }]}>
-              Language: {importPreview.settings?.language ?? '-'}
-            </Text>
-            <Text style={[styles.previewText, { color: colors[theme].main }]}>
-              Theme: {importPreview.settings?.theme ?? '-'}
-            </Text>
-            <Text style={[styles.previewText, { color: colors[theme].main }]}>
-              Games: {importPreview.statistics?.games ?? 0}
-            </Text>
-            <Text style={[styles.previewText, { color: colors[theme].main }]}>
-              History entries: {importPreview.historyCount}
-            </Text>
-          </View>
-        ) : null}
-      </UserDataActionModal>
 
       <ImportWarningModal
         theme={theme}

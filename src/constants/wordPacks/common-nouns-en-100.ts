@@ -4,6 +4,7 @@ export const common_noun_en_100: WordPack = {
   language: 'en',
   name: 'Common Nouns 100',
   id: 'common-en-100',
+  key: 'simple_nouns',
   isSystem: true,
   words: [
     'time',
@@ -105,6 +106,6 @@ export const common_noun_en_100: WordPack = {
     'song',
     'store',
     'station',
-    'leaf',
+    'violet',
   ],
 };

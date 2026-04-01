@@ -6,13 +6,16 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { Language } from '../constants/interfaces/interface';
+import {
+  DEFAULT_SYSTEM_WORD_PACK_KEYS,
+  Language,
+  SystemWordPackKey,
+} from '../constants/interfaces/interface';
 import {
   settingsRepository,
   AppSettings,
 } from '../db/repositories/settingsRepository';
 import { ThemeType } from '../constants/themes/themeType';
-import { getDefaultWordPackIdByLanguage } from '../constants/wordPacks/defaultWordPack';
 import { StatusBar } from 'react-native';
 import colors from '../constants/themes/colors';
 
@@ -20,12 +23,13 @@ interface SettingsContextValue {
   settings: AppSettings | null;
   language: Language;
   theme: ThemeType;
-  selectedWordPackId: string;
+  selectedSystemWordPackKeys: SystemWordPackKey[];
   isLoading: boolean;
 
   setLanguage: (language: Language) => Promise<void>;
   setTheme: (theme: ThemeType) => Promise<void>;
-  setSelectedWordPackId: (wordPackId: string) => Promise<void>;
+  setSelectedSystemWordPackKeys: (keys: SystemWordPackKey[]) => Promise<void>;
+  toggleSystemWordPackKey: (key: SystemWordPackKey) => Promise<void>;
   reloadSettings: () => Promise<void>;
 }
 
@@ -55,17 +59,16 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
 
   const setLanguage = useCallback(async (language: Language) => {
     try {
-      const defaultWordPackId = getDefaultWordPackIdByLanguage(language);
-
       await settingsRepository.updateLanguage(language);
-      await settingsRepository.updateSelectedWordPack(defaultWordPackId);
 
       setSettings(prev => {
-        if (!prev) return prev;
+        if (!prev) {
+          return prev;
+        }
+
         return {
           ...prev,
           language,
-          selectedWordPackId: defaultWordPackId,
         };
       });
     } catch (error) {
@@ -78,7 +81,10 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       await settingsRepository.updateTheme(theme);
 
       setSettings(prev => {
-        if (!prev) return prev;
+        if (!prev) {
+          return prev;
+        }
+
         return {
           ...prev,
           theme,
@@ -89,34 +95,72 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const setSelectedWordPackId = useCallback(async (wordPackId: string) => {
-    try {
-      await settingsRepository.updateSelectedWordPack(wordPackId);
+  const setSelectedSystemWordPackKeys = useCallback(
+    async (keys: SystemWordPackKey[]) => {
+      try {
+        const nextKeys = Array.from(new Set(keys)).filter(
+          Boolean,
+        ) as SystemWordPackKey[];
 
-      setSettings(prev => {
-        if (!prev) return prev;
-        return {
-          ...prev,
-          selectedWordPackId: wordPackId,
-        };
-      });
-    } catch (error) {
-      console.error('Failed to update selected word pack:', error);
-    }
-  }, []);
+        const safeKeys =
+          nextKeys.length > 0 ? nextKeys : DEFAULT_SYSTEM_WORD_PACK_KEYS;
+
+        await settingsRepository.updateSelectedSystemWordPackKeys(safeKeys);
+
+        setSettings(prev => {
+          if (!prev) {
+            return prev;
+          }
+
+          return {
+            ...prev,
+            selectedSystemWordPackKeys: safeKeys,
+          };
+        });
+      } catch (error) {
+        console.error(
+          'Failed to update selected system word pack keys:',
+          error,
+        );
+      }
+    },
+    [],
+  );
+
+  const toggleSystemWordPackKey = useCallback(
+    async (key: SystemWordPackKey) => {
+      const currentKeys =
+        settings?.selectedSystemWordPackKeys ?? DEFAULT_SYSTEM_WORD_PACK_KEYS;
+
+      const hasKey = currentKeys.includes(key);
+
+      const nextKeys = hasKey
+        ? currentKeys.filter(currentKey => currentKey !== key)
+        : [...currentKeys, key];
+
+      // Do not allow empty selection
+      if (nextKeys.length === 0) {
+        return;
+      }
+
+      await setSelectedSystemWordPackKeys(nextKeys);
+    },
+    [settings?.selectedSystemWordPackKeys, setSelectedSystemWordPackKeys],
+  );
 
   const value = useMemo<SettingsContextValue>(() => {
     return {
       settings,
       language: settings?.language ?? 'en',
       theme: settings?.theme ?? 'olive',
-      selectedWordPackId:
-        settings?.selectedWordPackId ?? getDefaultWordPackIdByLanguage('en'),
+      selectedSystemWordPackKeys:
+        settings?.selectedSystemWordPackKeys ?? DEFAULT_SYSTEM_WORD_PACK_KEYS,
       isLoading,
 
       setLanguage,
       setTheme,
-      setSelectedWordPackId,
+      setSelectedSystemWordPackKeys,
+      toggleSystemWordPackKey,
       reloadSettings: loadSettings,
     };
   }, [
@@ -124,7 +168,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     isLoading,
     setLanguage,
     setTheme,
-    setSelectedWordPackId,
+    setSelectedSystemWordPackKeys,
+    toggleSystemWordPackKey,
     loadSettings,
   ]);
 

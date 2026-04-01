@@ -2,39 +2,56 @@ import { pick, types } from '@react-native-documents/picker';
 import RNFS from 'react-native-fs';
 import { decrypt } from '../utils/backupCrypto';
 import {
+  EncryptedBackupFile,
+  BackupPayload,
+} from '../constants/interfaces/backup';
+import {
   backupRepository,
   BackupData,
 } from '../db/repositories/backupRepository';
 
-type EncryptedBackupFile = {
-  fileType: 'wordfull-backup';
-  version: 1;
-  exportedAt: number;
-  crypto: {
-    salt: string;
-    iv: string;
-  };
-  payload: string;
+type ImportEncryptedBackupResult = {
+  backupFile: EncryptedBackupFile;
+  payload: BackupPayload;
 };
 
-type DecryptedBackupPayload = {
-  exportedAt: number;
-  data: BackupData;
-};
+function isBackupDataValid(data: unknown): data is BackupData {
+  if (!data || typeof data !== 'object') {
+    return false;
+  }
 
-function isBackupDataValid(data: any): data is BackupData {
+  const typedData = data as BackupData;
+
   return (
-    data &&
-    Array.isArray(data.settings) &&
-    Array.isArray(data.statistics) &&
-    Array.isArray(data.history)
+    Array.isArray(typedData.settings) &&
+    Array.isArray(typedData.statistics) &&
+    Array.isArray(typedData.history)
+  );
+}
+
+function isEncryptedBackupFile(value: unknown): value is EncryptedBackupFile {
+  if (!value || typeof value !== 'object') {
+    return false;
+  }
+
+  const file = value as EncryptedBackupFile;
+
+  return (
+    file.fileType === 'wordfull-backup' &&
+    file.version === 1 &&
+    !!file.preview &&
+    !!file.crypto &&
+    typeof file.crypto.salt === 'string' &&
+    typeof file.crypto.iv === 'string' &&
+    typeof file.payload === 'string'
   );
 }
 
 export const backupImportService = {
   async importEncryptedBackup(
+    password: string,
     onlyDecrypt?: boolean,
-  ): Promise<DecryptedBackupPayload> {
+  ): Promise<ImportEncryptedBackupResult> {
     const result = await pick({
       mode: 'import',
       type: [types.allFiles],
@@ -51,39 +68,42 @@ export const backupImportService = {
     const filePath = fileUri.replace('file://', '');
     const fileContent = await RNFS.readFile(filePath, 'utf8');
 
-    const parsedFile = JSON.parse(fileContent) as EncryptedBackupFile;
+    const parsedFile = JSON.parse(fileContent) as unknown;
 
-    if (parsedFile.fileType !== 'wordfull-backup') {
+    if (!isEncryptedBackupFile(parsedFile)) {
       throw new Error('Selected file is not a valid backup');
-    }
-
-    if (parsedFile.version !== 1) {
-      throw new Error('Unsupported backup version');
-    }
-
-    if (
-      !parsedFile.crypto ||
-      !parsedFile.crypto.salt ||
-      !parsedFile.crypto.iv ||
-      !parsedFile.payload
-    ) {
-      throw new Error('Backup file is corrupted');
     }
 
     const decryptedText = await decrypt({
       cipher: parsedFile.payload,
       salt: parsedFile.crypto.salt,
       iv: parsedFile.crypto.iv,
+      password,
     });
 
-    const parsedPayload = JSON.parse(decryptedText) as DecryptedBackupPayload;
-    if (!isBackupDataValid(parsedPayload.data)) {
+    const parsedPayload = JSON.parse(decryptedText) as unknown;
+
+    if (
+      !parsedPayload ||
+      typeof parsedPayload !== 'object' ||
+      !('data' in parsedPayload)
+    ) {
+      throw new Error('Backup payload is invalid');
+    }
+
+    const payload = parsedPayload as BackupPayload;
+
+    if (!isBackupDataValid(payload.data)) {
       throw new Error('Backup data structure is invalid');
     }
 
     if (!onlyDecrypt) {
-      await backupRepository.restoreAllTables(parsedPayload.data);
+      await backupRepository.restoreAllTables(payload.data);
     }
-    return parsedPayload;
+
+    return {
+      backupFile: parsedFile,
+      payload,
+    };
   },
 };

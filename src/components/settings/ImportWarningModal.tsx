@@ -81,7 +81,10 @@ function ImportWarningModal({
 
   const onImportData = async () => {
     try {
-      const data = await backupImportService.importEncryptedBackup(true);
+      const data = await backupImportService.importEncryptedBackup(
+        'password',
+        true,
+      );
 
       setPreviewData(data);
       setState('preview');

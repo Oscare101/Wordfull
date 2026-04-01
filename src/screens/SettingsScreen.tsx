@@ -4,21 +4,18 @@ import { RootStackParamList } from '../navigation/types';
 import { StackScreenProps } from '@react-navigation/stack';
 import SimpleHeader from '../components/global/SimpleHeader';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { WordPack } from '../constants/interfaces/interface';
 import text from '../constants/languages/text';
 import { useSettings } from '../context/SettingsContext';
 import colors from '../constants/themes/colors';
 import { IconName } from '../constants/interfaces/iconInterface';
 import SettingsButtonItem from '../components/settings/SettingsButtonItem';
-import { useSelectedWordPack } from '../constants/wordPacks/useSelectedWordPack';
 import DeviceInfo from 'react-native-device-info';
 
 type Props = StackScreenProps<RootStackParamList, 'SettingsScreen'>;
 
 export default function SettingsScreen({ navigation }: Props) {
   const insets = useSafeAreaInsets();
-  const { language, theme, selectedWordPackId } = useSettings();
-  const wordPack: WordPack = useSelectedWordPack();
+  const { language, theme } = useSettings();
   const appVersion = DeviceInfo.getVersion();
 
   const buttons: { title: string; icon: IconName; onPress?: () => void }[] = [
@@ -36,10 +33,13 @@ export default function SettingsScreen({ navigation }: Props) {
         navigation.navigate('LanguageScreen');
       }, [navigation]),
     },
-    // {
-    //   title: wordPack?.name || selectedWordPackId,
-    //   icon: 'list',
-    // },
+    {
+      title: text[language].WordPacks,
+      icon: 'list',
+      onPress: useCallback(() => {
+        navigation.navigate('WordPacksScreen');
+      }, [navigation]),
+    },
     {
       title: text[language].UserData,
       icon: 'profile',

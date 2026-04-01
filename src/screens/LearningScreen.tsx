@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import { RootStackParamList } from '../navigation/types';
 import { StackScreenProps } from '@react-navigation/stack';
 import SimpleHeader from '../components/global/SimpleHeader';
@@ -16,8 +16,6 @@ import text from '../constants/languages/text';
 import { useSettings } from '../context/SettingsContext';
 import colors from '../constants/themes/colors';
 import { IconName } from '../constants/interfaces/iconInterface';
-import SettingsButtonItem from '../components/settings/SettingsButtonItem';
-import { getSystemWordPackById } from '../constants/wordPacks/wordPack';
 import LearningChapterItem from '../components/learning/LearningChapterItem';
 
 type Props = StackScreenProps<RootStackParamList, 'LearningScreen'>;

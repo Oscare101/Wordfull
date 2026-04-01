@@ -169,6 +169,11 @@ const english = {
   AppVersion: 'App version',
   ReportsAndFeedback: 'Reports and feedback',
   ScreenshotsDisabled: 'Screenshots are disabled',
+  WordPacks: 'Word Packs',
+  simple_nouns: 'Simple nouns',
+  complex_nouns: 'Complex nouns',
+  abstract_nouns: 'Abstract nouns',
+  Preview: 'Preview',
 } satisfies Record<TextType, string>;
 
 export default english;

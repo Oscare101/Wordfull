@@ -1,4 +1,4 @@
-import { GameMode } from '../constants/interfaces/interface';
+import { GameMode, SystemWordPackKey } from '../constants/interfaces/interface';
 
 export type RootStackParamList = {
   HomeScreen: undefined;
@@ -6,6 +6,8 @@ export type RootStackParamList = {
   LanguageScreen: undefined;
   UserDataScreen: undefined;
   ThemeScreen: undefined;
+  WordPacksScreen: undefined;
+  WordPackPreviewScreen: { wordPackKey: SystemWordPackKey };
   GameModesScreen: undefined;
   PreGameScreen: { mode: GameMode };
   GameScreen: { wordsAmount: number; mode: GameMode; words: string[] };

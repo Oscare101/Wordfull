@@ -171,6 +171,11 @@ const ukrainian = {
   AppVersion: 'Версія застосунку',
   ReportsAndFeedback: 'Звіти та відгуки',
   ScreenshotsDisabled: 'Скриншоти вимкнено',
+  WordPacks: 'Словникові набори',
+  simple_nouns: 'Прості іменники',
+  complex_nouns: 'Складні іменники',
+  abstract_nouns: 'Абстрактні іменники',
+  Preview: 'Попередній перегляд',
 } satisfies Record<TextType, string>;
 
 export default ukrainian;

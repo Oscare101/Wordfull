@@ -1,12 +1,19 @@
 import Aes from 'react-native-aes-crypto';
 
-const ITERATIONS = 100000;
+export const BACKUP_CRYPTO_ITERATIONS = 100000;
 
-export async function encrypt(text: string, password: string = 'password') {
+export async function encrypt(text: string, password: string) {
   const salt = await Aes.randomKey(16);
   const iv = await Aes.randomKey(16);
 
-  const key = await Aes.pbkdf2(password, salt, ITERATIONS, 256, 'sha256');
+  const key = await Aes.pbkdf2(
+    password,
+    salt,
+    BACKUP_CRYPTO_ITERATIONS,
+    256,
+    'sha256',
+  );
+
   const cipher = await Aes.encrypt(text, key, iv, 'aes-256-cbc');
 
   return {
@@ -20,12 +27,12 @@ export async function decrypt(params: {
   cipher: string;
   salt: string;
   iv: string;
+  password: string;
 }) {
-  const password = 'password';
   const key = await Aes.pbkdf2(
-    password,
+    params.password,
     params.salt,
-    ITERATIONS,
+    BACKUP_CRYPTO_ITERATIONS,
     256,
     'sha256',
   );

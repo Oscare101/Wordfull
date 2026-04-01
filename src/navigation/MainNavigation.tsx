@@ -20,6 +20,8 @@ import PersonalBestsScreen from '../screens/PersonalBestsScreen';
 import LearningScreen from '../screens/LearningScreen';
 import AverageStatsScreen from '../screens/AverageStatsScreen';
 import ChapterScreen from '../screens/ChapterScreen';
+import WordPacksScreen from '../screens/WordPacksScreen';
+import WordPackPreviewScreen from '../screens/WordPackPreviewScreen';
 
 const screenOption = {
   headerShown: false,
@@ -63,6 +65,16 @@ function Navigation() {
         options={screenOption}
         name="ThemeScreen"
         component={ThemeScreen}
+      />
+      <Stack.Screen
+        options={screenOption}
+        name="WordPacksScreen"
+        component={WordPacksScreen}
+      />
+      <Stack.Screen
+        options={screenOption}
+        name="WordPackPreviewScreen"
+        component={WordPackPreviewScreen}
       />
       <Stack.Screen
         options={screenOption}

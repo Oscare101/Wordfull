@@ -4,6 +4,7 @@ export const common_noun_uk_100: WordPack = {
   language: 'uk',
   name: 'Загальні іменники 100',
   id: 'common-uk-100',
+  key: 'simple_nouns',
   isSystem: true,
   words: [
     'час',

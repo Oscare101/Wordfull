@@ -137,6 +137,11 @@ export type TextType =
   | 'AppVersion'
   | 'ReportsAndFeedback'
   | 'ScreenshotsDisabled'
+  | 'WordPacks'
+  | 'simple_nouns'
+  | 'complex_nouns'
+  | 'abstract_nouns'
+  | 'Preview'
   // themes
   | 'olive'
   | 'darkBlue'

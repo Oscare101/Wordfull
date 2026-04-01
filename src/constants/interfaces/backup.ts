@@ -1,11 +1,17 @@
-import { Statistics } from './interface';
+import { Statistics, SystemWordPackKey } from './interface';
 import { AppSettings } from '../../db/repositories/settingsRepository';
 
 export interface RawSettingsRow {
   id: number;
   theme: string;
   language: string;
-  selected_word_pack_id: string;
+
+  // new field
+  selected_system_word_pack_keys_json?: string | null;
+
+  // optional old field, only for compatibility with old backup files
+  selected_word_pack_id?: string | null; // TODO remove
+
   start_date: number;
 }
 
@@ -61,7 +67,7 @@ export interface BackupPreview {
   settings: {
     language: AppSettings['language'];
     theme: AppSettings['theme'];
-    selectedWordPackId: string;
+    selectedSystemWordPackKeys: SystemWordPackKey[];
     startDate: number;
   } | null;
   statistics: Statistics | null;

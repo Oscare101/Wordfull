@@ -37,7 +37,7 @@ function ExportWarningModal({
 }) {
   const onExportData = async () => {
     try {
-      await backupExportService.exportPlainJsonBackup();
+      await backupExportService.exportPlainJsonBackup('password'); // TODO
       onClose();
       Toast.show({
         type: 'ToastMessage',
