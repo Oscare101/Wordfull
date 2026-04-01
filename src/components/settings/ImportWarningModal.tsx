@@ -85,8 +85,7 @@ function ImportWarningModal({
         'password',
         true,
       );
-
-      setPreviewData(data);
+      setPreviewData(data.payload);
       setState('preview');
     } catch (error) {
       console.error('onImportPress error:', error);
@@ -222,20 +221,20 @@ function ImportWarningModal({
                 <Text style={{ color: colors[theme].main, fontSize: 16 }}>
                   {text[language].GamesCompleted}:{' '}
                   <Text style={{ fontWeight: 'bold' }}>
-                    {previewData.data.statistics[0].games}
+                    {previewData?.data?.statistics[0].games ?? '0'}
                   </Text>
                 </Text>
                 <Text style={{ color: colors[theme].main, fontSize: 16 }}>
                   {text[language].TotalWordsMemorized}:{' '}
                   <Text style={{ fontWeight: 'bold' }}>
-                    {previewData.data.statistics[0].words_memorized}
+                    {previewData?.data?.statistics[0].words_memorized ?? '0'}
                   </Text>
                 </Text>
                 <Text style={{ color: colors[theme].main, fontSize: 16 }}>
                   {text[language].timeMemorizing}:{' '}
                   <Text style={{ fontWeight: 'bold' }}>
                     {TimeFormat(
-                      previewData.data.statistics[0].time_spent,
+                      previewData?.data?.statistics[0].time_spent ?? 0,
                       language,
                     )}
                   </Text>
@@ -244,7 +243,7 @@ function ImportWarningModal({
                   {text[language].PlayedSince}:{' '}
                   <Text style={{ fontWeight: 'bold' }}>
                     {new Date(
-                      previewData.data.settings[0].start_date,
+                      previewData?.data?.settings[0].start_date ?? 0,
                     ).toLocaleDateString(language, {
                       month: 'long',
                       day: 'numeric',

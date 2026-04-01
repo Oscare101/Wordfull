@@ -1,4 +1,4 @@
-import { pick, types } from '@react-native-documents/picker';
+import { pick, types, keepLocalCopy } from '@react-native-documents/picker';
 import RNFS from 'react-native-fs';
 import { decrypt } from '../utils/backupCrypto';
 import {
@@ -47,27 +47,42 @@ function isEncryptedBackupFile(value: unknown): value is EncryptedBackupFile {
   );
 }
 
+async function readPickedFileAsText(): Promise<string> {
+  const result = await pick({
+    mode: 'import',
+    type: [types.allFiles],
+    allowMultiSelection: false,
+  });
+  const pickedFile = Array.isArray(result) ? result[0] : result;
+  if (!pickedFile?.uri) {
+    throw new Error('Could not access selected file');
+  }
+  const localCopyResult = await keepLocalCopy({
+    files: [
+      {
+        uri: pickedFile.uri,
+        fileName: pickedFile.name ?? `backup-${Date.now()}.json`,
+      },
+    ],
+    destination: 'cachesDirectory',
+  });
+  const copiedFile: any = localCopyResult[0];
+  const localUri = copiedFile?.localUri;
+  if (!localUri) {
+    throw new Error('Could not create local copy of selected file');
+  }
+  const localPath = localUri.replace('file://', '');
+  const fileContent = await RNFS.readFile(localPath, 'utf8');
+  await RNFS.unlink(localPath).catch(() => {});
+  return fileContent;
+}
+
 export const backupImportService = {
   async importEncryptedBackup(
     password: string,
     onlyDecrypt?: boolean,
   ): Promise<ImportEncryptedBackupResult> {
-    const result = await pick({
-      mode: 'import',
-      type: [types.allFiles],
-      allowMultiSelection: false,
-    });
-
-    const pickedFile = Array.isArray(result) ? result[0] : result;
-    const fileUri = pickedFile.uri;
-
-    if (!fileUri) {
-      throw new Error('Could not access selected file');
-    }
-
-    const filePath = fileUri.replace('file://', '');
-    const fileContent = await RNFS.readFile(filePath, 'utf8');
-
+    const fileContent = await readPickedFileAsText();
     const parsedFile = JSON.parse(fileContent) as unknown;
 
     if (!isEncryptedBackupFile(parsedFile)) {
@@ -100,10 +115,6 @@ export const backupImportService = {
     if (!onlyDecrypt) {
       await backupRepository.restoreAllTables(payload.data);
     }
-
-    return {
-      backupFile: parsedFile,
-      payload,
-    };
+    return { backupFile: parsedFile, payload };
   },
 };

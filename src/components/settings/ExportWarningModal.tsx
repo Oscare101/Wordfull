@@ -46,8 +46,11 @@ function ExportWarningModal({
         },
         position: 'top',
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('onExportPress error:', error);
+      if (error.includes('CANCELLED')) {
+        return;
+      }
       Toast.show({
         type: 'ToastMessage',
         props: {

@@ -5,13 +5,7 @@ export interface RawSettingsRow {
   id: number;
   theme: string;
   language: string;
-
-  // new field
   selected_system_word_pack_keys_json?: string | null;
-
-  // optional old field, only for compatibility with old backup files
-  selected_word_pack_id?: string | null; // TODO remove
-
   start_date: number;
 }
 
