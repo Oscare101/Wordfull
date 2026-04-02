@@ -177,6 +177,10 @@ const ukrainian = {
   abstract_nouns: 'Абстрактні іменники',
   Preview: 'Попередній перегляд',
   SmthWentWrongTryAgain: 'Щось пішло не так\nБудь ласка, спробуйте ще раз',
+  InGameSettings: 'Налаштування гри',
+  Other: 'Інше',
+  AfterChangingWordPackWarning:
+    'Після зміни словникового набору ваш прогрес буде збережено, нові ігри будуть використовувати новий словниковий набір, а ваші попередні результати будуть збережені з попереднім словниковим набором',
 } satisfies Record<TextType, string>;
 
 export default ukrainian;

@@ -143,6 +143,9 @@ export type TextType =
   | 'abstract_nouns'
   | 'Preview'
   | 'SmthWentWrongTryAgain'
+  | 'InGameSettings'
+  | 'Other'
+  | 'AfterChangingWordPackWarning'
   // themes
   | 'olive'
   | 'darkBlue'

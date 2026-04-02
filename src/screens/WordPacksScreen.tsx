@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
 import React, { useCallback } from 'react';
 import { RootStackParamList } from '../navigation/types';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -88,6 +88,14 @@ export default function WordPacksScreen({ navigation }: Props) {
           gap: 8,
         }}
       />
+      <Text
+        style={[
+          styles.comment,
+          { color: colors[theme].comment, marginBottom: insets.bottom + 16 },
+        ]}
+      >
+        {text[language].AfterChangingWordPackWarning}
+      </Text>
     </View>
   );
 }
@@ -97,5 +105,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-start',
+  },
+  comment: {
+    fontSize: 14,
+    width: '92%',
+    marginBottom: 16,
+    textAlign: 'center',
   },
 });
