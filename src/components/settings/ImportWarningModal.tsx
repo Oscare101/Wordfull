@@ -24,6 +24,7 @@ import { useSettings } from '../../context/SettingsContext';
 import { TimeFormat } from '../../functions/functions';
 import { backupRepository } from '../../db/repositories/backupRepository';
 import { TextType } from '../../constants/languages/textType';
+import { GetLanguageName } from '../../functions/languageFunctions';
 
 const width = Dimensions.get('screen').width;
 
@@ -269,15 +270,10 @@ function ImportWarningModal({
                 <Text style={{ color: colors[theme].main, fontSize: 16 }}>
                   {text[language].Language}:{' '}
                   <Text style={{ fontWeight: 'bold' }}>
-                    {previewData?.data?.settings[0]?.language === 'en'
-                      ? language === 'en'
-                        ? 'English'
-                        : 'Англійська'
-                      : previewData?.data?.settings[0]?.language === 'uk'
-                      ? language === 'en'
-                        ? 'Ukrainian'
-                        : 'Українська'
-                      : previewData?.data?.settings[0]?.language}
+                    {GetLanguageName(
+                      language,
+                      previewData?.data?.settings[0]?.language,
+                    )}
                   </Text>
                 </Text>
                 <View style={styles.buttonsRow}>
