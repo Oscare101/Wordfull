@@ -10,7 +10,7 @@ const darkRed = {
   card: '#3A545E',
   cardTitle: '#e0d7d7',
   success: '#4FA03B',
-  error: '#A64646',
+  error: '#e35d5d',
   warning: '#656060',
   buttonActive: '#392c2c',
   buttonInactive: '#5e3a3a',

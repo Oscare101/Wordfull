@@ -10,7 +10,7 @@ const blackWhite = {
   card: '#494949',
   cardTitle: '#000000',
   success: '#4FA03B',
-  error: '#A64646',
+  error: '#e35d5d',
   warning: '#d7e55a',
   buttonActive: '#333333',
   buttonInactive: '#343434',

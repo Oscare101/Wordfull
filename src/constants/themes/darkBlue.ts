@@ -10,7 +10,7 @@ const darkBlue = {
   card: '#3A545E',
   cardTitle: '#374951',
   success: '#4FA03B',
-  error: '#A64646',
+  error: '#e35d5d',
   warning: '#606465',
   buttonActive: '#333333',
   buttonInactive: '#3A545E',
