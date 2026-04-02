@@ -23,6 +23,7 @@ import { useStatistics } from '../../context/StatisticsContext';
 import { useSettings } from '../../context/SettingsContext';
 import { TimeFormat } from '../../functions/functions';
 import { backupRepository } from '../../db/repositories/backupRepository';
+import { TextType } from '../../constants/languages/textType';
 
 const width = Dimensions.get('screen').width;
 
@@ -63,7 +64,11 @@ function ImportWarningModal({
       Toast.show({
         type: 'ToastMessage',
         props: {
-          title: text[language].YourDataWasImported,
+          title:
+            text[
+              (previewData?.data?.settings[0]?.language as keyof typeof text) ||
+                language
+            ].YourDataWasImported,
         },
         position: 'top',
       });
@@ -249,6 +254,30 @@ function ImportWarningModal({
                       day: 'numeric',
                       year: 'numeric',
                     })}
+                  </Text>
+                </Text>
+                <Text style={{ color: colors[theme].main, fontSize: 16 }}>
+                  {text[language].Theme}:{' '}
+                  <Text style={{ fontWeight: 'bold' }}>
+                    {
+                      text[language][
+                        previewData?.data?.settings[0]?.theme as TextType
+                      ]
+                    }
+                  </Text>
+                </Text>
+                <Text style={{ color: colors[theme].main, fontSize: 16 }}>
+                  {text[language].Language}:{' '}
+                  <Text style={{ fontWeight: 'bold' }}>
+                    {previewData?.data?.settings[0]?.language === 'en'
+                      ? language === 'en'
+                        ? 'English'
+                        : 'Англійська'
+                      : previewData?.data?.settings[0]?.language === 'uk'
+                      ? language === 'en'
+                        ? 'Ukrainian'
+                        : 'Українська'
+                      : previewData?.data?.settings[0]?.language}
                   </Text>
                 </Text>
                 <View style={styles.buttonsRow}>
