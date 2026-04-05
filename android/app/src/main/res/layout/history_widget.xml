@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/history_widget_bg">
+
+    <TextView
+        android:id="@+id/widget_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total words memorized in past week"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:maxLines="2" />
+
+    <TextView
+        android:id="@+id/widget_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="43 words"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black" />
+
+    <LinearLayout
+        android:id="@+id/chart_container"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal"
+        android:gravity="bottom">
+
+        <ImageView
+            android:id="@+id/bar_1"
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="4dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/history_widget_bar_muted"
+            android:contentDescription="@null" />
+
+        <ImageView
+            android:id="@+id/bar_2"
+            android:layout_width="0dp"
+            android:layout_height="28dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="4dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/history_widget_bar_muted"
+            android:contentDescription="@null" />
+
+        <ImageView
+            android:id="@+id/bar_3"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="4dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/history_widget_bar_accent"
+            android:contentDescription="@null" />
+
+        <ImageView
+            android:id="@+id/bar_4"
+            android:layout_width="0dp"
+            android:layout_height="24dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="4dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/history_widget_bar_main"
+            android:contentDescription="@null" />
+
+        <ImageView
+            android:id="@+id/bar_5"
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+            android:layout_weight="1"
+            android:scaleType="fitXY"
+            android:src="@drawable/history_widget_bar_main"
+            android:contentDescription="@null" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -18,6 +18,7 @@ import {
 import { ThemeType } from '../constants/themes/themeType';
 import { StatusBar } from 'react-native';
 import colors from '../constants/themes/colors';
+import { updateHistoryWidgetTheme } from '../utils/updateHistoryWidgetTheme';
 
 interface SettingsContextValue {
   settings: AppSettings | null;
@@ -40,6 +41,12 @@ const SettingsContext = createContext<SettingsContextValue | undefined>(
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [settings, setSettings] = useState<AppSettings | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  // for widgets
+  useEffect(() => {
+    if (!settings?.theme) return;
+    updateHistoryWidgetTheme(settings.theme);
+  }, [settings?.theme]);
 
   const loadSettings = useCallback(async () => {
     try {
@@ -79,6 +86,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const setTheme = useCallback(async (theme: ThemeType) => {
     try {
       await settingsRepository.updateTheme(theme);
+      // for widgets
+      await updateHistoryWidgetTheme(theme);
 
       setSettings(prev => {
         if (!prev) {
