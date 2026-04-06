@@ -7,12 +7,19 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.os.Bundle
+import android.util.Log
 import android.widget.RemoteViews
 import com.wordfull.MainActivity
 import com.wordfull.R
 import java.util.Calendar
 
 class HistoryWidgetReceiver : AppWidgetProvider() {
+
+    enum class WidgetMode {
+        SHORT,
+        TALL
+    }
 
     override fun onUpdate(
         context: Context,
@@ -22,6 +29,16 @@ class HistoryWidgetReceiver : AppWidgetProvider() {
         appWidgetIds.forEach { appWidgetId ->
             updateWidget(context, appWidgetManager, appWidgetId)
         }
+    }
+
+    override fun onAppWidgetOptionsChanged(
+        context: Context,
+        appWidgetManager: AppWidgetManager,
+        appWidgetId: Int,
+        newOptions: Bundle
+    ) {
+        super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
+        updateWidget(context, appWidgetManager, appWidgetId)
     }
 
     override fun onReceive(context: Context, intent: Intent) {
@@ -42,7 +59,23 @@ class HistoryWidgetReceiver : AppWidgetProvider() {
             appWidgetManager: AppWidgetManager,
             appWidgetId: Int
         ) {
-            val views = RemoteViews(context.packageName, R.layout.history_widget)
+            val options = appWidgetManager.getAppWidgetOptions(appWidgetId)
+            val minWidthDp = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 250)
+            val minHeightDp = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 120)
+
+            val mode = resolveMode(minWidthDp ,minHeightDp)
+
+            Log.d(
+                "HistoryWidget",
+                "appWidgetId=$appWidgetId minWidthDp=$minWidthDp minHeightDp=$minHeightDp mode=$mode"
+            )
+
+            val layoutId = when (mode) {
+                WidgetMode.SHORT -> R.layout.history_widget_short
+                WidgetMode.TALL -> R.layout.history_widget_tall
+            }
+
+            val views = RemoteViews(context.packageName, layoutId)
 
             val bgColor = safeParseColor(HistoryWidgetUpdater.getBgColor(context), "#F4F1E8")
             val textColor = safeParseColor(HistoryWidgetUpdater.getTextColor(context), "#2E2E2E")
@@ -66,21 +99,39 @@ class HistoryWidgetReceiver : AppWidgetProvider() {
             }
 
             views.setInt(R.id.widget_root, "setBackgroundColor", bgColor)
-            views.setTextColor(R.id.widget_title, textColor)
             views.setTextColor(R.id.widget_value, textColor)
-            views.setTextViewText(R.id.widget_title, titleText)
             views.setTextViewText(R.id.widget_value, valueText)
+
+            if (mode == WidgetMode.TALL) {
+                views.setTextColor(R.id.widget_title, textColor)
+                views.setTextViewText(R.id.widget_title, titleText)
+            }
+
+            val horizontalInsetsDp = when (mode) {
+                WidgetMode.SHORT -> 24f
+                WidgetMode.TALL -> 32f
+            }
+
+            val chartWidthPx = (dp(context, minWidthDp.toFloat()) - dp(context, horizontalInsetsDp))
+                .coerceAtLeast(dp(context, 140f))
+
+            val chartHeightPx = when (mode) {
+                WidgetMode.SHORT -> dp(context, 72f)
+                WidgetMode.TALL -> dp(context, 118f)
+            }
 
             val chartBitmap = HistoryWidgetChartRenderer.render(
                 context = context,
-                widthPx = dp(context, 320f),
-                heightPx = dp(context, 110f),
+                widthPx = chartWidthPx,
+                heightPx = chartHeightPx,
                 bars = bars,
                 weekdayLabels = weekdayLabels,
                 textColor = textColor,
                 mainColor = barMainColor,
                 accentColor = barAccentColor,
-                mutedColor = barMutedColor
+                mutedColor = barMutedColor,
+                showWeekdayLabels = mode == WidgetMode.TALL,
+                compactMode = false,
             )
 
             views.setImageViewBitmap(R.id.widget_chart, chartBitmap)
@@ -98,6 +149,12 @@ class HistoryWidgetReceiver : AppWidgetProvider() {
             appWidgetManager.updateAppWidget(appWidgetId, views)
         }
 
+        private fun resolveMode(widthDp: Int, heightDp: Int): WidgetMode {
+            return if (widthDp >= 280) WidgetMode.TALL else WidgetMode.SHORT
+        }
+
+        
+
         private fun getRollingWeekdayLabels(language: String): List<String> {
             val labels = mutableListOf<String>()
             val today = Calendar.getInstance()
@@ -110,13 +167,13 @@ class HistoryWidgetReceiver : AppWidgetProvider() {
 
                 val label = when (language) {
                     "uk" -> when (dayOfWeek) {
-                        Calendar.MONDAY -> "П"
-                        Calendar.TUESDAY -> "В"
-                        Calendar.WEDNESDAY -> "С"
-                        Calendar.THURSDAY -> "Ч"
-                        Calendar.FRIDAY -> "П"
-                        Calendar.SATURDAY -> "С"
-                        Calendar.SUNDAY -> "Н"
+                        Calendar.MONDAY -> "Пн"
+                        Calendar.TUESDAY -> "Вт"
+                        Calendar.WEDNESDAY -> "Ср"
+                        Calendar.THURSDAY -> "Чт"
+                        Calendar.FRIDAY -> "Пт"
+                        Calendar.SATURDAY -> "Сб"
+                        Calendar.SUNDAY -> "Нд"
                         else -> ""
                     }
                     else -> when (dayOfWeek) {
