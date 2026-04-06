@@ -5,6 +5,7 @@ const darkBlue = {
   id: 'darkBlue',
   bg: '#374951',
   main: '#EDF1F3',
+  mainDim: '#929DA2', // '#EDF1F380',
   comment: '#808490',
   accent: '#6C92A2',
   card: '#3A545E',

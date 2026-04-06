@@ -5,6 +5,7 @@ const blackWhite = {
   id: 'blackWhite',
   bg: '#000000',
   main: '#d5d5d5',
+  mainDim: '#6B6B6B', // '#d5d5d580',
   comment: '#878787',
   accent: '#d8f03c',
   card: '#494949',

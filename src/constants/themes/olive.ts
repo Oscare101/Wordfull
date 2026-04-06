@@ -5,6 +5,7 @@ const olive = {
   id: 'olive',
   bg: '#7E9783',
   main: '#333333',
+  mainDim: '#546157', // '#33333380'
   comment: '#CCCCCC',
   accent: '#B6B654',
   card: '#5F7463',

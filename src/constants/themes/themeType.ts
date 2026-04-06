@@ -7,6 +7,7 @@ export interface Theme {
   id: ThemeType;
   bg: string;
   main: string;
+  mainDim: string;
   comment: string;
   accent: string;
   card: string;

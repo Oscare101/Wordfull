@@ -10,10 +10,10 @@ export async function updateHistoryWidgetTheme(theme: ThemeType) {
   const palette = colors[theme];
 
   await HistoryWidgetModule.updateTheme(
-    palette.card, // bgColor
-    palette.cardTitle, // textColor
+    palette.bg, // bgColor
+    palette.main, // textColor
     palette.main, // barMainColor
     palette.accent, // barAccentColor
-    palette.border, // barMutedColor
+    palette.mainDim, // barMutedColor
   );
 }

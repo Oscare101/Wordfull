@@ -5,6 +5,7 @@ const sky = {
   id: 'sky',
   bg: '#d6e3e3',
   main: '#140301',
+  mainDim: '#757372', // '#14030180',
   comment: '#556b6e',
   accent: '#098df3',
   card: '#b1c7cd',

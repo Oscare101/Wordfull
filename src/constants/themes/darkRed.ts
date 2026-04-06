@@ -5,6 +5,7 @@ const darkRed = {
   id: 'darkRed',
   bg: '#7a5d5d',
   main: '#140301',
+  mainDim: '#47302F', // '#14030180',
   comment: '#A18B8B',
   accent: '#c784bf',
   card: '#3A545E',

@@ -125,7 +125,7 @@ export default function HistoryActivityChart({
                       backgroundColor: item.isToday
                         ? themeColors.accent
                         : item.value === 0
-                        ? themeColors.main + '80'
+                        ? themeColors.mainDim
                         : themeColors.main,
                     },
                   ]}

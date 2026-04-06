@@ -59,8 +59,8 @@ function CheckInputRow({
             borderColor: colors[theme].main,
           },
         ]}
-        cursorColor={colors[theme].main + '80'}
-        selectionColor={colors[theme].main + '80'}
+        cursorColor={colors[theme].mainDim}
+        selectionColor={colors[theme].mainDim}
         autoCapitalize="words"
         returnKeyType={isLast ? 'done' : 'next'}
         blurOnSubmit={isLast}
