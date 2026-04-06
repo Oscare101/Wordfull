@@ -19,6 +19,7 @@ import { ThemeType } from '../constants/themes/themeType';
 import { StatusBar } from 'react-native';
 import colors from '../constants/themes/colors';
 import { updateHistoryWidgetTheme } from '../utils/updateHistoryWidgetTheme';
+import { updateHistoryWidgetLanguage } from '../utils/updateHistoryWidgetLanguage';
 
 interface SettingsContextValue {
   settings: AppSettings | null;
@@ -48,6 +49,11 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     updateHistoryWidgetTheme(settings.theme);
   }, [settings?.theme]);
 
+  useEffect(() => {
+    if (!settings?.language) return;
+    updateHistoryWidgetLanguage(settings.language);
+  }, [settings?.language]);
+
   const loadSettings = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -67,6 +73,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const setLanguage = useCallback(async (language: Language) => {
     try {
       await settingsRepository.updateLanguage(language);
+      // for widgets
+      await updateHistoryWidgetLanguage(language);
 
       setSettings(prev => {
         if (!prev) {

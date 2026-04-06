@@ -28,4 +28,14 @@ class HistoryWidgetModule(private val reactContext: ReactApplicationContext) :
 
         HistoryWidgetUpdater.refreshAllWidgets(reactContext)
     }
+
+    @ReactMethod
+    fun updateLanguage(language: String) {
+        HistoryWidgetUpdater.saveLanguage(
+            reactContext,
+            language
+        )
+
+        HistoryWidgetUpdater.refreshAllWidgets(reactContext)
+    }
 }

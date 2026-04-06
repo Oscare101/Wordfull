@@ -48,20 +48,24 @@ class HistoryWidgetReceiver : AppWidgetProvider() {
             val barMainColor = Color.parseColor(HistoryWidgetUpdater.getBarMainColor(context))
             val barAccentColor = Color.parseColor(HistoryWidgetUpdater.getBarAccentColor(context))
             val barMutedColor = Color.parseColor(HistoryWidgetUpdater.getBarMutedColor(context))
+            val language = HistoryWidgetUpdater.getLanguage(context)
+
+            val titleText = when (language) {
+                "uk" -> "Вивчено слів за останній тиждень"
+                else -> "Total words memorized in past week"
+            }
+
+            val valueText = when (language) {
+                "uk" -> "43 слова"
+                else -> "43 words"
+            }
 
             views.setInt(R.id.widget_root, "setBackgroundColor", bgColor)
             views.setTextColor(R.id.widget_title, textColor)
             views.setTextColor(R.id.widget_value, textColor)
 
-            views.setTextViewText(
-                R.id.widget_title,
-                "Total words memorized in past week"
-            )
-
-            views.setTextViewText(
-                R.id.widget_value,
-                "43 words"
-            )
+            views.setTextViewText(R.id.widget_title, titleText)
+            views.setTextViewText(R.id.widget_value, valueText)
 
             views.setInt(R.id.bar_1, "setColorFilter", barMutedColor)
             views.setInt(R.id.bar_2, "setColorFilter", barMutedColor)

@@ -13,6 +13,7 @@ object HistoryWidgetUpdater {
     private const val KEY_BAR_MAIN_COLOR = "bar_main_color"
     private const val KEY_BAR_ACCENT_COLOR = "bar_accent_color"
     private const val KEY_BAR_MUTED_COLOR = "bar_muted_color"
+    private const val KEY_LANGUAGE = "language"
 
     fun saveTheme(
         context: Context,
@@ -31,6 +32,15 @@ object HistoryWidgetUpdater {
             .apply()
     }
 
+    fun saveLanguage(
+        context: Context,
+        language: String,
+    ) {
+        prefs(context).edit()
+            .putString(KEY_LANGUAGE, language)
+            .apply()
+    }
+
     fun getBgColor(context: Context): String =
         prefs(context).getString(KEY_BG_COLOR, "#F4F1E8") ?: "#F4F1E8"
 
@@ -45,6 +55,9 @@ object HistoryWidgetUpdater {
 
     fun getBarMutedColor(context: Context): String =
         prefs(context).getString(KEY_BAR_MUTED_COLOR, "#D8D2C2") ?: "#D8D2C2"
+
+    fun getLanguage(context: Context): String =
+        prefs(context).getString(KEY_LANGUAGE, "en") ?: "en"
 
     fun refreshAllWidgets(context: Context) {
         val appWidgetManager = AppWidgetManager.getInstance(context)
