@@ -13,7 +13,11 @@ object HistoryWidgetUpdater {
     private const val KEY_BAR_MAIN_COLOR = "bar_main_color"
     private const val KEY_BAR_ACCENT_COLOR = "bar_accent_color"
     private const val KEY_BAR_MUTED_COLOR = "bar_muted_color"
+
     private const val KEY_LANGUAGE = "language"
+
+    private const val KEY_TOTAL_WORDS = "total_words"
+    private const val KEY_BARS = "bars"
 
     fun saveTheme(
         context: Context,
@@ -68,6 +72,31 @@ object HistoryWidgetUpdater {
             HistoryWidgetReceiver.updateWidget(context, appWidgetManager, widgetId)
         }
     }
+
+    fun saveStats(
+      context: Context,
+      totalWords: Int,
+      bars: String // JSON string
+    ) {
+      prefs(context).edit()
+          .putInt(KEY_TOTAL_WORDS, totalWords)
+          .putString(KEY_BARS, bars)
+          .apply()
+    }
+
+fun getTotalWords(context: Context): Int =
+    prefs(context).getInt(KEY_TOTAL_WORDS, 0)
+
+fun getBars(context: Context): List<Int> {
+    val json = prefs(context).getString(KEY_BARS, null) ?: return listOf(0,0,0,0,0,0,0)
+
+    return try {
+        val arr = org.json.JSONArray(json)
+        List(arr.length()) { arr.getInt(it) }
+    } catch (e: Exception) {
+        listOf(0,0,0,0,0,0,0)
+    }
+}
 
     private fun prefs(context: Context): SharedPreferences {
         return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)

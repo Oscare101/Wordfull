@@ -25,6 +25,7 @@ import { TimeFormat } from '../../functions/functions';
 import { backupRepository } from '../../db/repositories/backupRepository';
 import { TextType } from '../../constants/languages/textType';
 import { GetLanguageName } from '../../functions/languageFunctions';
+import { updateHistoryWidgetStats } from '../../utils/updateHistoryWidgetStats';
 
 const width = Dimensions.get('screen').width;
 
@@ -60,6 +61,7 @@ function ImportWarningModal({
         reloadStatistics(),
         reloadHistory(),
       ]);
+      updateHistoryWidgetStats();
 
       onClose();
       Toast.show({

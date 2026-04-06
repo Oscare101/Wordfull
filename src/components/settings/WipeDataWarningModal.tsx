@@ -20,6 +20,7 @@ import { useHistory } from '../../context/HistoryContext';
 import Icon from '../../assets/icon';
 import Toast from 'react-native-toast-message';
 import { Line, Svg } from 'react-native-svg';
+import { updateHistoryWidgetStats } from '../../utils/updateHistoryWidgetStats';
 
 const width = Dimensions.get('screen').width;
 
@@ -49,6 +50,7 @@ function WipeDataWarningModal({
         reloadStatistics(),
         reloadHistory(),
       ]);
+      updateHistoryWidgetStats();
       onClose();
       navigation.reset({
         index: 0,

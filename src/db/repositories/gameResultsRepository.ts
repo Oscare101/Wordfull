@@ -3,6 +3,7 @@ import {
   GameMode,
   Language,
 } from '../../constants/interfaces/interface';
+import { updateHistoryWidgetStats } from '../../utils/updateHistoryWidgetStats';
 import { historyRepository } from './historyRepository';
 import { statisticsRepository } from './statisticsRepository';
 
@@ -56,6 +57,8 @@ export const gameResultsRepository = {
     };
 
     await historyRepository.create(historyItem);
+
+    await updateHistoryWidgetStats();
 
     await statisticsRepository.increment({
       wordsMemorized: correctWords,

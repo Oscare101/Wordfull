@@ -20,6 +20,7 @@ import { StatusBar } from 'react-native';
 import colors from '../constants/themes/colors';
 import { updateHistoryWidgetTheme } from '../utils/updateHistoryWidgetTheme';
 import { updateHistoryWidgetLanguage } from '../utils/updateHistoryWidgetLanguage';
+import { updateHistoryWidgetStats } from '../utils/updateHistoryWidgetStats';
 
 interface SettingsContextValue {
   settings: AppSettings | null;
@@ -53,6 +54,10 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     if (!settings?.language) return;
     updateHistoryWidgetLanguage(settings.language);
   }, [settings?.language]);
+
+  useEffect(() => {
+    updateHistoryWidgetStats();
+  }, []);
 
   const loadSettings = useCallback(async () => {
     try {
