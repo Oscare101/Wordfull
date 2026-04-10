@@ -47,7 +47,7 @@ object HistoryWidgetChartRenderer {
 
         val bottomPadding = if (showWeekdayLabels) dp(context, 2f) else dp(context, 4f)
 
-        val barAreaHeight = if (showWeekdayLabels) (safeHeight - labelsAreaHeight - bottomPadding).coerceAtLeast(dp(context, 24f)) else dp(context, 128f) // (safeHeight).coerceAtLeast(dp(context, 24f))
+        val barAreaHeight = if (showWeekdayLabels) (safeHeight - labelsAreaHeight - bottomPadding).coerceAtLeast(dp(context, 24f)) else (safeHeight - bottomPadding).coerceAtLeast(dp(context, 24f)) // (safeHeight).coerceAtLeast(dp(context, 24f))
 
         val chartLeft = horizontalPadding.toFloat()
         val chartRight = (safeWidth - horizontalPadding).toFloat()
@@ -69,7 +69,7 @@ object HistoryWidgetChartRenderer {
         val minBarHeight = if (showWeekdayLabels) {
             max(dp(context, 8f).toFloat(), barAreaHeight * 0.08f)
         } else {
-            max(dp(context, 10f).toFloat(), barAreaHeight * 0.11f)
+            max(dp(context, 8f).toFloat(), barAreaHeight * 0.08f)
         }
 
         val maxBarHeight = (barAreaHeight - topPadding).coerceAtLeast(minBarHeight.toInt()).toFloat()
