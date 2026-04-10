@@ -9,6 +9,13 @@ function startOfDay(date: Date) {
   return d;
 }
 
+function formatLocalDate(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 export async function updateHistoryWidgetStats() {
   if (!HistoryWidgetModule?.updateStats) return;
 
@@ -39,8 +46,13 @@ export async function updateHistoryWidgetStats() {
 
     const bars = days.map(day => dayMap.get(day.getTime()) || 0);
     const totalWords = bars.reduce((sum, value) => sum + value, 0);
+    const anchorDate = formatLocalDate(today);
 
-    await HistoryWidgetModule.updateStats(totalWords, JSON.stringify(bars));
+    await HistoryWidgetModule.updateStats(
+      totalWords,
+      JSON.stringify(bars),
+      anchorDate,
+    );
   } catch (error) {
     if (__DEV__) {
       console.error('updateHistoryWidgetStats error:', error);

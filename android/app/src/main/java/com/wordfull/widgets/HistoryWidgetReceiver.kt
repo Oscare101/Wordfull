@@ -26,6 +26,8 @@ class HistoryWidgetReceiver : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray
     ) {
+        HistoryWidgetUpdater.rollStatsToTodayIfNeeded(context)
+
         appWidgetIds.forEach { appWidgetId ->
             updateWidget(context, appWidgetManager, appWidgetId)
         }
@@ -38,18 +40,23 @@ class HistoryWidgetReceiver : AppWidgetProvider() {
         newOptions: Bundle
     ) {
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
+        HistoryWidgetUpdater.rollStatsToTodayIfNeeded(context)
         updateWidget(context, appWidgetManager, appWidgetId)
     }
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
 
-        if (intent.action == AppWidgetManager.ACTION_APPWIDGET_UPDATE) {
-            val manager = AppWidgetManager.getInstance(context)
-            val ids = manager.getAppWidgetIds(
-                ComponentName(context, HistoryWidgetReceiver::class.java)
-            )
-            onUpdate(context, manager, ids)
+        when (intent.action) {
+            AppWidgetManager.ACTION_APPWIDGET_UPDATE,
+            Intent.ACTION_DATE_CHANGED,
+            Intent.ACTION_TIME_CHANGED,
+            Intent.ACTION_TIMEZONE_CHANGED,
+            Intent.ACTION_BOOT_COMPLETED,
+            Intent.ACTION_MY_PACKAGE_REPLACED -> {
+                HistoryWidgetUpdater.rollStatsToTodayIfNeeded(context)
+                HistoryWidgetUpdater.refreshAllWidgets(context)
+            }
         }
     }
 
@@ -59,11 +66,13 @@ class HistoryWidgetReceiver : AppWidgetProvider() {
             appWidgetManager: AppWidgetManager,
             appWidgetId: Int
         ) {
+            HistoryWidgetUpdater.rollStatsToTodayIfNeeded(context)
+
             val options = appWidgetManager.getAppWidgetOptions(appWidgetId)
             val minWidthDp = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 250)
             val minHeightDp = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 120)
 
-            val mode = resolveMode(minWidthDp ,minHeightDp)
+            val mode = resolveMode(minWidthDp, minHeightDp)
 
             Log.d(
                 "HistoryWidget",
@@ -89,8 +98,8 @@ class HistoryWidgetReceiver : AppWidgetProvider() {
             val weekdayLabels = getRollingWeekdayLabels(language)
 
             val titleText = when (language) {
-                "uk" -> "Усього вивчених слів за минулий тиждень"
-                else -> "Total words memorized in past week"
+                "uk" -> "Вивчених слів за тиждень"
+                else -> "Words memorized in a week"
             }
 
             val valueText = when (language) {
@@ -116,8 +125,8 @@ class HistoryWidgetReceiver : AppWidgetProvider() {
                 .coerceAtLeast(dp(context, 140f))
 
             val chartHeightPx = when (mode) {
-                WidgetMode.SHORT -> dp(context, 72f)
-                WidgetMode.TALL -> dp(context, 118f)
+                WidgetMode.SHORT -> dp(context, 82f)
+                WidgetMode.TALL -> dp(context, 128f)
             }
 
             val chartBitmap = HistoryWidgetChartRenderer.render(
@@ -131,7 +140,7 @@ class HistoryWidgetReceiver : AppWidgetProvider() {
                 accentColor = barAccentColor,
                 mutedColor = barMutedColor,
                 showWeekdayLabels = mode == WidgetMode.TALL,
-                compactMode = false,
+                compactMode = mode == WidgetMode.SHORT,
             )
 
             views.setImageViewBitmap(R.id.widget_chart, chartBitmap)
@@ -152,8 +161,6 @@ class HistoryWidgetReceiver : AppWidgetProvider() {
         private fun resolveMode(widthDp: Int, heightDp: Int): WidgetMode {
             return if (widthDp >= 280) WidgetMode.TALL else WidgetMode.SHORT
         }
-
-        
 
         private fun getRollingWeekdayLabels(language: String): List<String> {
             val labels = mutableListOf<String>()

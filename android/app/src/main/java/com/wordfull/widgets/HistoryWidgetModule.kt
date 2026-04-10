@@ -39,19 +39,19 @@ class HistoryWidgetModule(private val reactContext: ReactApplicationContext) :
         HistoryWidgetUpdater.refreshAllWidgets(reactContext)
     }
 
-
     @ReactMethod
     fun updateStats(
         totalWords: Int,
-        barsJson: String
+        barsJson: String,
+        anchorDate: String
     ) {
         HistoryWidgetUpdater.saveStats(
             reactContext,
             totalWords,
-            barsJson
+            barsJson,
+            anchorDate
         )
 
         HistoryWidgetUpdater.refreshAllWidgets(reactContext)
     }
-
 }
