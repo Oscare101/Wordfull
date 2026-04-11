@@ -6,10 +6,15 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.Log
 import android.widget.RemoteViews
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import com.wordfull.MainActivity
 import com.wordfull.R
 import java.util.Calendar
@@ -145,6 +150,10 @@ class HistoryWidgetReceiver : AppWidgetProvider() {
 
             views.setImageViewBitmap(R.id.widget_chart, chartBitmap)
 
+            // Set tinted app icon based on theme text color
+            val iconBitmap = createTintedIconBitmap(context, textColor)
+            views.setImageViewBitmap(R.id.widget_app_icon, iconBitmap)
+
             val intent = Intent(context, MainActivity::class.java)
             val pendingIntent = PendingIntent.getActivity(
                 context,
@@ -231,6 +240,21 @@ class HistoryWidgetReceiver : AppWidgetProvider() {
 
         private fun dp(context: Context, value: Float): Int {
             return (value * context.resources.displayMetrics.density).toInt()
+        }
+
+        private fun createTintedIconBitmap(context: Context, tintColor: Int): Bitmap {
+            val iconSizePx = dp(context, 24f)
+            val bitmap = Bitmap.createBitmap(iconSizePx, iconSizePx, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bitmap)
+
+            val drawable = ResourcesCompat.getDrawable(context.resources, R.drawable.ic_widget_app_icon, null)
+            if (drawable != null) {
+                DrawableCompat.setTint(drawable, tintColor)
+                drawable.setBounds(0, 0, iconSizePx, iconSizePx)
+                drawable.draw(canvas)
+            }
+
+            return bitmap
         }
     }
 }

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="850dp"
+    android:height="850dp"
+    android:viewportWidth="850"
+    android:viewportHeight="850">
+
+    <path
+        android:strokeColor="@android:color/black"
+        android:strokeWidth="25.5"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M656.424 374.001C710.841 405.506 695.873 487.843 633.85 498.18L613.924 501.501" />
+
+    <path
+        android:strokeColor="@android:color/black"
+        android:strokeWidth="25.5"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M681.924 484.497C704.366 520.407 689.841 567.867 651.145 585.065L647.923 586.497" />
+
+    <path
+        android:strokeColor="@android:color/black"
+        android:strokeWidth="25.5"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M647.923 586.499C657.583 629.966 632.821 673.7 590.579 687.781L588.424 688.499" />
+
+    <path
+        android:strokeColor="@android:color/black"
+        android:strokeWidth="25.5"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M494.923 509.995L501.74 509.995C546.585 509.994 580.218 551.021 571.424 594.994" />
+
+    <path
+        android:strokeColor="@android:color/black"
+        android:strokeWidth="25.5"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M520.422 671.496C516.028 627.554 552.981 590.602 596.923 594.996" />
+
+    <path
+        android:strokeColor="@android:color/black"
+        android:strokeWidth="25.5"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M425 637.501C435.856 610.361 457.361 588.856 484.501 578.001" />
+
+    <path
+        android:strokeColor="@android:color/black"
+        android:strokeWidth="25.5"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M425.001 348.491L427.09 345.357C436.753 330.861 450.972 320 467.499 314.491" />
+
+    <path
+        android:strokeColor="@android:color/black"
+        android:strokeWidth="25.5"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M384.888 277.723L391.181 279.968C407.163 285.667 419.634 298.401 425.001 314.497" />
+
+    <path
+        android:strokeColor="@android:color/black"
+        android:strokeWidth="25.5"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M579.924 467.496L571.675 466.121C545.941 461.832 525.54 442.078 520.423 416.496" />
+
+    <path
+        android:strokeColor="@android:color/black"
+        android:strokeWidth="25.5"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M596.923 339.994C596.923 402.409 525.237 437.617 475.843 399.46L469.423 394.501" />
+
+    <path
+        android:strokeColor="@android:color/black"
+        android:strokeWidth="25.5"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M588.423 688.5C556.454 744.445 477.477 748.936 439.372 696.975L426.924 680" />
+
+    <path
+        android:strokeColor="@android:color/black"
+        android:strokeWidth="25.5"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M426.922 161.495C452.668 140.899 488.261 137.77 517.205 153.558L562.923 178.495" />
+
+    <path
+        android:strokeColor="@android:color/black"
+        android:strokeWidth="25.5"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M503.425 212.493C532.463 155.945 618.332 184.199 608.118 246.942L605.424 263.493" />
+
+    <path
+        android:strokeColor="@android:color/black"
+        android:strokeWidth="25.5"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M520.424 348.495L531.122 313.724C543.514 273.45 588.32 253.061 626.827 270.175L629.748 271.473C669.509 289.144 682.529 339.187 656.423 373.995" />
+
+    <path
+        android:strokeColor="@android:color/black"
+        android:strokeWidth="25.5"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M195.498 374.001C141.081 405.506 156.049 487.843 218.072 498.18L237.998 501.501" />
+
+    <path
+        android:strokeColor="@android:color/black"
+        android:strokeWidth="25.5"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M169.998 484.497C147.555 520.407 162.08 567.867 200.776 585.065L203.999 586.497" />
+
+    <path
+        android:strokeColor="@android:color/black"
+        android:strokeWidth="25.5"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M203.998 586.499C194.339 629.966 219.101 673.7 261.343 687.781L263.498 688.499" />
+
+    <path
+        android:strokeColor="@android:color/black"
+        android:strokeWidth="25.5"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M373.999 509.995L367.181 509.995C322.337 509.994 288.703 551.021 297.498 594.994" />
+
+    <path
+        android:strokeColor="@android:color/black"
+        android:strokeWidth="25.5"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M348.499 671.496C352.893 627.554 315.94 590.602 271.998 594.996" />
+
+    <path
+        android:strokeColor="@android:color/black"
+        android:strokeWidth="25.5"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M254.997 467.496L263.246 466.121C288.98 461.832 309.382 442.078 314.498 416.496" />
+
+    <path
+        android:strokeColor="@android:color/black"
+        android:strokeWidth="25.5"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M237.999 339.994C237.998 402.409 309.685 437.617 359.078 399.46L365.499 394.501" />
+
+    <path
+        android:strokeColor="@android:color/black"
+        android:strokeWidth="25.5"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M263.499 688.5C295.467 744.445 374.445 748.936 412.549 696.975L424.998 680" />
+
+    <path
+        android:strokeColor="@android:color/black"
+        android:strokeWidth="25.5"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M424.999 161.495C399.253 140.899 363.66 137.77 334.716 153.558L288.999 178.495" />
+
+    <path
+        android:strokeColor="@android:color/black"
+        android:strokeWidth="25.5"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M348.497 212.493C319.459 155.945 233.59 184.199 243.804 246.942L246.498 263.493" />
+
+    <path
+        android:strokeColor="@android:color/black"
+        android:strokeWidth="25.5"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M331.498 348.495L320.799 313.724C308.407 273.45 263.601 253.061 225.095 270.175L222.173 271.473C182.413 289.144 169.393 339.187 195.499 373.995" />
+
+    <path
+        android:strokeColor="@android:color/black"
+        android:strokeWidth="25.5"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M425 152.999L425 679.999" />
+
+</vector>

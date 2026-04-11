@@ -31,7 +31,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginStart="8dp"
-            android:src="@mipmap/ic_launcher"
+            android:src="@drawable/ic_widget_app_icon"
             android:contentDescription="@null" />
     </LinearLayout>
 
