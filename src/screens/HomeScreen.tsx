@@ -46,6 +46,7 @@ export default function HomeScreen({ navigation }: Props) {
           theme={theme}
           type="week"
           onOpen={() => navigation.navigate('StatisticsScreen')}
+          interactive={false}
         />
         {/* <SettingsButtonItem
           title={text[language].Learning}

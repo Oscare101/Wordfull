@@ -120,6 +120,7 @@ export default function WordsAmountScreen({ navigation }: Props) {
           theme={theme}
           type="month"
           height={200}
+          interactive={true}
         />
         <FlatList
           data={stats}

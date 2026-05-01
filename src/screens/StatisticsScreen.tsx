@@ -44,6 +44,7 @@ export default function StatisticsScreen({ navigation }: Props) {
           type="month"
           height={150}
           onOpen={() => navigation.navigate('WordsAmountScreen')}
+          interactive={false}
         />
         <AccuracyHistoryBlock
           history={history}

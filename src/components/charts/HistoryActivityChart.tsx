@@ -1,9 +1,16 @@
-import React, { useMemo } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { LayoutChangeEvent, StyleSheet, Text, View } from 'react-native';
 import { History, Language } from '../../constants/interfaces/interface';
 import { useSettings } from '../../context/SettingsContext';
 import colors from '../../constants/themes/colors';
 import useDayRefreshKey from '../../hooks/useDayRefreshKey';
+import { NumberFormat, WordsTitleFromAmount } from '../../functions/functions';
 
 type ChartDays = 7 | 30;
 
@@ -11,6 +18,8 @@ interface HistoryActivityChartProps {
   history: History[];
   days: ChartDays;
   height?: number;
+  interactive?: boolean;
+  onInteractionStateChange?: (isInteracting: boolean) => void;
 }
 
 interface ChartBarItem {
@@ -49,6 +58,33 @@ function getShortMonthDay(date: Date, language: Language): string {
     month: 'long',
     day: 'numeric',
   });
+}
+
+function getBarHeight(
+  value: number,
+  maxValue: number,
+  chartHeight: number,
+): number {
+  if (chartHeight <= 0) {
+    return 0;
+  }
+
+  const rawHeight = value === 0 ? 0 : (value / maxValue) * chartHeight;
+  return Math.min(Math.max(rawHeight, 8), chartHeight);
+}
+
+function getTouchedBarIndex(
+  locationX: number,
+  chartWidth: number,
+  itemsCount: number,
+): number | null {
+  if (chartWidth <= 0 || itemsCount === 0) {
+    return null;
+  }
+
+  const nextIndex = Math.floor((locationX / chartWidth) * itemsCount);
+
+  return Math.max(0, Math.min(itemsCount - 1, nextIndex));
 }
 
 function buildChartData(
@@ -93,10 +129,19 @@ export default function HistoryActivityChart({
   history,
   days,
   height = 100,
+  interactive = true,
+  onInteractionStateChange,
 }: HistoryActivityChartProps) {
   const { theme, language } = useSettings();
   const themeColors = colors[theme];
   const dayKey = useDayRefreshKey();
+  const isMonthChart = days === 30 && interactive;
+  const [chartAreaWidth, setChartAreaWidth] = useState(0);
+  const [chartAreaHeight, setChartAreaHeight] = useState(0);
+  const [activeBarIndex, setActiveBarIndex] = useState<number | null>(null);
+  const isInteractingRef = useRef(false);
+  const chartAreaRef = useRef<View>(null);
+  const chartAreaPageXRef = useRef(0);
 
   const chartData = useMemo(
     () => buildChartData(history, days, language),
@@ -107,41 +152,180 @@ export default function HistoryActivityChart({
     return Math.max(...chartData.map(item => item.value), 1);
   }, [chartData]);
 
+  const setInteractionState = useCallback(
+    (isInteracting: boolean) => {
+      if (isInteractingRef.current === isInteracting) {
+        return;
+      }
+
+      isInteractingRef.current = isInteracting;
+      onInteractionStateChange?.(isInteracting);
+    },
+    [onInteractionStateChange],
+  );
+
+  const clearActiveBar = useCallback(() => {
+    setActiveBarIndex(null);
+    setInteractionState(false);
+  }, [setInteractionState]);
+
+  const updateActiveBar = useCallback(
+    (pageX: number) => {
+      if (!interactive) {
+        return;
+      }
+
+      const relativeX = pageX - chartAreaPageXRef.current;
+      const nextIndex = getTouchedBarIndex(
+        relativeX,
+        chartAreaWidth,
+        chartData.length,
+      );
+
+      if (nextIndex === null) {
+        return;
+      }
+
+      setActiveBarIndex(currentIndex =>
+        currentIndex === nextIndex ? currentIndex : nextIndex,
+      );
+      setInteractionState(true);
+    },
+    [chartAreaWidth, chartData.length, interactive, setInteractionState],
+  );
+
+  const handleChartAreaLayout = useCallback((event: LayoutChangeEvent) => {
+    const { width, height: nextHeight } = event.nativeEvent.layout;
+    setChartAreaWidth(width);
+    setChartAreaHeight(nextHeight);
+    // Measure absolute screen offset so we can translate pageX correctly.
+    // requestAnimationFrame gives layout time to commit before measuring.
+    requestAnimationFrame(() => {
+      chartAreaRef.current?.measureInWindow(x => {
+        chartAreaPageXRef.current = x;
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!interactive) {
+      clearActiveBar();
+    }
+  }, [clearActiveBar, interactive]);
+
+  useEffect(() => {
+    return () => {
+      onInteractionStateChange?.(false);
+    };
+  }, [onInteractionStateChange]);
+
   return (
     <View style={[styles.container, { height }]}>
-      <View style={styles.barsRow}>
-        {chartData.map(item => {
-          const barHeightPercent = item.value === 0 ? 0 : item.value / maxValue;
+      <View
+        ref={chartAreaRef}
+        style={styles.chartArea}
+        onLayout={handleChartAreaLayout}
+        onStartShouldSetResponder={() => interactive}
+        onMoveShouldSetResponder={() => interactive}
+        onResponderGrant={event => {
+          // Re-measure on every grant so scroll position changes are accounted for.
+          chartAreaRef.current?.measureInWindow(x => {
+            chartAreaPageXRef.current = x;
+            updateActiveBar(event.nativeEvent.pageX);
+          });
+        }}
+        onResponderMove={event => {
+          updateActiveBar(event.nativeEvent.pageX);
+        }}
+        onResponderRelease={clearActiveBar}
+        onResponderTerminate={clearActiveBar}
+      >
+        <View style={styles.barsRow}>
+          {chartData.map((item, index) => {
+            const barHeightPercent =
+              item.value === 0 ? 0 : item.value / maxValue;
+            const isActive = activeBarIndex === index;
+            // const tooltipTop = Math.max(
+            //   chartAreaHeight -
+            //     getBarHeight(item.value, maxValue, chartAreaHeight) -
+            //     42,
+            //   0,
+            // );
 
-          return (
-            <View key={item.key} style={styles.barItem}>
-              <View style={styles.barTrack}>
-                <View
-                  style={[
-                    styles.bar,
-                    {
-                      maxHeight: days === 7 ? height - 26 : undefined,
-                      height: `${barHeightPercent * 100}%`,
-                      backgroundColor: item.isToday
-                        ? themeColors.accent
-                        : item.value === 0
-                        ? themeColors.mainDim
-                        : themeColors.main,
-                    },
-                  ]}
-                />
+            const tooltipTop = -50;
+
+            return (
+              <View
+                key={item.key}
+                style={[styles.barItem, isActive ? styles.activeBarItem : null]}
+              >
+                {isMonthChart && isActive ? (
+                  <View
+                    pointerEvents="none"
+                    style={[styles.tooltipContainer, { top: tooltipTop }]}
+                  >
+                    <View
+                      style={[
+                        styles.tooltipBubble,
+                        {
+                          backgroundColor: themeColors.main,
+                          borderColor: themeColors.main,
+                        },
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.tooltipText,
+                          { color: themeColors.cardTitle },
+                        ]}
+                      >
+                        {NumberFormat(item.value, language)}
+                        {'\n'}
+                        {WordsTitleFromAmount(item.value, language)}
+                      </Text>
+                    </View>
+
+                    <View
+                      style={[
+                        styles.tooltipArrow,
+                        {
+                          borderTopColor: themeColors.main,
+                        },
+                      ]}
+                    />
+                  </View>
+                ) : null}
+
+                <View style={styles.barTrack}>
+                  <View
+                    style={[
+                      styles.bar,
+                      {
+                        maxHeight: days === 7 ? height - 26 : undefined,
+                        height: `${barHeightPercent * 100}%`,
+                        backgroundColor: isActive
+                          ? themeColors.accent
+                          : item.isToday
+                          ? themeColors.accent
+                          : item.value === 0
+                          ? themeColors.mainDim
+                          : themeColors.main,
+                      },
+                    ]}
+                  />
+                </View>
+
+                {days === 7 ? (
+                  <Text
+                    style={[styles.weekdayLabel, { color: themeColors.main }]}
+                  >
+                    {item.label}
+                  </Text>
+                ) : null}
               </View>
-
-              {days === 7 ? (
-                <Text
-                  style={[styles.weekdayLabel, { color: themeColors.main }]}
-                >
-                  {item.label}
-                </Text>
-              ) : null}
-            </View>
-          );
-        })}
+            );
+          })}
+        </View>
       </View>
 
       {days === 30 ? (
@@ -166,6 +350,9 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
   },
+  chartArea: {
+    flex: 1,
+  },
   barsRow: {
     flex: 1,
     flexDirection: 'row',
@@ -176,6 +363,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-end',
+    position: 'relative',
+  },
+  activeBarItem: {
+    zIndex: 2,
   },
   barTrack: {
     width: '78%',
@@ -196,6 +387,36 @@ const styles = StyleSheet.create({
     marginTop: 8,
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  tooltipContainer: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    zIndex: 3,
+  },
+  tooltipBubble: {
+    minWidth: 52,
+    maxWidth: 88,
+    paddingHorizontal: 6,
+    paddingVertical: 4,
+    borderRadius: 10,
+    borderWidth: 1,
+  },
+  tooltipText: {
+    fontSize: 11,
+    lineHeight: 14,
+    textAlign: 'center',
+    fontWeight: '600',
+  },
+  tooltipArrow: {
+    width: 0,
+    height: 0,
+    borderLeftWidth: 5,
+    borderRightWidth: 5,
+    borderTopWidth: 7,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
   },
   dateLabel: {
     fontSize: 14,
