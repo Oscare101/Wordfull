@@ -179,6 +179,8 @@ const english = {
   Other: 'Other',
   AfterChangingWordPackWarning:
     'After changing the word pack, your progress will be preserved, new games will use the new word pack, and your previous results will be saved with the previous word pack',
+  AfterChangingThemeWarning:
+    'If you use widget, it will be synced with the app theme',
 } satisfies Record<TextType, string>;
 
 export default english;

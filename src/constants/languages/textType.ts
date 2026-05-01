@@ -146,6 +146,7 @@ export type TextType =
   | 'InGameSettings'
   | 'Other'
   | 'AfterChangingWordPackWarning'
+  | 'AfterChangingThemeWarning'
   // themes
   | 'olive'
   | 'darkBlue'

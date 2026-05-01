@@ -1,13 +1,22 @@
 package com.wordfull.widgets
 
 import android.appwidget.AppWidgetManager
+import android.content.Intent
 import android.content.ComponentName
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Color
+import android.app.PendingIntent
+import android.os.Bundle
+import android.util.TypedValue
+import android.widget.RemoteViews
+import com.wordfull.MainActivity
+import com.wordfull.R
 import org.json.JSONArray
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import com.wordfull.widgets.HistoryWidgetReceiver
 
 object HistoryWidgetUpdater {
     private const val PREFS_NAME = "history_widget_prefs"
@@ -25,6 +34,59 @@ object HistoryWidgetUpdater {
     private const val KEY_ANCHOR_DATE = "anchor_date"
 
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+
+    fun update(
+        context: Context,
+        appWidgetManager: AppWidgetManager,
+        widgetId: Int,
+    ) {
+        rollStatsToTodayIfNeeded(context)
+
+        val options = appWidgetManager.getAppWidgetOptions(widgetId)
+        val compact = isCompactWidget(options)
+        val layoutId = if (compact) R.layout.history_widget_short else R.layout.history_widget_tall
+
+        val language = getLanguage(context)
+        val bars = normalizeBars(getBars(context))
+
+        val widthPx = getApproxChartWidthPx(context, options)
+        val heightPx = if (compact) dp(context, 82f) else dp(context, 128f)
+
+        val totalWords = getTotalWords(context)
+
+        val chartBitmap = HistoryWidgetChartRenderer.render(
+            context = context,
+            widthPx = widthPx,
+            heightPx = heightPx,
+            bars = bars,
+            weekdayLabels = getRollingWeekdayLabels(language),
+            textColor = parseColorOrDefault(getTextColor(context), "#2E2E2E"),
+            mainColor = parseColorOrDefault(getBarMainColor(context), "#7E9783"),
+            accentColor = parseColorOrDefault(getBarAccentColor(context), "#B8A06A"),
+            mutedColor = parseColorOrDefault(getBarMutedColor(context), "#D8D2C2"),
+            showWeekdayLabels = !compact,
+            compactMode = compact,
+        )
+
+        val remoteViews = RemoteViews(context.packageName, layoutId).apply {
+            val textColor = parseColorOrDefault(getTextColor(context), "#2E2E2E")
+            val bgColor = parseColorOrDefault(getBgColor(context), "#F4F1E8")
+
+            setInt(R.id.widget_root, "setBackgroundColor", bgColor)
+            setTextColor(R.id.widget_value, textColor)
+            setImageViewBitmap(R.id.widget_chart, chartBitmap)
+            setTextViewText(R.id.widget_value, getValueText(language, totalWords))
+
+            if (!compact) {
+                setTextColor(R.id.widget_title, textColor)
+                setTextViewText(R.id.widget_title, getWeeklyTitleForLanguage(language))
+            }
+
+            setOnClickPendingIntent(R.id.widget_root, createLaunchPendingIntent(context))
+        }
+
+        appWidgetManager.updateAppWidget(widgetId, remoteViews)
+    }
 
     fun saveTheme(
         context: Context,
@@ -103,7 +165,7 @@ object HistoryWidgetUpdater {
         val ids = appWidgetManager.getAppWidgetIds(componentName)
 
         ids.forEach { widgetId ->
-            HistoryWidgetReceiver.updateWidget(context, appWidgetManager, widgetId)
+            update(context, appWidgetManager, widgetId)
         }
     }
 
@@ -184,5 +246,109 @@ object HistoryWidgetUpdater {
 
     private fun prefs(context: Context): SharedPreferences {
         return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    }
+
+    private fun isCompactWidget(options: Bundle?): Boolean {
+        val minWidthDp = options?.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 250) ?: 250
+        return minWidthDp < 280
+    }
+
+    private fun getApproxChartWidthPx(context: Context, options: Bundle?): Int {
+        val minWidthDp = options?.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 250) ?: 250
+        return dp(context, minWidthDp.toFloat())
+    }
+
+    private fun parseColorOrDefault(colorHex: String, fallback: String): Int {
+        return try {
+            Color.parseColor(colorHex)
+        } catch (_: Exception) {
+            Color.parseColor(fallback)
+        }
+    }
+
+    private fun getRollingWeekdayLabels(language: String): List<String> {
+        val labels = mutableListOf<String>()
+        val today = Calendar.getInstance()
+
+        for (i in 6 downTo 0) {
+            val cal = today.clone() as Calendar
+            cal.add(Calendar.DAY_OF_YEAR, -i)
+
+            val dayOfWeek = cal.get(Calendar.DAY_OF_WEEK)
+            val label = when (language.lowercase(Locale.ROOT)) {
+                "uk" -> when (dayOfWeek) {
+                    Calendar.MONDAY -> "Пн"
+                    Calendar.TUESDAY -> "Вт"
+                    Calendar.WEDNESDAY -> "Ср"
+                    Calendar.THURSDAY -> "Чт"
+                    Calendar.FRIDAY -> "Пт"
+                    Calendar.SATURDAY -> "Сб"
+                    Calendar.SUNDAY -> "Нд"
+                    else -> ""
+                }
+
+                else -> when (dayOfWeek) {
+                    Calendar.MONDAY -> "M"
+                    Calendar.TUESDAY -> "T"
+                    Calendar.WEDNESDAY -> "W"
+                    Calendar.THURSDAY -> "T"
+                    Calendar.FRIDAY -> "F"
+                    Calendar.SATURDAY -> "S"
+                    Calendar.SUNDAY -> "S"
+                    else -> ""
+                }
+            }
+
+            labels.add(label)
+        }
+
+        return labels
+    }
+
+    private fun getWeeklyTitleForLanguage(language: String): String {
+        return when (language.lowercase(Locale.ROOT)) {
+            "uk" -> "Вивчених слів за тиждень"
+            else -> "Words memorized in a week"
+        }
+    }
+
+    private fun getValueText(language: String, totalWords: Int): String {
+        return when (language.lowercase(Locale.ROOT)) {
+            "uk" -> "$totalWords ${getUkrainianWordForm(totalWords)}"
+            else -> "$totalWords ${if (totalWords == 1) "word" else "words"}"
+        }
+    }
+
+    private fun getUkrainianWordForm(count: Int): String {
+        val mod10 = count % 10
+        val mod100 = count % 100
+
+        return when {
+            mod100 in 11..14 -> "слів"
+            mod10 == 1 -> "слово"
+            mod10 in 2..4 -> "слова"
+            else -> "слів"
+        }
+    }
+
+    private fun createLaunchPendingIntent(context: Context): PendingIntent {
+        val launchIntent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        }
+
+        return PendingIntent.getActivity(
+            context,
+            0,
+            launchIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+    }
+
+    private fun dp(context: Context, value: Float): Int {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            value,
+            context.resources.displayMetrics
+        ).toInt()
     }
 }

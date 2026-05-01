@@ -181,6 +181,8 @@ const ukrainian = {
   Other: 'Інше',
   AfterChangingWordPackWarning:
     'Після зміни словникового набору ваш прогрес буде збережено, нові ігри будуть використовувати новий словниковий набір, а ваші попередні результати будуть збережені з попереднім словниковим набором',
+  AfterChangingThemeWarning:
+    'Якщо ви використовуєте віджет, він буде синхронізований з темою застосунку',
 } satisfies Record<TextType, string>;
 
 export default ukrainian;

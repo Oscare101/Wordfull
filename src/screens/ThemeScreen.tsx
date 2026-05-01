@@ -84,6 +84,14 @@ export default function ThemeScreen({ navigation }: Props) {
         numColumns={2}
         renderItem={renderThemeItem}
       />
+      <Text
+        style={[
+          styles.comment,
+          { color: colors[theme].comment, marginBottom: insets.bottom + 16 },
+        ]}
+      >
+        {text[language].AfterChangingThemeWarning}
+      </Text>
     </View>
   );
 }
@@ -99,5 +107,11 @@ const styles = StyleSheet.create({
     width: '92%',
     marginBottom: 8,
     marginTop: 16,
+  },
+  comment: {
+    fontSize: 14,
+    width: '92%',
+    marginBottom: 16,
+    textAlign: 'center',
   },
 });
