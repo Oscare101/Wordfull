@@ -390,15 +390,13 @@ const styles = StyleSheet.create({
   },
   tooltipContainer: {
     position: 'absolute',
-    left: 0,
-    right: 0,
+    left: -60,
+    right: -60,
     alignItems: 'center',
     zIndex: 3,
   },
   tooltipBubble: {
-    minWidth: 52,
-    maxWidth: 88,
-    paddingHorizontal: 6,
+    paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 10,
     borderWidth: 1,
@@ -408,6 +406,7 @@ const styles = StyleSheet.create({
     lineHeight: 14,
     textAlign: 'center',
     fontWeight: '600',
+    flexShrink: 0,
   },
   tooltipArrow: {
     width: 0,
