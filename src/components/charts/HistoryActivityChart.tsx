@@ -11,6 +11,7 @@ import { useSettings } from '../../context/SettingsContext';
 import colors from '../../constants/themes/colors';
 import useDayRefreshKey from '../../hooks/useDayRefreshKey';
 import { NumberFormat, WordsTitleFromAmount } from '../../functions/functions';
+import Svg, { Line } from 'react-native-svg';
 
 type ChartDays = 7 | 30;
 
@@ -245,14 +246,8 @@ export default function HistoryActivityChart({
             const barHeightPercent =
               item.value === 0 ? 0 : item.value / maxValue;
             const isActive = activeBarIndex === index;
-            // const tooltipTop = Math.max(
-            //   chartAreaHeight -
-            //     getBarHeight(item.value, maxValue, chartAreaHeight) -
-            //     42,
-            //   0,
-            // );
 
-            const tooltipTop = -50;
+            const tooltipTop = -70;
 
             return (
               <View
@@ -269,18 +264,34 @@ export default function HistoryActivityChart({
                         styles.tooltipBubble,
                         {
                           backgroundColor: themeColors.main,
-                          borderColor: themeColors.main,
                         },
                       ]}
                     >
+                      <Text
+                        style={[styles.tooltipText, { color: themeColors.bg }]}
+                      >
+                        {item.fullDate.toLocaleDateString(language, {
+                          month: '2-digit',
+                          day: '2-digit',
+                        })}
+                      </Text>
+
+                      <Text
+                        style={{
+                          ...styles.tooltipText,
+                          fontSize: 18,
+                          color: themeColors.cardTitle,
+                          fontWeight: '700',
+                        }}
+                      >
+                        {NumberFormat(item.value, language)}
+                      </Text>
                       <Text
                         style={[
                           styles.tooltipText,
                           { color: themeColors.cardTitle },
                         ]}
                       >
-                        {NumberFormat(item.value, language)}
-                        {'\n'}
                         {WordsTitleFromAmount(item.value, language)}
                       </Text>
                     </View>
@@ -393,17 +404,18 @@ const styles = StyleSheet.create({
     left: -60,
     right: -60,
     alignItems: 'center',
-    zIndex: 3,
+    // zIndex: 3,
   },
   tooltipBubble: {
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 10,
-    borderWidth: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   tooltipText: {
-    fontSize: 11,
-    lineHeight: 14,
+    fontSize: 10,
     textAlign: 'center',
     fontWeight: '600',
     flexShrink: 0,
