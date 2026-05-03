@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import {
   History,
   Language,
@@ -18,6 +18,7 @@ export default function AccuracyHistoryBlock({
   theme,
   height = 150,
   onOpen,
+  interactive,
 }: {
   history: History[];
   statistics: Statistics | null;
@@ -25,8 +26,57 @@ export default function AccuracyHistoryBlock({
   theme: ThemeType;
   height?: number;
   onOpen?: () => void;
+  interactive?: boolean;
 }) {
   const wordsAmount: number = statistics?.wordsMemorized ?? 0;
+  const ignoreNextOpenRef = useRef(false);
+  const clearIgnoreTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
+
+  const handleChartInteractionStateChange = useCallback(
+    (isInteracting: boolean) => {
+      if (!onOpen) {
+        return;
+      }
+
+      if (clearIgnoreTimeoutRef.current) {
+        clearTimeout(clearIgnoreTimeoutRef.current);
+        clearIgnoreTimeoutRef.current = null;
+      }
+
+      if (isInteracting) {
+        ignoreNextOpenRef.current = true;
+        return;
+      }
+
+      clearIgnoreTimeoutRef.current = setTimeout(() => {
+        ignoreNextOpenRef.current = false;
+      }, 150);
+    },
+    [onOpen],
+  );
+
+  const handleOpen = useCallback(() => {
+    if (!onOpen) {
+      return;
+    }
+
+    if (ignoreNextOpenRef.current) {
+      ignoreNextOpenRef.current = false;
+      return;
+    }
+
+    onOpen();
+  }, [onOpen]);
+
+  useEffect(() => {
+    return () => {
+      if (clearIgnoreTimeoutRef.current) {
+        clearTimeout(clearIgnoreTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const container = (
     <View
@@ -46,13 +96,15 @@ export default function AccuracyHistoryBlock({
         days={7}
         accuracyColor={colors[theme].comment}
         height={height - 40}
+        interactive={interactive}
+        onInteractionStateChange={handleChartInteractionStateChange}
       />
     </View>
   );
 
   if (onOpen) {
     return (
-      <TouchableOpacity activeOpacity={0.8} onPress={onOpen}>
+      <TouchableOpacity activeOpacity={0.8} onPress={handleOpen}>
         {container}
       </TouchableOpacity>
     );

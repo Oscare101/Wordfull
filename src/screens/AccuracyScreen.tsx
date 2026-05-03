@@ -87,6 +87,7 @@ export default function AccuracyScreen({ navigation }: Props) {
           language={language}
           theme={theme}
           height={200}
+          interactive={true}
         />
         <FlatList
           data={stats}

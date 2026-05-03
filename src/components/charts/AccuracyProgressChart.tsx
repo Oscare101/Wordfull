@@ -1,9 +1,17 @@
-import React, { useMemo } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { LayoutChangeEvent, StyleSheet, Text, View } from 'react-native';
 import Svg, { Circle, Line, Path, Rect } from 'react-native-svg';
 import { History, Language } from '../../constants/interfaces/interface';
 import { useSettings } from '../../context/SettingsContext';
 import colors from '../../constants/themes/colors';
+import { NumberFormat, WordsTitleFromAmount } from '../../functions/functions';
+import text from '../../constants/languages/text';
 
 type ChartDays = 7 | 30;
 
@@ -13,6 +21,8 @@ interface AccuracyProgressChartProps {
   height?: number;
   lineColor?: string;
   accuracyColor?: string;
+  interactive?: boolean;
+  onInteractionStateChange?: (isInteracting: boolean) => void;
 }
 
 interface DayPoint {
@@ -49,6 +59,28 @@ function getWeekdayLabel(date: Date, language: Language): string {
 
 function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
+}
+
+function getTouchedPointIndex(
+  pageX: number,
+  chartAreaPageX: number,
+  chartAreaWidth: number,
+  chartWidth: number,
+  leftPadding: number,
+  xStep: number,
+  pointsCount: number,
+): number | null {
+  if (chartAreaWidth <= 0 || pointsCount === 0) {
+    return null;
+  }
+
+  const relativeX = pageX - chartAreaPageX;
+  const clampedRelativeX = clamp(relativeX, 0, chartAreaWidth);
+  const scale = chartWidth / chartAreaWidth;
+  const svgX = clampedRelativeX * scale;
+  const rawIndex = Math.round((svgX - leftPadding) / xStep);
+
+  return clamp(rawIndex, 0, pointsCount - 1);
 }
 
 function buildChartDays(
@@ -132,9 +164,16 @@ function AccuracyProgressChart({
   height = 150,
   lineColor,
   accuracyColor,
+  interactive = false,
+  onInteractionStateChange,
 }: AccuracyProgressChartProps) {
   const { theme, language } = useSettings();
   const themeColors = colors[theme];
+  const [chartAreaWidth, setChartAreaWidth] = useState(0);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const isInteractingRef = useRef(false);
+  const chartAreaRef = useRef<View>(null);
+  const chartAreaPageXRef = useRef(0);
 
   const data = useMemo(
     () => buildChartDays(history, days, language),
@@ -147,6 +186,8 @@ function AccuracyProgressChart({
   const bottomPadding = 32;
   const leftPadding = 14;
   const rightPadding = 14;
+  const tooltipWidth = 140;
+  const tooltipHalfWidth = tooltipWidth / 2;
 
   const innerWidth = chartWidth - leftPadding - rightPadding;
   const innerHeight = chartHeight - topPadding - bottomPadding;
@@ -162,6 +203,104 @@ function AccuracyProgressChart({
   const labelColor = themeColors.main;
 
   const xStep = data.length > 1 ? innerWidth / (data.length - 1) : innerWidth;
+
+  const activeTooltipMetrics = useMemo(() => {
+    if (activeIndex === null || chartAreaWidth <= 0 || data.length === 0) {
+      return null;
+    }
+
+    const activeSvgX = leftPadding + activeIndex * xStep;
+    const activeCenterX = (activeSvgX / chartWidth) * chartAreaWidth;
+    const bubbleLeft = activeCenterX - tooltipHalfWidth;
+
+    return {
+      bubbleLeft,
+    };
+  }, [
+    activeIndex,
+    chartAreaWidth,
+    chartWidth,
+    data.length,
+    leftPadding,
+    tooltipHalfWidth,
+    tooltipWidth,
+    xStep,
+  ]);
+
+  const setInteractionState = useCallback(
+    (isInteracting: boolean) => {
+      if (isInteractingRef.current === isInteracting) {
+        return;
+      }
+
+      isInteractingRef.current = isInteracting;
+      onInteractionStateChange?.(isInteracting);
+    },
+    [onInteractionStateChange],
+  );
+
+  const clearActivePoint = useCallback(() => {
+    setActiveIndex(null);
+    setInteractionState(false);
+  }, [setInteractionState]);
+
+  const updateActivePoint = useCallback(
+    (pageX: number) => {
+      if (!interactive) {
+        return;
+      }
+
+      const nextIndex = getTouchedPointIndex(
+        pageX,
+        chartAreaPageXRef.current,
+        chartAreaWidth,
+        chartWidth,
+        leftPadding,
+        xStep,
+        data.length,
+      );
+
+      if (nextIndex === null) {
+        return;
+      }
+
+      setActiveIndex(currentIndex =>
+        currentIndex === nextIndex ? currentIndex : nextIndex,
+      );
+      setInteractionState(true);
+    },
+    [
+      chartAreaWidth,
+      chartWidth,
+      data.length,
+      interactive,
+      leftPadding,
+      setInteractionState,
+      xStep,
+    ],
+  );
+
+  const handleChartAreaLayout = useCallback((event: LayoutChangeEvent) => {
+    const { width } = event.nativeEvent.layout;
+    setChartAreaWidth(width);
+    requestAnimationFrame(() => {
+      chartAreaRef.current?.measureInWindow(x => {
+        chartAreaPageXRef.current = x;
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!interactive) {
+      clearActivePoint();
+    }
+  }, [clearActivePoint, interactive]);
+
+  useEffect(() => {
+    return () => {
+      onInteractionStateChange?.(false);
+    };
+  }, [onInteractionStateChange]);
 
   const correctWordPoints = data.map((item, index) => {
     const x = leftPadding + index * xStep;
@@ -184,92 +323,201 @@ function AccuracyProgressChart({
 
   return (
     <View style={[styles.container, { height: chartHeight }]}>
-      <Svg
-        width="100%"
-        height="100%"
-        viewBox={`0 0 ${chartWidth} ${chartHeight}`}
+      <View
+        ref={chartAreaRef}
+        style={[styles.chartArea]}
+        onLayout={handleChartAreaLayout}
+        onStartShouldSetResponder={() => interactive}
+        onMoveShouldSetResponder={() => interactive}
+        onResponderGrant={event => {
+          chartAreaRef.current?.measureInWindow(x => {
+            chartAreaPageXRef.current = x;
+            updateActivePoint(event.nativeEvent.pageX);
+          });
+        }}
+        onResponderMove={event => {
+          updateActivePoint(event.nativeEvent.pageX);
+        }}
+        onResponderRelease={clearActivePoint}
+        onResponderTerminate={clearActivePoint}
       >
-        {data.map((item, index) => {
-          const x = leftPadding + index * xStep;
-
-          return (
-            <React.Fragment key={item.key}>
-              <Line
-                key={`divider-${index}`}
-                x1={x}
-                y1={topPadding}
-                x2={x}
-                y2={topPadding + innerHeight}
-                stroke={dashed}
-                strokeWidth={1}
-                strokeDasharray="4 6"
-                opacity={0.6}
-              />
-              <Text
-                key={'label-' + index}
-                style={{
-                  left: (x - 6) * 0.93,
-                  bottom: 10,
-                  position: 'absolute',
-                  fontSize: 16,
-                  color: labelColor,
-                }}
-              >
-                {item.label}
+        {interactive && activeIndex !== null && activeTooltipMetrics ? (
+          <View
+            pointerEvents="none"
+            style={[
+              styles.tooltipContainer,
+              {
+                left: activeTooltipMetrics.bubbleLeft,
+              },
+            ]}
+          >
+            <View
+              style={[
+                styles.tooltipBubble,
+                {
+                  backgroundColor: themeColors.main,
+                },
+              ]}
+            >
+              <Text style={[styles.tooltipText, { color: themeColors.bg }]}>
+                {data[activeIndex].date.toLocaleDateString(language, {
+                  month: '2-digit',
+                  day: '2-digit',
+                })}
               </Text>
-            </React.Fragment>
-          );
-        })}
 
-        <Path d={accuracyPath} stroke={white} strokeWidth={2} fill="none" />
+              <Text
+                style={[
+                  styles.tooltipText,
+                  styles.tooltipWordsValue,
+                  { color: themeColors.cardTitle },
+                ]}
+              >
+                {NumberFormat(data[activeIndex].totalCorrectWords, language)}
+              </Text>
 
-        <Path d={correctWordsPath} stroke={black} strokeWidth={2} fill="none" />
+              <Text
+                style={[styles.tooltipText, { color: themeColors.cardTitle }]}
+              >
+                {WordsTitleFromAmount(
+                  data[activeIndex].totalCorrectWords,
+                  language,
+                )}
+              </Text>
 
-        {accuracyPoints.map((point, index) => {
-          const isLast = index === accuracyPoints.length - 1;
-          const isNull = data[index].totalCorrectWords === 0;
+              <Text style={[styles.tooltipText, { color: themeColors.bg }]}>
+                {`${Math.round(data[activeIndex].accuracy * 100)}% ${text[
+                  language
+                ].Accuracy.toLocaleLowerCase()}`}
+              </Text>
+            </View>
 
-          return (
-            // <Line
-            //   key={`accuracy-point-${index}`}
-            //   x1={point.x - xStep / 3}
-            //   y1={point.y}
-            //   x2={point.x + xStep / 3}
-            //   y2={point.y}
-            //   stroke={isNull ? 'transparent' : white}
-            //   strokeWidth={2}
-            // />
-            <Circle
-              key={`accuracy-point-${index}`}
-              cx={point.x}
-              cy={point.y}
-              r={6}
-              fill={isNull ? 'transparent' : isLast ? white : themeColors.bg}
-              stroke={isNull ? 'transparent' : white}
-              strokeWidth={2}
+            <View
+              style={[
+                styles.tooltipArrow,
+                {
+                  borderTopColor: themeColors.main,
+                },
+              ]}
             />
-          );
-        })}
+          </View>
+        ) : null}
 
-        {correctWordPoints.map((point, index) => {
-          const isLast = index === correctWordPoints.length - 1;
-          const isNull = data[index].totalCorrectWords === 0;
+        <Svg
+          width="100%"
+          height="100%"
+          viewBox={`0 0 ${chartWidth} ${chartHeight}`}
+        >
+          {data.map((item, index) => {
+            const x = leftPadding + index * xStep;
+            const isActive = activeIndex === index;
 
-          return (
-            <Rect
-              key={`correct-point-${index}`}
-              x={point.x - 6}
-              y={point.y - 6}
-              width={12}
-              height={12}
-              rx={2}
-              fill={isNull ? 'transparent' : isLast ? black : themeColors.bg}
-              stroke={isNull ? 'transparent' : black}
-              strokeWidth={2}
-            />
-          );
-        })}
-      </Svg>
+            return (
+              <React.Fragment key={item.key}>
+                <Line
+                  key={`divider-${index}`}
+                  x1={x}
+                  y1={topPadding}
+                  x2={x}
+                  y2={topPadding + innerHeight}
+                  stroke={isActive ? themeColors.accent : dashed}
+                  strokeWidth={1}
+                  strokeDasharray="4 6"
+                  opacity={isActive ? 1 : 0.6}
+                />
+                <Text
+                  key={'label-' + index}
+                  style={{
+                    left: (x - 6) * 0.93,
+                    bottom: 10,
+                    position: 'absolute',
+                    fontSize: 16,
+                    color: isActive ? themeColors.accent : labelColor,
+                  }}
+                >
+                  {item.label}
+                </Text>
+              </React.Fragment>
+            );
+          })}
+
+          <Path d={accuracyPath} stroke={white} strokeWidth={2} fill="none" />
+
+          <Path
+            d={correctWordsPath}
+            stroke={black}
+            strokeWidth={2}
+            fill="none"
+          />
+
+          {accuracyPoints.map((point, index) => {
+            const isLast = index === accuracyPoints.length - 1;
+            const isNull = data[index].totalCorrectWords === 0;
+            const isActive = activeIndex === index;
+
+            return (
+              // <Line
+              //   key={`accuracy-point-${index}`}
+              //   x1={point.x - xStep / 3}
+              //   y1={point.y}
+              //   x2={point.x + xStep / 3}
+              //   y2={point.y}
+              //   stroke={isNull ? 'transparent' : white}
+              //   strokeWidth={2}
+              // />
+              <Circle
+                key={`accuracy-point-${index}`}
+                cx={point.x}
+                cy={point.y}
+                r={6}
+                fill={
+                  isNull
+                    ? 'transparent'
+                    : isActive
+                    ? themeColors.accent
+                    : isLast
+                    ? white
+                    : themeColors.bg
+                }
+                stroke={
+                  isNull ? 'transparent' : isActive ? themeColors.accent : white
+                }
+                strokeWidth={2}
+              />
+            );
+          })}
+
+          {correctWordPoints.map((point, index) => {
+            const isLast = index === correctWordPoints.length - 1;
+            const isNull = data[index].totalCorrectWords === 0;
+            const isActive = activeIndex === index;
+
+            return (
+              <Rect
+                key={`correct-point-${index}`}
+                x={point.x - 6}
+                y={point.y - 6}
+                width={12}
+                height={12}
+                rx={2}
+                fill={
+                  isNull
+                    ? 'transparent'
+                    : isActive
+                    ? themeColors.accent
+                    : isLast
+                    ? black
+                    : themeColors.bg
+                }
+                stroke={
+                  isNull ? 'transparent' : isActive ? themeColors.accent : black
+                }
+                strokeWidth={2}
+              />
+            );
+          })}
+        </Svg>
+      </View>
     </View>
   );
 }
@@ -277,6 +525,44 @@ function AccuracyProgressChart({
 const styles = StyleSheet.create({
   container: {
     width: '100%',
+  },
+  chartArea: {
+    flex: 1,
+    position: 'relative',
+  },
+  tooltipContainer: {
+    position: 'absolute',
+    top: -72,
+    width: 140,
+    alignItems: 'center',
+    zIndex: 5,
+  },
+  tooltipBubble: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 10,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  tooltipText: {
+    fontSize: 10,
+    textAlign: 'center',
+    fontWeight: '600',
+    flexShrink: 0,
+  },
+  tooltipWordsValue: {
+    fontSize: 18,
+    fontWeight: '700',
+  },
+  tooltipArrow: {
+    width: 0,
+    height: 0,
+    borderLeftWidth: 5,
+    borderRightWidth: 5,
+    borderTopWidth: 7,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
   },
 
   labelItem: {
