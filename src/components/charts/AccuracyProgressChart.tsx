@@ -428,7 +428,7 @@ function AccuracyProgressChart({
                 <Text
                   key={'label-' + index}
                   style={{
-                    left: (x - 6) * 0.93,
+                    left: (x - 6) * 0.96,
                     bottom: 10,
                     position: 'absolute',
                     fontSize: 16,
